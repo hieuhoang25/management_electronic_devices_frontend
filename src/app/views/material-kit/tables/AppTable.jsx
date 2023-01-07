@@ -3,6 +3,7 @@ import { Breadcrumb, SimpleCard } from 'app/components';
 import { tableHeader } from 'app/utils/constant';
 import { createDataTableAccount } from 'app/utils/objects';
 import CollapsibleTable from './CollapsibleTable';
+import { FilterTable } from './FilterTable';
 import PaginationTable from './PaginationTable';
 import SimpleTable from './SimpleTable';
 
@@ -70,6 +71,10 @@ const AppTable = () => {
 
             <SimpleCard title="Coolapsible Table">
                 <CollapsibleTable tableHeader={tableHeader} rows={rows} />
+            </SimpleCard>
+
+            <SimpleCard title="filter table">
+                <FilterTable />
             </SimpleCard>
         </Container>
     );
