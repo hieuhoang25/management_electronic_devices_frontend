@@ -7,13 +7,13 @@ import App from './app/App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <StyledEngineProvider injectFirst>
-    <BrowserRouter>
-      <CssBaseline />
-      <App />
-    </BrowserRouter>
-  </StyledEngineProvider>,
-  document.getElementById('root')
+    <StyledEngineProvider injectFirst>
+        <BrowserRouter>
+            <CssBaseline />
+            <App />
+        </BrowserRouter>
+    </StyledEngineProvider>,
+    document.getElementById('root'),
 );
 
 // for IE-11 support un-comment cssVars() and it's import in this file

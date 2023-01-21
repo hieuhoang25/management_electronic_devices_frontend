@@ -1,7 +1,9 @@
-import { Box, TextField, Autocomplete } from '@mui/material';
+import { Box, TextField, Autocomplete, Fab, Icon } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
 import PaginationTable from '../material-kit/tables/PaginationTable';
 import { Container as ContainerTable } from '../material-kit/tables/AppTable';
+import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import { Link } from 'react-router-dom';
 
 const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
@@ -115,29 +117,76 @@ const AppProduct = () => {
             <Box className="breadcrumb">
                 <Breadcrumb
                     routeSegments={[
-                        { name: 'Material', path: '/material' },
+                        { name: '????', path: '/????' },
                         { name: 'Table' },
                     ]}
                 />
             </Box>
             <SimpleCard title="Danh sách sản phẩm">
-                <Autocomplete
-                    multiple
-                    id="tags-outlined"
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    // defaultValue={[top100Films[13]]}
-                    filterSelectedOptions
-                    renderInput={(params) => (
+                <Grid2 container spacing={0} alignItems="center">
+                    <Grid2 xs={10} md={10}>
                         <TextField
-                            {...params}
-                            variant="outlined"
-                            label="Lọc theo loại"
-                            placeholder="Lọc theo loại"
+                            margin="normal"
+                            required
+                            id="outlined-required"
+                            label="Tìm kiếm"
+                            placeholder="Tìm kiếm theo tên sản phẩm"
                             fullWidth
                         />
-                    )}
-                />
+                    </Grid2>
+                    <Grid2 xs={1} md={1} style={{ marginLeft: '80px' }}>
+                        <Link to="stepperForm">
+                            <Fab
+                                color="primary"
+                                aria-label="Add"
+                                className="button"
+                            >
+                                <Icon>add</Icon>
+                            </Fab>
+                        </Link>
+                    </Grid2>
+                </Grid2>
+                <Grid2 container spacing={2}>
+                    <Grid2 xs={6} md={6}>
+                        <Autocomplete
+                            multiple
+                            id="tags-outlined"
+                            options={top100Films}
+                            getOptionLabel={(option) => option.title}
+                            // defaultValue={[top100Films[13]]}
+                            filterSelectedOptions
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    label="Lọc theo loại"
+                                    placeholder="Lọc theo loại"
+                                    fullWidth
+                                />
+                            )}
+                        />
+                    </Grid2>
+                    <Grid2 xs={6} md={6}>
+                        <Autocomplete
+                            multiple
+                            id="tags-outlined"
+                            options={top100Films}
+                            getOptionLabel={(option) => option.title}
+                            // defaultValue={[top100Films[13]]}
+                            filterSelectedOptions
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    label="Lọc theo thuộc tính"
+                                    placeholder="Lọc theo thuộc tính"
+                                    fullWidth
+                                />
+                            )}
+                        />
+                    </Grid2>
+                </Grid2>
+
                 {/* table */}
                 <PaginationTable />
             </SimpleCard>
