@@ -1,15 +1,15 @@
-import { PRODUCT_FORM, STATUS_DISABLE } from '../actions/ProductAction';
+import { PRODUCT_FORM, STATUS_DISABLE } from '../actions/ProductFormAction';
 
 const initalState = {
-    productList: [],
     formProduct: {
         name: '',
         category: '',
         subCategory: '',
     },
     inputNextStatus: true,
+    stepperNumber: '0',
 };
-const ProductReducre = (state = initalState, action) => {
+const ProductFormReducer = (state = initalState, action) => {
     switch (action.type) {
         case PRODUCT_FORM:
             return {
@@ -26,4 +26,4 @@ const ProductReducre = (state = initalState, action) => {
             return state;
     }
 };
-export default ProductReducre;
+export default ProductFormReducer;

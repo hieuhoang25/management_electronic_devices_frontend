@@ -157,11 +157,6 @@ export default function CollapsibleTable({ tableHeader, rows }) {
                                 </TableCell>
                             ),
                         )}
-                        {/* <TableCell>Họ và tên</TableCell>
-                    <TableCell align="center">Email</TableCell>
-                    <TableCell align="right">Phone</TableCell>
-                    <TableCell align="right">Ngày tạo</TableCell>
-                    <TableCell align="right">Ngày cập nhật</TableCell> */}
                     </TableRow>
                 </TableHead>
                 <TableBody>

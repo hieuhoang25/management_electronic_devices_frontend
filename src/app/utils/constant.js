@@ -10,3 +10,11 @@ export const tableHeader = [
     'Ngày tạo',
     'Ngày cập nhật',
 ];
+
+export const orderTableHeader = [
+    'Họ và tên',
+    'Email',
+    'Phone',
+    'Thời gian',
+    'Trạng thái',
+];

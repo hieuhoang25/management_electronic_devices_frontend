@@ -10,6 +10,11 @@ export const navigations = [
         icon: 'account_circle',
         path: '/account',
     },
+    {
+        name: 'Đơn hàng',
+        icon: 'shopping_cart',
+        path: '/order',
+    },
     { label: 'PAGES', type: 'label' },
     {
         name: 'Session/Auth',

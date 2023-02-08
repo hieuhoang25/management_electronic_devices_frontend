@@ -139,7 +139,7 @@ const PaginationTable = () => {
                                 </TableCell>
                                 <TableCell align="right">
                                     <IconButton>
-                                        <Icon color="error">close</Icon>
+                                        <Icon color="primary">visibility</Icon>
                                     </IconButton>
                                 </TableCell>
                             </TableRow>

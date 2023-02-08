@@ -1,21 +1,14 @@
 import { SimpleCard } from 'app/components';
-// import CollapsibleTable from '../material-kit/tables/CollapsibleTable';
+import CollapsibleTable from '../material-kit/tables/CollapsibleTable';
 import { Container } from '../material-kit/tables/AppTable';
 import { PropTypes } from 'prop-types';
-import { connect } from 'react-redux';
-import { getAccountList } from 'app/redux/actions/AccountAction';
 import { useEffect } from 'react';
-import { tableHeader } from 'app/utils/constant';
-import Loadable from 'app/components/Loadable';
-import { lazy } from 'react';
+import { connect } from 'react-redux';
+import { orderTableHeader } from 'app/utils/constant';
+import { getAccountList } from 'app/redux/actions/AccountAction';
 
-const CollapsibleTable = Loadable(
-    lazy(() => import('../material-kit/tables/CollapsibleTable')),
-);
-
-function AppAccount(props) {
+function AppOrder(props) {
     const { getAccountList, accounts } = props;
-
     useEffect(() => {
         getAccountList();
 
@@ -23,17 +16,18 @@ function AppAccount(props) {
     }, []);
     return (
         <Container>
-            <SimpleCard title="Quản lý tài khoản">
+            <SimpleCard title="Quản lý đơn hàng">
                 <CollapsibleTable
-                    tableHeader={tableHeader}
+                    tableHeader={orderTableHeader}
                     rows={accounts.accountList}
                 />
             </SimpleCard>
         </Container>
     );
 }
+
 const mapStateToProps = (state) => ({
     getAccountList: PropTypes.func.isRequired,
     accounts: state.accounts,
 });
-export default connect(mapStateToProps, { getAccountList })(AppAccount);
+export default connect(mapStateToProps, { getAccountList })(AppOrder);
