@@ -10,14 +10,18 @@ import { ValidatorForm } from 'react-material-ui-form-validator';
 import { Container as ContainerStepper } from '../material-kit/forms/AppForm';
 import FormStepper1 from './Form/FormStepper1';
 import { connect } from 'react-redux';
-import { ProductForm, StatusDisable } from 'app/redux/actions/ProductAction';
+import {
+    ProductForm,
+    StatusDisable,
+} from 'app/redux/actions/ProductFormAction';
 import { PropTypes } from 'prop-types';
+import FormStepper2 from './Form/FormStepper2';
 
 function getSteps() {
     return [
         'Chọn loại sản phẩm cần tạo',
-        'Nhập thông tin sản phẩm',
-        'Tạo sản phẩm',
+        'Tạo các thuộc tính của sản phẩm',
+        '',
     ];
 }
 
@@ -27,7 +31,7 @@ function getStepContent(stepIndex) {
             return `Vui lòng nhập tên sản phẩm và loại sản phẩm cần tạo mới`;
 
         case 1:
-            return `Vui lòng nhập đầy đủ thông tin của sản phẩm`;
+            return `Tạo các thuộc tính của sản phẩm (ví dụ Ram : 8GB , màu sắc: ĐỎ)`;
 
         case 2:
             return `In laoreet, dui vel tristique facilisis, velit dui dictum diam, nec feugiat mi mauris eu nunc. Nullam auctor eget ante ac laoreet. Aliquam et ante ligula. Nam imperdiet augue magna, ac tincidunt neque mollis nec. Sed eu nunc sit amet tellus commodo elementum non sit amet sem. Etiam ipsum nibh, rutrum vel ultrices in, vulputate ac dolor. Morbi dictum lectus id orci dapibus, et faucibus nulla viverra. Nulla consectetur ex vitae pretium vehicula. Quisque varius tempor erat et semper. Vivamus consectetur, eros sit amet ornare facilisis, nulla felis laoreet tortor, sit amet egestas risus ipsum sed eros.`;
@@ -40,7 +44,7 @@ function getStepContent(stepIndex) {
 function StepperForm(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
-    const { products, StatusDisable } = props;
+    const { productForm, StatusDisable } = props;
 
     const handleNext = () => {
         return setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -55,6 +59,7 @@ function StepperForm(props) {
         if (index === 0) {
             return <FormStepper1 />;
         } else if (index === 1) {
+            return <FormStepper2 />;
         }
     };
     const handleSubmit = () => {
@@ -119,7 +124,9 @@ function StepperForm(props) {
                                         </Button>
 
                                         <Button
-                                            disabled={products.inputNextStatus}
+                                            disabled={
+                                                productForm.inputNextStatus
+                                            }
                                             sx={{ ml: 2 }}
                                             variant="contained"
                                             color="primary"
@@ -144,7 +151,7 @@ function StepperForm(props) {
 const mapStateToProps = (state) => ({
     ProductForm: PropTypes.func.isRequired,
     StatusDisable: PropTypes.func.isRequired,
-    products: state.products,
+    productForm: state.productForm,
 });
 export default connect(mapStateToProps, { ProductForm, StatusDisable })(
     StepperForm,

@@ -1,7 +1,7 @@
 export class CustomerService {
     getCustomersSmall() {
         return fetch(
-            'dhttps://www.primefaces.org/data/customers?ata/customers-small.json',
+            'https://www.primefaces.org/data/customers?ata/customers-small.json',
         )
             .then((res) => res.json())
             .then((d) => d.data);

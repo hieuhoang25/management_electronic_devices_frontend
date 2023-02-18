@@ -1,4 +1,4 @@
-import { Box, TextField, Autocomplete, Fab, Icon } from '@mui/material';
+import { Box, TextField, Autocomplete, Fab, Icon, Grid } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
 import PaginationTable from '../material-kit/tables/PaginationTable';
 import { Container as ContainerTable } from '../material-kit/tables/AppTable';
@@ -123,8 +123,14 @@ const AppProduct = () => {
                 />
             </Box>
             <SimpleCard title="Danh sách sản phẩm">
-                <Grid2 container spacing={0} alignItems="center">
-                    <Grid2 xs={10} md={10}>
+                <Grid
+                    container
+                    flex={1}
+                    // direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                >
+                    <Grid xs={11} item>
                         <TextField
                             margin="normal"
                             required
@@ -133,8 +139,8 @@ const AppProduct = () => {
                             placeholder="Tìm kiếm theo tên sản phẩm"
                             fullWidth
                         />
-                    </Grid2>
-                    <Grid2 xs={1} md={1} style={{ marginLeft: '80px' }}>
+                    </Grid>
+                    <Grid item>
                         <Link to="stepperForm">
                             <Fab
                                 color="primary"
@@ -144,8 +150,9 @@ const AppProduct = () => {
                                 <Icon>add</Icon>
                             </Fab>
                         </Link>
-                    </Grid2>
-                </Grid2>
+                    </Grid>
+                </Grid>
+
                 <Grid2 container spacing={2}>
                     <Grid2 xs={6} md={6}>
                         <Autocomplete
@@ -153,7 +160,6 @@ const AppProduct = () => {
                             id="tags-outlined"
                             options={top100Films}
                             getOptionLabel={(option) => option.title}
-                            // defaultValue={[top100Films[13]]}
                             filterSelectedOptions
                             renderInput={(params) => (
                                 <TextField

@@ -8,6 +8,7 @@ import { Navigate } from 'react-router-dom';
 import MatxLayout from './components/MatxLayout/MatxLayout';
 import AccountsRouter from './views/accounts/AccountsRouter';
 import ProductRouter from './views/product/ProductRouter';
+import OrderRouter from './views/orders/OrderRouter';
 
 const routes = [
     {
@@ -22,6 +23,7 @@ const routes = [
             ...materialRoutes,
             ...ProductRouter,
             ...AccountsRouter,
+            ...OrderRouter,
         ],
     },
     ...sessionRoutes,

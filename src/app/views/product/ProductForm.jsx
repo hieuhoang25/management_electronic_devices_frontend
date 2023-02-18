@@ -23,7 +23,7 @@ const TextField = styled(TextValidator)(() => ({
     marginBottom: '16px',
 }));
 
-const SimpleForm = () => {
+const ProductForm = () => {
     const [state, setState] = useState({ date: new Date() });
 
     useEffect(() => {
@@ -221,4 +221,4 @@ const SimpleForm = () => {
     );
 };
 
-export default SimpleForm;
+export default ProductForm;
