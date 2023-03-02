@@ -1,10 +1,24 @@
-import { Box, TextField, Autocomplete, Fab, Icon, Grid } from '@mui/material';
+import {
+    Box,
+    TextField,
+    Autocomplete,
+    Grid,
+    Button,
+    styled,
+} from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
-import PaginationTable from '../material-kit/tables/PaginationTable';
 import { Container as ContainerTable } from '../material-kit/tables/AppTable';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
-import { Link } from 'react-router-dom';
-
+import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
+import {
+    getProductsList,
+    changeStateTable,
+} from 'app/redux/actions/ProductAction';
+import { lazy } from 'react';
+import Loadable from 'app/components/Loadable';
+import ButtonProduct from './ButtonProduct';
+const SimpleTable = Loadable(lazy(() => import('./SimpleTable')));
 const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
     { title: 'The Godfather', year: 1972 },
@@ -110,94 +124,138 @@ const top100Films = [
     { title: '3 Idiots', year: 2009 },
     { title: 'Monty Python and the Holy Grail', year: 1975 },
 ];
+const StyledButton = styled(Button)(({ theme }) => ({
+    margin: theme.spacing(1),
+}));
 
-const AppProduct = () => {
+const AppProduct = (props) => {
+    // eslint-disable-next-line
+    const { getProductsList, products, changeStateTable } = props;
+
+    const handleClickBack = () => {
+        changeStateTable('product');
+    };
     return (
         <ContainerTable>
             <Box className="breadcrumb">
-                <Breadcrumb
-                    routeSegments={[
-                        { name: '????', path: '/????' },
-                        { name: 'Table' },
-                    ]}
-                />
+                <Breadcrumb routeSegments={products.breadCrum.data} />
             </Box>
-            <SimpleCard title="Danh sách sản phẩm">
-                <Grid
-                    container
-                    flex={1}
-                    // direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
-                    <Grid xs={11} item>
-                        <TextField
-                            margin="normal"
-                            required
-                            id="outlined-required"
-                            label="Tìm kiếm"
-                            placeholder="Tìm kiếm theo tên sản phẩm"
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Link to="stepperForm">
-                            <Fab
+            {products.stateTable === 'product' ? (
+                <SimpleCard title="Danh sách sản phẩm">
+                    <Grid
+                        container
+                        flex={1}
+                        // direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                    >
+                        <Grid xs={10} item>
+                            <TextField
+                                margin="normal"
+                                required
+                                id="outlined-required"
+                                label="Tìm kiếm"
+                                placeholder="Tìm kiếm theo tên sản phẩm"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            {/* <Link to="stepperForm">
+                                <Fab
+                                    color="primary"
+                                    aria-label="Add"
+                                    className="button"
+                                >
+                                    <Icon>add</Icon>
+                                </Fab>
+                            </Link> */}
+                            <ButtonProduct
+                                variant="contained"
                                 color="primary"
-                                aria-label="Add"
-                                className="button"
+                                size="medium"
                             >
-                                <Icon>add</Icon>
-                            </Fab>
-                        </Link>
+                                Thêm sản phẩm
+                            </ButtonProduct>
+                        </Grid>
                     </Grid>
-                </Grid>
 
-                <Grid2 container spacing={2}>
-                    <Grid2 xs={6} md={6}>
-                        <Autocomplete
-                            multiple
-                            id="tags-outlined"
-                            options={top100Films}
-                            getOptionLabel={(option) => option.title}
-                            filterSelectedOptions
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    variant="outlined"
-                                    label="Lọc theo loại"
-                                    placeholder="Lọc theo loại"
-                                    fullWidth
-                                />
-                            )}
-                        />
+                    <Grid2 container spacing={2}>
+                        <Grid2 xs={6} md={6}>
+                            <Autocomplete
+                                multiple
+                                id="tags-outlined"
+                                options={top100Films}
+                                getOptionLabel={(option) => option.title}
+                                filterSelectedOptions
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        label="Lọc theo loại"
+                                        placeholder="Lọc theo loại"
+                                        fullWidth
+                                    />
+                                )}
+                            />
+                        </Grid2>
+                        <Grid2 xs={6} md={6}>
+                            <Autocomplete
+                                multiple
+                                id="tags-outlined"
+                                options={top100Films}
+                                getOptionLabel={(option) => option.title}
+                                // defaultValue={[top100Films[13]]}
+                                filterSelectedOptions
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        label="Lọc theo thuộc tính"
+                                        placeholder="Lọc theo thuộc tính"
+                                        fullWidth
+                                    />
+                                )}
+                            />
+                        </Grid2>
                     </Grid2>
-                    <Grid2 xs={6} md={6}>
-                        <Autocomplete
-                            multiple
-                            id="tags-outlined"
-                            options={top100Films}
-                            getOptionLabel={(option) => option.title}
-                            // defaultValue={[top100Films[13]]}
-                            filterSelectedOptions
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    variant="outlined"
-                                    label="Lọc theo thuộc tính"
-                                    placeholder="Lọc theo thuộc tính"
-                                    fullWidth
-                                />
-                            )}
-                        />
-                    </Grid2>
-                </Grid2>
+                    <SimpleTable />
+                </SimpleCard>
+            ) : (
+                <SimpleCard title="Danh sách sản phẩm">
+                    <Grid container>
+                        <Grid>
+                            <StyledButton
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleClickBack}
+                            >
+                                Quay về
+                            </StyledButton>
+                        </Grid>
+                        <Grid mdOffset="auto">
+                            <StyledButton
+                                variant="contained"
+                                color="primary"
+                                onClick={handleClickBack}
+                            >
+                                Thêm mới product variant
+                            </StyledButton>
+                        </Grid>
+                    </Grid>
 
-                {/* table */}
-                <PaginationTable />
-            </SimpleCard>
+                    <SimpleTable />
+                </SimpleCard>
+            )}
         </ContainerTable>
     );
 };
 
-export default AppProduct;
+const mapStateToProps = (state) => ({
+    getProductsList: PropTypes.func.isRequired,
+    changeStateTable: PropTypes.func.isRequired,
+
+    products: state.products,
+});
+export default connect(mapStateToProps, { changeStateTable, getProductsList })(
+    AppProduct,
+);
