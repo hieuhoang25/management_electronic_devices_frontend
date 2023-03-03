@@ -18,3 +18,21 @@ export const orderTableHeader = [
     'Thời gian',
     'Trạng thái',
 ];
+export const productTableHeader = [
+    'Tên sản phẩm',
+    'Thương hiệu',
+    'Danh mục',
+    'Ngày tạo',
+    'Khuyến mãi',
+    'Xoá',
+    'Hành động',
+];
+export const productVariantTableHeader = [
+    'SKU',
+    'Số lượng',
+    'Giá',
+    'Tên hiển thị',
+    'Màu',
+    'Dung lượng',
+    'Trạng thái',
+];

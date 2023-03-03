@@ -88,7 +88,7 @@ export default function AppButton() {
 
             <SimpleCard title="outlined buttons">
                 <StyledButton variant="outlined">Default</StyledButton>
-                <StyledButton variant="outlined" color="primary">
+                <StyledButton size="small" variant="outlined" color="primary">
                     Primary
                 </StyledButton>
 
