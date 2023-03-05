@@ -22,6 +22,7 @@ export const getProductsList = (size, page) => (dispatch) => {
             });
         });
 };
+
 export const getProductAttributeList = (id) => (dispatch) => {
     axios
         .get(process.env.REACT_APP_BASE_URL + 'product_attribute/' + id)
@@ -42,7 +43,7 @@ export const getProductVariant = (size, page, id) => (dispatch) => {
     axios
         .get(
             process.env.REACT_APP_BASE_URL +
-                'product_variant/' +
+                'product-variant/' +
                 id +
                 '?size=' +
                 size +

@@ -1,14 +1,6 @@
 import {
     Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Grid,
-    Icon,
-    IconButton,
     Pagination,
     Stack,
     styled,
@@ -17,7 +9,6 @@ import {
     TableCell,
     TableHead,
     TableRow,
-    TextField,
     Typography,
 } from '@mui/material';
 import {
@@ -31,9 +22,10 @@ import { format, parseISO } from 'date-fns';
 import {
     getProductsList,
     getProductVariant,
-    getProductAttributeList,
 } from 'app/redux/actions/ProductAction';
 import ButtonProduct from './ButtonProduct';
+import { getProductAttribute } from 'app/redux/actions/ProductAttributeAction';
+import DialogProductAttribute from './DialogProductAttribute';
 
 const StyledTable = styled(Table)(({ theme }) => ({
     whiteSpace: 'pre',
@@ -50,11 +42,13 @@ const SimpleTable = (props) => {
         getProductsList,
         products,
         getProductVariant,
-        getProductAttributeList,
+        getProductAttribute,
+        productAttribute,
     } = props;
     if (!products.listProduct.data) {
         products.listProduct.data = [];
     }
+    //check null productAttribute
     const [page, setPage] = useState(1);
     const handleChange = (event, value) => {
         if (products.stateTable === 'product') {
@@ -76,15 +70,15 @@ const SimpleTable = (props) => {
         // eslint-disable-next-line
     }, [getProductsList]);
     const [open, setOpen] = useState(false);
-    function handleClickOpen(id) {
-        getProductAttributeList(id);
+    function handleOpenProductAttribute(id) {
+        // getProductAttributeList(id);
+        getProductAttribute(id);
         setOpen(true);
     }
 
     function handleClose() {
         setOpen(false);
     }
-    console.log(products);
     return (
         <Box width="100%">
             <StyledTable>
@@ -158,7 +152,9 @@ const SimpleTable = (props) => {
                                             size="small"
                                             fullWidth
                                             onClick={() => {
-                                                handleClickOpen(product.id);
+                                                handleOpenProductAttribute(
+                                                    product.id,
+                                                );
                                             }}
                                         >
                                             Thông số
@@ -223,8 +219,13 @@ const SimpleTable = (props) => {
                     onChange={handleChange}
                 />
             </Stack>
+            <DialogProductAttribute
+                open={open}
+                productAttributeList={productAttribute.data}
+                handleClose={handleClose}
+            />
             {/* dialog */}
-            <Dialog
+            {/* <Dialog
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="form-dialog-title"
@@ -282,7 +283,7 @@ const SimpleTable = (props) => {
                         rowSpacing={1}
                         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                     >
-                        {products.listProductAttribute.map((product, index) => (
+                        {productAttribute.data.map((product, index) => (
                             <Grid
                                 container
                                 item
@@ -332,7 +333,7 @@ const SimpleTable = (props) => {
                         Cập nhật
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog> */}
         </Box>
     );
 };
@@ -341,10 +342,11 @@ const mapStateToProps = (state) => ({
     getProductsList: PropTypes.func.isRequired,
     getProductVariant: PropTypes.func.isRequired,
     products: state.products,
-    getProductAttributeList: PropTypes.func.isRequired,
+    productAttribute: state.productAttribute,
+    getProductAttribute: PropTypes.func.isRequired,
 });
 export default connect(mapStateToProps, {
     getProductVariant,
     getProductsList,
-    getProductAttributeList,
+    getProductAttribute,
 })(SimpleTable);
