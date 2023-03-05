@@ -5,6 +5,7 @@ import NotificationReducer from './NotificationReducer';
 import AccountReducer from './AccountReducre';
 import ProductFormReducer from './ProductFormReducer';
 import ProductReducer from './ProductReducer';
+import ProductAttributeReducer from './ProductAttributeReducer';
 
 const RootReducer = combineReducers({
     notifications: NotificationReducer,
@@ -13,6 +14,7 @@ const RootReducer = combineReducers({
     accounts: AccountReducer,
     productForm: ProductFormReducer,
     products: ProductReducer,
+    productAttribute: ProductAttributeReducer,
 });
 
 export default RootReducer;
