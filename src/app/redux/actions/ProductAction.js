@@ -4,7 +4,10 @@ export const LIST_PRODUCTS = 'listProducts';
 export const STATUS_DISABLE = 'statusDisable';
 export const LIST_PRODUCT_VARIANT = 'listProductVariant';
 export const CHANGE_STATE_TABLE = 'changeStateTable';
-export const LIST_PRODUCT_ATTRIBUTE = 'listProductAttribute';
+export const DELETE_PRODUCT = 'deleteProduct';
+export const GET_PRODUCT_BYID = 'getProductById';
+export const PUT_PRODUCT = 'putProduct';
+export const POST_PRODUCT = 'postProduct';
 
 export const getProductsList = (size, page) => (dispatch) => {
     axios
@@ -22,13 +25,49 @@ export const getProductsList = (size, page) => (dispatch) => {
             });
         });
 };
-
-export const getProductAttributeList = (id) => (dispatch) => {
+export const getProductById = (id) => (dispatch) => {
+    axios.get(process.env.REACT_APP_BASE_URL + 'product/' + id).then((res) =>
+        dispatch({
+            type: GET_PRODUCT_BYID,
+            payload: res.data,
+        }),
+    );
+};
+export const deleteProduct = (id, isDelted) => (dispatch) => {
     axios
-        .get(process.env.REACT_APP_BASE_URL + 'product_attribute/' + id)
+        .delete(
+            process.env.REACT_APP_BASE_URL + 'product/' + id + '/' + isDelted,
+        )
+        .then(() => {
+            dispatch({
+                type: DELETE_PRODUCT,
+            });
+        });
+};
+export const putProduct = (product) => (dispatch) => {
+    axios
+        .put(
+            process.env.REACT_APP_BASE_URL + 'product/',
+
+            product,
+        )
         .then((res) => {
             dispatch({
-                type: LIST_PRODUCT_ATTRIBUTE,
+                type: PUT_PRODUCT,
+                payload: res.data,
+            });
+        });
+};
+export const postProduct = (product) => (dispatch) => {
+    axios
+        .post(
+            process.env.REACT_APP_BASE_URL + 'product',
+
+            product,
+        )
+        .then((res) => {
+            dispatch({
+                type: POST_PRODUCT,
                 payload: res.data,
             });
         });

@@ -20,11 +20,11 @@ export const orderTableHeader = [
 ];
 export const productTableHeader = [
     'Tên sản phẩm',
+    'Hình ảnh',
     'Thương hiệu',
     'Danh mục',
     'Ngày tạo',
     'Khuyến mãi',
-    'Xoá',
     'Hành động',
 ];
 export const productVariantTableHeader = [

@@ -18,6 +18,7 @@
     "date-fns": "^2.29.3",
     "echarts": "^5.2.2",
     "echarts-for-react": "^3.0.2",
+    "firebase": "^9.17.2",
     "formik": "^2.2.9",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
@@ -40,6 +41,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.0",
     "shortid": "^2.2.16",
+    "uuid": "^9.0.0",
     "yup": "^0.32.11"
   },
   "scripts": {

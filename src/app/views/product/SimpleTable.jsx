@@ -1,4 +1,6 @@
 import {
+    Avatar,
+    Badge,
     Box,
     Grid,
     Pagination,
@@ -11,21 +13,32 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
+// eslint-disable-next-line
+
 import {
     productTableHeader,
     productVariantTableHeader,
 } from 'app/utils/constant';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { format, parseISO } from 'date-fns';
 import {
     getProductsList,
     getProductVariant,
+    deleteProduct,
+    getProductById,
 } from 'app/redux/actions/ProductAction';
 import ButtonProduct from './ButtonProduct';
 import { getProductAttribute } from 'app/redux/actions/ProductAttributeAction';
-import DialogProductAttribute from './DialogProductAttribute';
+
+import { v4 } from 'uuid';
+import Loadable from 'app/components/Loadable';
+
+const DialogProduct = Loadable(lazy(() => import('./DialogProduct')));
+const DialogProductAttribute = Loadable(
+    lazy(() => import('./DialogProductAttribute')),
+);
 
 const StyledTable = styled(Table)(({ theme }) => ({
     whiteSpace: 'pre',
@@ -36,7 +49,37 @@ const StyledTable = styled(Table)(({ theme }) => ({
         '& tr': { '& td': { paddingLeft: 0, textTransform: 'capitalize' } },
     },
 }));
+// avatar
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+        backgroundColor: '#44b700',
+        color: '#44b700',
+        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+        '&::after': {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            animation: 'ripple 1.2s infinite ease-in-out',
+            border: '5px solid currentColor',
+            content: '""',
+        },
+    },
+    '@keyframes ripple': {
+        '0%': {
+            transform: 'scale(.8)',
+            opacity: 1,
+        },
+        '100%': {
+            transform: 'scale(2.4)',
+            opacity: 0,
+        },
+    },
+}));
 
+//end avatar
 const SimpleTable = (props) => {
     const {
         getProductsList,
@@ -44,12 +87,16 @@ const SimpleTable = (props) => {
         getProductVariant,
         getProductAttribute,
         productAttribute,
+        deleteProduct,
+        getProductById,
     } = props;
     if (!products.listProduct.data) {
         products.listProduct.data = [];
     }
     //check null productAttribute
     const [page, setPage] = useState(1);
+    const [productList, setProductList] = useState([{}]);
+    const [idSelected, setIdSelected] = useState(-1);
     const handleChange = (event, value) => {
         if (products.stateTable === 'product') {
             getProductsList(5, value - 1);
@@ -58,20 +105,21 @@ const SimpleTable = (props) => {
         }
         setPage(value);
     };
+
     const handleClickShowDetail = (id) => {
         getProductVariant(1, 0, id);
     };
     useEffect(() => {
         if (products.stateTable === 'product') {
-            getProductsList(5, 0);
+            getProductsList(5, page - 1);
         }
-        return () => {};
+        setProductList(products.listProduct.data);
 
         // eslint-disable-next-line
-    }, [getProductsList]);
+    }, [productList, setOpen]);
     const [open, setOpen] = useState(false);
     function handleOpenProductAttribute(id) {
-        // getProductAttributeList(id);
+        // setIdSelected(id);
         getProductAttribute(id);
         setOpen(true);
     }
@@ -79,6 +127,24 @@ const SimpleTable = (props) => {
     function handleClose() {
         setOpen(false);
     }
+    const handleDeleteProduct = async (value, isDelted) => {
+        await deleteProduct(value, isDelted);
+        await getProductsList(5, page - 1);
+        setProductList(products.listProduct.data);
+    };
+
+    const [openDialogProduct, setOpenDialogProduct] = useState(false);
+
+    function handleClosedialogProduct() {
+        getProductsList(5, page - 1);
+        setOpenDialogProduct(false);
+    }
+    const handleOpenDialogProduct = (id) => {
+        getProductById(id);
+        setIdSelected(id);
+        setOpenDialogProduct(true);
+    };
+
     return (
         <Box width="100%">
             <StyledTable>
@@ -117,6 +183,50 @@ const SimpleTable = (props) => {
                                 <TableCell align="left">
                                     {product.product_name}
                                 </TableCell>
+                                <TableCell align="justify">
+                                    {product.is_delete ? (
+                                        <Avatar
+                                            sx={{ width: 120, height: 120 }}
+                                            alt="Hình ánh sản phẩm"
+                                            variant="square"
+                                            src={
+                                                process.env
+                                                    .REACT_APP_BASE_URL_FIREBASE +
+                                                product.image +
+                                                '?alt=media&token=' +
+                                                v4()
+                                            }
+                                            key={new Date()
+                                                .getTime()
+                                                .toString()}
+                                        />
+                                    ) : (
+                                        <StyledBadge
+                                            overlap="rectangular"
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'right',
+                                            }}
+                                            variant="dot"
+                                        >
+                                            <Avatar
+                                                sx={{
+                                                    width: 120,
+                                                    height: 120,
+                                                }}
+                                                alt="Hình ánh sản phẩm"
+                                                variant="square"
+                                                src={
+                                                    process.env
+                                                        .REACT_APP_BASE_URL_FIREBASE +
+                                                    product.image +
+                                                    '?alt=media&token=' +
+                                                    v4()
+                                                }
+                                            />
+                                        </StyledBadge>
+                                    )}
+                                </TableCell>
                                 <TableCell align="center">
                                     {product.brand_name}
                                 </TableCell>
@@ -134,45 +244,78 @@ const SimpleTable = (props) => {
                                         ? product.promotion_name
                                         : 'Không có'}
                                 </TableCell>
-                                <TableCell align="center">
+                                {/* <TableCell align="center">
                                     {product.is_delete ? 'true' : 'false'}
-                                </TableCell>
+                                </TableCell> */}
                                 <TableCell align="center">
-                                    {/* <IconButton
-                                        onClick={() => {
-                                            handleClickShowDetail(product.id);
-                                        }}
-                                    >
-                                        <Icon color="primary">visibility</Icon>
-                                    </IconButton> */}
-                                    <Grid>
-                                        <ButtonProduct
-                                            variant="contained"
-                                            color="primary"
-                                            size="small"
-                                            fullWidth
-                                            onClick={() => {
-                                                handleOpenProductAttribute(
-                                                    product.id,
-                                                );
-                                            }}
-                                        >
-                                            Thông số
-                                        </ButtonProduct>
+                                    <Grid container spacing={2}>
+                                        <Grid item md={6} xs={12}>
+                                            <ButtonProduct
+                                                variant="contained"
+                                                color="primary"
+                                                size="small"
+                                                fullWidth
+                                                onClick={() => {
+                                                    handleOpenProductAttribute(
+                                                        product.id,
+                                                    );
+                                                }}
+                                            >
+                                                Thông số
+                                            </ButtonProduct>
+                                        </Grid>
 
-                                        <ButtonProduct
-                                            variant="outlined"
-                                            color="primary"
-                                            size="small"
-                                            fullWidth
-                                            onClick={() => {
-                                                handleClickShowDetail(
-                                                    product.id,
-                                                );
-                                            }}
-                                        >
-                                            Chi tiết
-                                        </ButtonProduct>
+                                        <Grid item md={6} xs={12}>
+                                            <ButtonProduct
+                                                variant="outlined"
+                                                color="error"
+                                                size="small"
+                                                fullWidth
+                                                onClick={() => {
+                                                    handleDeleteProduct(
+                                                        product.id,
+                                                        product.is_delete
+                                                            ? 0
+                                                            : 1,
+                                                    );
+                                                }}
+                                            >
+                                                Ẩn/Bỏ ẩn
+                                            </ButtonProduct>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={2}>
+                                        <Grid item md={6} xs={12}>
+                                            <ButtonProduct
+                                                variant="outlined"
+                                                color="primary"
+                                                size="small"
+                                                fullWidth
+                                                onClick={() => {
+                                                    handleClickShowDetail(
+                                                        product.id,
+                                                    );
+                                                }}
+                                            >
+                                                Chi tiết
+                                            </ButtonProduct>
+                                        </Grid>
+
+                                        <Grid item md={6} xs={12}>
+                                            <ButtonProduct
+                                                variant="outlined"
+                                                color="success"
+                                                size="small"
+                                                fullWidth
+                                                onClick={() => {
+                                                    handleOpenDialogProduct(
+                                                        product.id,
+                                                    );
+                                                }}
+                                            >
+                                                Chỉnh sửa
+                                            </ButtonProduct>
+                                        </Grid>
                                     </Grid>
                                 </TableCell>
                             </TableRow>
@@ -187,6 +330,7 @@ const SimpleTable = (props) => {
                                     <TableCell align="left">
                                         {product.sku_name}
                                     </TableCell>
+
                                     <TableCell align="center">
                                         {product.quantity}
                                     </TableCell>
@@ -224,129 +368,32 @@ const SimpleTable = (props) => {
                 productAttributeList={productAttribute.data}
                 handleClose={handleClose}
             />
-            {/* dialog */}
-            {/* <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="form-dialog-title"
-            >
-                <DialogTitle id="form-dialog-title">
-                    Thông số sản phẩm
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText component="span">
-                        <Grid
-                            container
-                            justifyContent="center"
-                            alignItems="center"
-                            marginBottom={2}
-                        >
-                            <Grid item xs={7}>
-                                Hướng dẫn : Nhập tên thuộc tính sau đó click tạo
-                                để thêm 1 ô giá trị thuộc tính ở bên dưới
-                            </Grid>
-                            <Grid
-                                container
-                                item
-                                xs={5}
-                                justifyContent="center"
-                                alignItems="center"
-                            >
-                                <Grid item xs={8}>
-                                    <TextField
-                                        autoFocus
-                                        margin="dense"
-                                        id="name"
-                                        label="Tên thuộc tính"
-                                        type="text"
-                                    />
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <ButtonProduct
-                                        variant="contained"
-                                        color="primary"
-                                        size="small"
-                                    >
-                                        Tạo
-                                    </ButtonProduct>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Typography
-                            borderBottom="double"
-                            marginBottom={2}
-                        ></Typography>
-                    </DialogContentText>
-
-                    <Grid
-                        container
-                        rowSpacing={1}
-                        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                    >
-                        {productAttribute.data.map((product, index) => (
-                            <Grid
-                                container
-                                item
-                                xs={4}
-                                justifyContent="center"
-                                alignItems="center"
-                                key={index}
-                            >
-                                <Grid item xs={10}>
-                                    <TextField
-                                        key={index}
-                                        autoFocus
-                                        margin="dense"
-                                        id="name"
-                                        label={product.attribute_name}
-                                        type="text"
-                                        fullWidth
-                                        value={product.attribute_value}
-                                    />
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <IconButton
-                                        key={index}
-                                        className="button"
-                                        aria-label="Delete"
-                                    >
-                                        <Icon>delete</Icon>
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
-                        ))}
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="outlined"
-                        color="warning"
-                        onClick={handleClose}
-                    >
-                        Huỷ bỏ
-                    </Button>
-                    <Button
-                        onClick={handleClose}
-                        variant="outlined"
-                        color="primary"
-                    >
-                        Cập nhật
-                    </Button>
-                </DialogActions>
-            </Dialog> */}
+            {openDialogProduct && (
+                <DialogProduct
+                    open={openDialogProduct}
+                    handleClose={handleClosedialogProduct}
+                    id={idSelected}
+                    products={products.productById}
+                    productAttributeList={[]}
+                />
+            )}
         </Box>
     );
 };
 
 const mapStateToProps = (state) => ({
+    products: state.products,
     getProductsList: PropTypes.func.isRequired,
     getProductVariant: PropTypes.func.isRequired,
-    products: state.products,
     productAttribute: state.productAttribute,
     getProductAttribute: PropTypes.func.isRequired,
+    deleteProduct: PropTypes.func.isRequired,
+    getProductById: PropTypes.func.isRequired,
 });
 export default connect(mapStateToProps, {
     getProductVariant,
     getProductsList,
     getProductAttribute,
+    deleteProduct,
+    getProductById,
 })(SimpleTable);
