@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios.js';
 import { MatxLoading } from 'app/components';
+import { redirect } from 'react-router-dom';
 
 const initialState = {
     isAuthenticated: false,
@@ -14,9 +15,18 @@ const isValidToken = (accessToken) => {
         return false;
     }
     const decodedToken = jwtDecode(accessToken);
+    console.log(decodedToken)
     const currentTime = Date.now() / 1000;
     return decodedToken.exp > currentTime;
 };
+
+const roleOfUser = (accessToken) => {
+    if (!accessToken) {
+        return false;
+    }
+    const decodedToken = jwtDecode(accessToken);
+    return decodedToken.roles[0];
+}
 
 const setSession = (accessToken) => {
     if (accessToken) {
@@ -56,15 +66,15 @@ const reducer = (state, action) => {
                 fullName: null,
             };
         }
-        case 'REGISTER': {
-            const { fullName } = action.payload;
+        // case 'REGISTER': {
+        //     const { fullName } = action.payload;
 
-            return {
-                ...state,
-                isAuthenticated: true,
-                fullName,
-            };
-        }
+        //     return {
+        //         ...state,
+        //         isAuthenticated: true,
+        //         fullName,
+        //     };
+        // }
         default: {
             return { ...state };
         }
@@ -76,47 +86,66 @@ const AuthContext = createContext({
     method: 'JWT',
     login: () => Promise.resolve(),
     logout: () => {},
-    register: () => Promise.resolve(),
+    // register: () => Promise.resolve(),
 });
 
 export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const login = async (account) => {
-        const response = await axios
+        const response_login = await axios
             .post(process.env.REACT_APP_URL + 'login', account)
             .catch((error) => console.log(error));
-        const { access_token, fullName, error } = response.data;
+        
+        const { access_token, error } = response_login.data;
         if (error) {
             return error;
         }
-        setSession(access_token);
-        dispatch({
-            type: 'LOGIN',
-            payload: {
-                fullName,
-            },
-        });
+        if (roleOfUser(access_token)==="SUPER_ADMIN"){
+            setSession(access_token);
+            const response = await axios.get(
+                process.env.REACT_APP_URL + 'user/info',
+            );
+            const fullName = response.data.full_name;
+                  
+            dispatch({
+                type: 'INIT',
+                payload: {
+                    isAuthenticated: true,
+                    fullName,
+                },
+            });
+        }
+        else{
+            setSession(null);
+            dispatch({
+                type: 'INIT',
+                payload: {
+                    isAuthenticated: false,
+                    fullName:null,
+                },
+            });
+            }
     };
 
-    const register = async (email, username, password) => {
-        const response = await axios.post('/api/auth/register', {
-            email,
-            username,
-            password,
-        });
+    // const register = async (email, username, password) => {
+    //     const response = await axios.post('/api/auth/register', {
+    //         email,
+    //         username,
+    //         password,
+    //     });
 
-        const { access_token, user } = response.data;
+    //     const { access_token, user } = response.data;
 
-        setSession(access_token);
+    //     setSession(access_token);
 
-        dispatch({
-            type: 'REGISTER',
-            payload: {
-                user,
-            },
-        });
-    };
+    //     dispatch({
+    //         type: 'REGISTER',
+    //         payload: {
+    //             user,
+    //         },
+    //     });
+    // };
 
     const logout = () => {
         setSession(null);
@@ -130,19 +159,31 @@ export const AuthProvider = ({ children }) => {
                     window.localStorage.getItem('access_token');
                 console.log(access_token);
                 if (access_token && isValidToken(access_token)) {
-                    setSession(access_token);
-                    const response = await axios.get(
-                        process.env.REACT_APP_BASE_URL + 'user',
-                    );
-                    const { fullName } = response.data;
-
-                    dispatch({
-                        type: 'INIT',
-                        payload: {
-                            isAuthenticated: true,
-                            fullName,
-                        },
-                    });
+                    if (roleOfUser(access_token)==="SUPER_ADMIN"){
+                        setSession(access_token);
+                        const response = await axios.get(
+                            process.env.REACT_APP_URL + 'user/info',
+                        );
+                        const fullName = response.data.full_name;
+                              
+                        dispatch({
+                            type: 'INIT',
+                            payload: {
+                                isAuthenticated: true,
+                                fullName,
+                            },
+                        });
+                    }
+                    else{
+                        dispatch({
+                            type: 'INIT',
+                            payload: {
+                                isAuthenticated: false,
+                                fullName : null,
+                            },
+                        });
+                        }
+                    
                 } else {
                     dispatch({
                         type: 'INIT',
@@ -176,7 +217,7 @@ export const AuthProvider = ({ children }) => {
                 method: 'JWT',
                 login,
                 logout,
-                register,
+                // register,
             }}
         >
             {children}

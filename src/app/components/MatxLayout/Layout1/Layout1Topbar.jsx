@@ -73,9 +73,9 @@ const IconBox = styled('div')(({ theme }) => ({
 const Layout1Topbar = () => {
   const theme = useTheme();
   const { settings, updateSettings } = useSettings();
-  const { logout, user } = useAuth();
-  const isMdScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const { logout, fullName } = useAuth();
 
+  const isMdScreen = useMediaQuery(theme.breakpoints.down('md'));
   const updateSidebarMode = (sidebarSettings) => {
     updateSettings({
       layout1Settings: { leftSidebar: { ...sidebarSettings } },
@@ -118,10 +118,10 @@ const Layout1Topbar = () => {
               <UserMenu>
                 <Hidden xsDown>
                   <Span>
-                    Hi <strong>{user.name}</strong>
+                    Hi <strong>{fullName}</strong>
                   </Span>
                 </Hidden>
-                <Avatar src={user.avatar} sx={{ cursor: 'pointer' }} />
+                <Avatar src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShN0nuLT7HIpIANuDi6wbMKpeuCgZsl2PtAA&usqp=CAU"} sx={{ cursor: 'pointer' }} />
               </UserMenu>
             }
           >
