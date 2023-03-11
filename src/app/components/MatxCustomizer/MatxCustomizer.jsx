@@ -103,7 +103,9 @@ const MatxCustomizer = () => {
     <Fragment>
       <Tooltip title="Theme Settings" placement="left">
         <Label className="open" onClick={tooglePanel}>
-          DEMOS
+        <Icon className="icon" color="primary">
+                  settings
+                </Icon>
         </Label>
       </Tooltip>
 
@@ -121,7 +123,7 @@ const MatxCustomizer = () => {
                 <Icon className="icon" color="primary">
                   settings
                 </Icon>
-                <H5 sx={{ ml: 1, fontSize: '1rem' }}>Theme Settings</H5>
+                <H5 sx={{ ml: 1, fontSize: '1rem' }}>Cài đặt giao diện</H5>
               </Box>
 
               <IconButton onClick={tooglePanel}>
@@ -129,23 +131,7 @@ const MatxCustomizer = () => {
               </IconButton>
             </Controller>
 
-            <Box px={3} mb={2} display="flex">
-              <Button
-                variant="outlined"
-                onClick={() => handleTabChange(0)}
-                color={tabIndex === 0 ? 'secondary' : 'primary'}
-                sx={{ mr: 2 }}
-              >
-                Demos
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => handleTabChange(1)}
-                color={tabIndex === 1 ? 'secondary' : 'primary'}
-              >
-                Settings
-              </Button>
-            </Box>
+
 
             <StyledScrollBar options={{ suppressScrollX: true }}>
               {tabIndex === 0 && (
@@ -201,7 +187,7 @@ const MatxCustomizer = () => {
 const demoLayouts = [
   {
     isPro: false,
-    name: 'Light Sidebar',
+    name: 'Sáng',
     thumbnail: '/assets/images/screenshots/layout1-customizer.png',
     options: {
       activeTheme: 'blue',
@@ -215,7 +201,7 @@ const demoLayouts = [
   },
   {
     isPro: false,
-    name: 'Compact Sidebar',
+    name: 'Tiện lợi',
     thumbnail: '/assets/images/screenshots/layout5-customizer.png',
     options: {
       activeTheme: 'blue',
@@ -228,7 +214,7 @@ const demoLayouts = [
   },
   {
     isPro: false,
-    name: 'Dark Sidebar',
+    name: 'Tối',
     thumbnail: '/assets/images/screenshots/layout1-blue-customizer.png',
     options: {
       activeTheme: 'blue',

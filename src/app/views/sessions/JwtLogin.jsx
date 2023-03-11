@@ -34,8 +34,8 @@ const JWTRoot = styled(JustifyBox)(() => ({
 
 // inital login credentials
 const initialValues = {
-    userName: 'long',
-    password: 'long',
+    userName: '',
+    password: '',
     remember: true,
 };
 
@@ -55,7 +55,7 @@ const JwtLogin = () => {
     const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState('');
 
-    const { login } = useAuth();
+    const {isAuthenticated , login } = useAuth();
 
     const handleFormSubmit = async (values) => {
         let { userName, password } = values;
@@ -68,10 +68,19 @@ const JwtLogin = () => {
                 setLoading(false);
                 return;
             }
-            navigate('/');
+            else{
+                    if (isAuthenticated) {
+                        navigate('/');
+                    }
+                    else{
+                        navigate('/session/403');
+                        }
+                }
+           
         } catch (e) {
             setLoading(false);
         }
+        
     };
 
     return (
@@ -180,19 +189,7 @@ const JwtLogin = () => {
                                             Login
                                         </LoadingButton>
 
-                                        <Paragraph>
-                                            Don't have an account?
-                                            <NavLink
-                                                to="/session/signup"
-                                                style={{
-                                                    color: theme.palette.primary
-                                                        .main,
-                                                    marginLeft: 5,
-                                                }}
-                                            >
-                                                Register
-                                            </NavLink>
-                                        </Paragraph>
+                                        
                                     </form>
                                 )}
                             </Formik>
