@@ -28,7 +28,6 @@ import {
     handleChangePromotion,
 } from 'app/redux/actions/PromotionAction';
 import DialogConfirm from './DialogConfirm';
-import { postProduct } from 'app/redux/actions/ProductAction';
 import axios from 'axios.js';
 
 function DialogCreateProduct({ open, handleClose, ...props }) {
@@ -78,8 +77,6 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
         handleChangeBrand,
         handleChangePromotion,
         getAllBrand,
-        postProduct,
-        products,
     } = props;
 
     useEffect(() => {
@@ -437,7 +434,6 @@ const mapStateToProps = (state) => ({
     brands: state.brands,
     promotions: state.promotions,
     categories: state.categories,
-    products: state.products,
     getCategory: PropTypes.func.isRequired,
     getAllPromotion: PropTypes.func.isRequired,
     handleChangeCategory: PropTypes.func.isRequired,
@@ -445,7 +441,6 @@ const mapStateToProps = (state) => ({
     handleChangeBrand: PropTypes.func.isRequired,
     handleChangePromotion: PropTypes.func.isRequired,
     getAllBrand: PropTypes.func.isRequired,
-    postProduct: PropTypes.func.isRequired,
 });
 
 export default connect(mapStateToProps, {
@@ -456,5 +451,4 @@ export default connect(mapStateToProps, {
     handleChangeBrand,
     handleChangePromotion,
     getAllBrand,
-    postProduct,
 })(DialogCreateProduct);

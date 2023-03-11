@@ -7,7 +7,6 @@ import { Formik } from 'formik';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import jwtDecode from 'jwt-decode';
 
 const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
 
@@ -49,13 +48,7 @@ const validationSchema = Yup.object().shape({
     //     .email('Invalid Email address')
     //     .required('Email is required!'),
 });
-const checkIsValidToken = (values) => {
-    if (jwtDecode(values)) {
-        return true;
-    } else {
-        return false;
-    }
-};
+
 const JwtLogin = () => {
     const theme = useTheme();
     const navigate = useNavigate();

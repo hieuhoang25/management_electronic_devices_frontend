@@ -19,7 +19,7 @@ import {
     productTableHeader,
     productVariantTableHeader,
 } from 'app/utils/constant';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { format, parseISO } from 'date-fns';

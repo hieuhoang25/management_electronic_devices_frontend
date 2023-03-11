@@ -11,6 +11,7 @@ import useAuth from 'app/hooks/useAuth';
 import useSettings from 'app/hooks/useSettings';
 import {
     deleteProductFromCart,
+    // eslint-disable-next-line
     getCartList,
     updateCartAmount,
 } from 'app/redux/actions/EcommerceActions';
@@ -81,7 +82,7 @@ const ProductDetails = styled('div')(() => ({
         marginBottom: '4px',
     },
 }));
-
+// eslint-disable-next-line
 let cartListLoaded = false;
 
 function ShoppingCart({ container }) {

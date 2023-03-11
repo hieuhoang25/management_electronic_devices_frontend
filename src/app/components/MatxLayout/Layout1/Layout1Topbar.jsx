@@ -1,5 +1,5 @@
 import {
-    Avatar,
+    // Avatar,
     Hidden,
     Icon,
     IconButton,
@@ -80,6 +80,7 @@ const IconBox = styled('div')(({ theme }) => ({
 const Layout1Topbar = () => {
     const theme = useTheme();
     const { settings, updateSettings } = useSettings();
+    // eslint-disable-next-line
     const { logout, user } = useAuth();
     const isMdScreen = useMediaQuery(theme.breakpoints.down('md'));
 
