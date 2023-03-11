@@ -3,13 +3,15 @@ import {
     LIST_PRODUCT_VARIANT,
     STATUS_DISABLE,
     CHANGE_STATE_TABLE,
-    LIST_PRODUCT_ATTRIBUTE,
+    GET_PRODUCT_BYID,
+    DELETE_PRODUCT,
+    PUT_PRODUCT,
+    POST_PRODUCT,
 } from '../actions/ProductAction';
 
 const initalState = {
     listProduct: [],
     listProductVariant: [],
-    listProductAttribute: [],
     inputNextStatus: true,
     breadCrum: {
         data: [
@@ -20,6 +22,7 @@ const initalState = {
     productId: '',
     stateTable: 'product',
     totalPage: 0,
+    productById: {},
 };
 const ProductReducer = (state = initalState, action) => {
     switch (action.type) {
@@ -29,13 +32,13 @@ const ProductReducer = (state = initalState, action) => {
                 listProduct: action.payload,
                 totalPage: action.payload.totalPage,
             };
-        case STATUS_DISABLE: {
+        case STATUS_DISABLE:
             return {
                 ...state,
                 data: action.payload,
             };
-        }
-        case LIST_PRODUCT_VARIANT: {
+
+        case LIST_PRODUCT_VARIANT:
             return {
                 ...state,
                 stateTable: 'productVariant',
@@ -46,19 +49,36 @@ const ProductReducer = (state = initalState, action) => {
                         : action.payload.data[0].product_id,
                 totalPage: action.payload.totalPage,
             };
-        }
-        case CHANGE_STATE_TABLE: {
+
+        case CHANGE_STATE_TABLE:
             return {
                 ...state,
                 stateTable: action.payload,
             };
-        }
-        case LIST_PRODUCT_ATTRIBUTE: {
+
+        case DELETE_PRODUCT:
             return {
                 ...state,
-                listProductAttribute: action.payload,
+            };
+
+        case GET_PRODUCT_BYID:
+            return {
+                ...state,
+                productById: action.payload,
+            };
+
+        case PUT_PRODUCT: {
+            // console.log(action.payload);
+            return {
+                ...state,
+                productById: action.payload,
             };
         }
+        case POST_PRODUCT:
+            return {
+                ...state,
+                productById: action.payload,
+            };
         default:
             return state;
     }

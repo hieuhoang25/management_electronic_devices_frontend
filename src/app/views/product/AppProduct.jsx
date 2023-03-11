@@ -15,9 +15,10 @@ import {
     getProductsList,
     changeStateTable,
 } from 'app/redux/actions/ProductAction';
-import { lazy } from 'react';
+import { lazy, useState } from 'react';
 import Loadable from 'app/components/Loadable';
 import ButtonProduct from './ButtonProduct';
+import DialogCreateProduct from './DialogCreateProduct';
 const SimpleTable = Loadable(lazy(() => import('./SimpleTable')));
 const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
@@ -132,8 +133,17 @@ const AppProduct = (props) => {
     // eslint-disable-next-line
     const { getProductsList, products, changeStateTable } = props;
 
+    const [openFormProduct, setOpenFormProduct] = useState(false);
+
     const handleClickBack = () => {
         changeStateTable('product');
+    };
+
+    const handleCloseFormProduct = () => {
+        setOpenFormProduct(false);
+    };
+    const handleClickCreate = () => {
+        setOpenFormProduct(true);
     };
     return (
         <ContainerTable>
@@ -173,6 +183,9 @@ const AppProduct = (props) => {
                                 variant="contained"
                                 color="primary"
                                 size="medium"
+                                onClick={() => {
+                                    handleClickCreate();
+                                }}
                             >
                                 Thêm sản phẩm
                             </ButtonProduct>
@@ -232,7 +245,7 @@ const AppProduct = (props) => {
                                 Quay về
                             </StyledButton>
                         </Grid>
-                        <Grid mdOffset="auto">
+                        <Grid>
                             <StyledButton
                                 variant="contained"
                                 color="primary"
@@ -245,6 +258,12 @@ const AppProduct = (props) => {
 
                     <SimpleTable />
                 </SimpleCard>
+            )}
+            {openFormProduct && (
+                <DialogCreateProduct
+                    open={openFormProduct}
+                    handleClose={handleCloseFormProduct}
+                />
             )}
         </ContainerTable>
     );

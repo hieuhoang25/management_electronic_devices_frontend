@@ -27,12 +27,12 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
+import DialogConfirm from './DialogConfirm';
 
 function DialogProductAttribute({
     open,
     productAttributeList,
     handleClose,
-    // product_id,
     ...props
 }) {
     const {
@@ -141,6 +141,7 @@ function DialogProductAttribute({
         return check;
     };
     const handleChangeFormValue = (id, e) => {
+        console.log(typeof e.target.value);
         updateProductAtbInStore(id, e.target.value);
     };
 
@@ -317,7 +318,7 @@ function DialogProductAttribute({
             </Dialog>
 
             {/* dialog confirm  */}
-            <Dialog
+            {/* <Dialog
                 open={openConfirm}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
@@ -339,7 +340,13 @@ function DialogProductAttribute({
                         Đồng ý
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog> */}
+            <DialogConfirm
+                openConfirm={openConfirm}
+                handleClose={handleClose}
+                handleCloseConfirm={handleCloseConfirm}
+                handleConfirmUpdate={handleConfirmUpdate}
+            />
             {/* SnackBar */}
             <Snackbar
                 open={openSnackBar}
