@@ -9,6 +9,7 @@ import CategoryReducer from './CategoryReducer';
 import ProductAttributeReducer from './ProductAttributeReducer';
 import BrandReducer from './BrandReducer';
 import PromotionReducer from './PromotionReducer';
+import ProductVariantReducer from './ProductVariantReducer';
 
 const RootReducer = combineReducers({
     notifications: NotificationReducer,
@@ -21,6 +22,7 @@ const RootReducer = combineReducers({
     categories: CategoryReducer,
     brands: BrandReducer,
     promotions: PromotionReducer,
+    productVariant: ProductVariantReducer,
 });
 
 export default RootReducer;

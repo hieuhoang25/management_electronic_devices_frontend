@@ -13,7 +13,7 @@ let devtools = (x) => x;
 const persistConfig = {
     key: 'root',
     storage: sessionStorage,
-    whitelist: ['productForm'],
+    whitelist: [''],
 };
 
 if (
