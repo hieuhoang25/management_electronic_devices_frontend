@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios.js';
 
 export const GET_BRAND_PRODUCT = 'getBrandProduct';
 export const HANDLE_CHANGE_BRAND = 'handleChangeBrand';

@@ -18,6 +18,7 @@ const App = () => {
             <PersistGate loading={null} persistor={persistor}>
                 <SettingsProvider>
                     <MatxTheme>
+                        {/* {content} */}
                         <AuthProvider>{content}</AuthProvider>
                     </MatxTheme>
                 </SettingsProvider>

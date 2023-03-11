@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import axios from 'axios.js';
 export const LIST_PRODUCTS = 'listProducts';
 export const STATUS_DISABLE = 'statusDisable';
 export const LIST_PRODUCT_VARIANT = 'listProductVariant';
@@ -8,7 +8,6 @@ export const DELETE_PRODUCT = 'deleteProduct';
 export const GET_PRODUCT_BYID = 'getProductById';
 export const PUT_PRODUCT = 'putProduct';
 export const POST_PRODUCT = 'postProduct';
-
 export const getProductsList = (size, page) => (dispatch) => {
     axios
         .get(
