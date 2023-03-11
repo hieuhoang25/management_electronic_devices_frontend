@@ -29,10 +29,11 @@ export const productTableHeader = [
 ];
 export const productVariantTableHeader = [
     'SKU',
+    'Hình ảnh',
     'Số lượng',
     'Giá',
     'Tên hiển thị',
     'Màu',
     'Dung lượng',
-    'Trạng thái',
+    'Hành động',
 ];

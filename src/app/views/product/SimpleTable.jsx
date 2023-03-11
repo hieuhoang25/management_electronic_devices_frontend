@@ -25,11 +25,15 @@ import { PropTypes } from 'prop-types';
 import { format, parseISO } from 'date-fns';
 import {
     getProductsList,
-    getProductVariant,
     deleteProduct,
     getProductById,
+    changeStateTable,
 } from 'app/redux/actions/ProductAction';
 import ButtonProduct from './ButtonProduct';
+import {
+    getProductVariant,
+    deleteProductVariant,
+} from 'app/redux/actions/ProductVariantAction';
 import { getProductAttribute } from 'app/redux/actions/ProductAttributeAction';
 
 import { v4 } from 'uuid';
@@ -89,6 +93,9 @@ const SimpleTable = (props) => {
         productAttribute,
         deleteProduct,
         getProductById,
+        productVariant,
+        changeStateTable,
+        deleteProductVariant,
     } = props;
     if (!products.listProduct.data) {
         products.listProduct.data = [];
@@ -97,6 +104,7 @@ const SimpleTable = (props) => {
     const [page, setPage] = useState(1);
     const [productList, setProductList] = useState([{}]);
     const [idSelected, setIdSelected] = useState(-1);
+
     const handleChange = (event, value) => {
         if (products.stateTable === 'product') {
             getProductsList(5, value - 1);
@@ -107,13 +115,14 @@ const SimpleTable = (props) => {
     };
 
     const handleClickShowDetail = (id) => {
-        getProductVariant(1, 0, id);
+        changeStateTable('productVariant');
+        getProductVariant(5, 0, id);
     };
     useEffect(() => {
         if (products.stateTable === 'product') {
             getProductsList(5, page - 1);
         }
-        setProductList(products.listProduct.data);
+        // setProductList(products.listProduct.data);
 
         // eslint-disable-next-line
     }, [productList, setOpen]);
@@ -127,10 +136,17 @@ const SimpleTable = (props) => {
     function handleClose() {
         setOpen(false);
     }
-    const handleDeleteProduct = async (value, isDelted) => {
-        await deleteProduct(value, isDelted);
-        await getProductsList(5, page - 1);
-        setProductList(products.listProduct.data);
+    const handleDelete = async (value, isDelted, name) => {
+        if (name === 'product') {
+            await deleteProduct(value, isDelted);
+            await getProductsList(5, page - 1);
+            setProductList(products.listProduct.data);
+        } else {
+            await deleteProductVariant(value, isDelted);
+            await getProductVariant(5, 0, productVariant.product_id);
+            console.log(productVariant);
+            setProductList(Math.random() * 100);
+        }
     };
 
     const [openDialogProduct, setOpenDialogProduct] = useState(false);
@@ -144,6 +160,7 @@ const SimpleTable = (props) => {
         setIdSelected(id);
         setOpenDialogProduct(true);
     };
+    const handleOpenDiaLogPDVariant = (id) => {};
 
     return (
         <Box width="100%">
@@ -272,11 +289,12 @@ const SimpleTable = (props) => {
                                                 size="small"
                                                 fullWidth
                                                 onClick={() => {
-                                                    handleDeleteProduct(
+                                                    handleDelete(
                                                         product.id,
                                                         product.is_delete
                                                             ? 0
                                                             : 1,
+                                                        'product',
                                                     );
                                                 }}
                                             >
@@ -321,44 +339,125 @@ const SimpleTable = (props) => {
                             </TableRow>
                         ))
                     ) : //product_variant
-                    products.listProductVariant.length === 0 ? (
+                    productVariant.data.length === 0 ? (
                         <></>
                     ) : (
-                        products.listProductVariant.data.map(
-                            (product, index) => (
-                                <TableRow key={index}>
-                                    <TableCell align="left">
-                                        {product.sku_name}
-                                    </TableCell>
+                        productVariant.data.map((product, index) => (
+                            <TableRow key={index}>
+                                <TableCell align="left">
+                                    {product.sku_name}
+                                </TableCell>
+                                <TableCell align="justify">
+                                    {!product.status ? (
+                                        <Avatar
+                                            sx={{ width: 120, height: 120 }}
+                                            alt="Hình ánh sản phẩm"
+                                            variant="square"
+                                            src={
+                                                process.env
+                                                    .REACT_APP_BASE_URL_FIREBASE +
+                                                product.image +
+                                                '?alt=media&token=' +
+                                                v4()
+                                            }
+                                            key={new Date()
+                                                .getTime()
+                                                .toString()}
+                                        />
+                                    ) : (
+                                        <StyledBadge
+                                            overlap="rectangular"
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'right',
+                                            }}
+                                            variant="dot"
+                                        >
+                                            <Avatar
+                                                sx={{
+                                                    width: 120,
+                                                    height: 120,
+                                                }}
+                                                alt="Hình ánh sản phẩm"
+                                                variant="square"
+                                                src={
+                                                    process.env
+                                                        .REACT_APP_BASE_URL_FIREBASE +
+                                                    product.image +
+                                                    '?alt=media&token=' +
+                                                    v4()
+                                                }
+                                            />
+                                        </StyledBadge>
+                                    )}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {product.quantity}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {product.price}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {product.display_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {product.color_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {product.storage_name}
+                                </TableCell>
 
-                                    <TableCell align="center">
-                                        {product.quantity}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {product.price}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {product.display_name}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {product.color_name}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {product.storage_name}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {product.status}
-                                    </TableCell>
-                                </TableRow>
-                            ),
-                        )
+                                <TableCell align="center">
+                                    <Grid container spacing={2}>
+                                        <Grid item md={12} xs={12}>
+                                            <ButtonProduct
+                                                variant="outlined"
+                                                color="error"
+                                                size="small"
+                                                fullWidth
+                                                onClick={() => {
+                                                    handleDelete(
+                                                        product.id,
+                                                        product.status ? 0 : 1,
+                                                        'productVariant',
+                                                    );
+                                                }}
+                                            >
+                                                Ẩn/Bỏ ẩn
+                                            </ButtonProduct>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={2}>
+                                        <Grid item md={12} xs={12}>
+                                            <ButtonProduct
+                                                variant="outlined"
+                                                color="success"
+                                                size="small"
+                                                fullWidth
+                                                onClick={() => {
+                                                    handleOpenDiaLogPDVariant(
+                                                        product.id,
+                                                    );
+                                                }}
+                                            >
+                                                Chỉnh sửa
+                                            </ButtonProduct>
+                                        </Grid>
+                                    </Grid>
+                                </TableCell>
+                            </TableRow>
+                        ))
                     )}
                 </TableBody>
             </StyledTable>
             <Stack justifyContent="center" alignItems="center">
                 <Typography component="span">Page: {page}</Typography>
                 <Pagination
-                    count={products.totalPage}
+                    count={
+                        products.stateTable === 'product'
+                            ? products.totalPage
+                            : productVariant.totalPage
+                    }
                     page={page}
                     onChange={handleChange}
                 />
@@ -389,6 +488,9 @@ const mapStateToProps = (state) => ({
     getProductAttribute: PropTypes.func.isRequired,
     deleteProduct: PropTypes.func.isRequired,
     getProductById: PropTypes.func.isRequired,
+    changeStateTable: PropTypes.func.isRequired,
+    productVariant: state.productVariant,
+    deleteProductVariant: state.productVariant,
 });
 export default connect(mapStateToProps, {
     getProductVariant,
@@ -396,4 +498,6 @@ export default connect(mapStateToProps, {
     getProductAttribute,
     deleteProduct,
     getProductById,
+    deleteProductVariant,
+    changeStateTable,
 })(SimpleTable);

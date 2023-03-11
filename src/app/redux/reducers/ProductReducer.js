@@ -1,6 +1,6 @@
 import {
     LIST_PRODUCTS,
-    LIST_PRODUCT_VARIANT,
+    // LIST_PRODUCT_VARIANT,
     STATUS_DISABLE,
     CHANGE_STATE_TABLE,
     GET_PRODUCT_BYID,
@@ -38,19 +38,8 @@ const ProductReducer = (state = initalState, action) => {
                 data: action.payload,
             };
 
-        case LIST_PRODUCT_VARIANT:
-            return {
-                ...state,
-                stateTable: 'productVariant',
-                listProductVariant: action.payload,
-                productId:
-                    action.payload.data.length === 0
-                        ? ''
-                        : action.payload.data[0].product_id,
-                totalPage: action.payload.totalPage,
-            };
-
         case CHANGE_STATE_TABLE:
+            console.log(action.payload);
             return {
                 ...state,
                 stateTable: action.payload,
