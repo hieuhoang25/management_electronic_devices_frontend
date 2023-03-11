@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios.js';
 
 export const GET_CATEGORY = 'getCategory';
 export const GET_CATEGORY_SHOW_PRODUCT = 'getCategoryShowProduct';

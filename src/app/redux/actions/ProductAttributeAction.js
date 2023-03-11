@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios.js';
 
 export const POST_PRODUCT_ATTRIBUTE = 'createProductAttribute';
 export const PUT_PRODUCT_ATTRIBUTE = 'updateProductAttribute';
