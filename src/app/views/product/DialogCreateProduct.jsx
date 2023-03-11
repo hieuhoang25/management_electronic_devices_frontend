@@ -29,7 +29,7 @@ import {
 } from 'app/redux/actions/PromotionAction';
 import DialogConfirm from './DialogConfirm';
 import { postProduct } from 'app/redux/actions/ProductAction';
-import axios from 'axios';
+import axios from 'axios.js';
 
 function DialogCreateProduct({ open, handleClose, ...props }) {
     const [image, setImage] = useState();

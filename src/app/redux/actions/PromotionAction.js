@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios.js';
 
 export const GET_PROMOTION_PRODUCT_WITH_PROMOTIONID =
     'getPromotionProductWithPromotionId';

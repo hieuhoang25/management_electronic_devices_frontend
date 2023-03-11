@@ -33,7 +33,7 @@ import {
 } from 'app/redux/actions/PromotionAction';
 import DialogConfirm from './DialogConfirm';
 import { putProduct } from 'app/redux/actions/ProductAction';
-import axios from 'axios';
+import axios from 'axios.js';
 import { v4 as uuidv4 } from 'uuid';
 function DialogProduct({
     open,
