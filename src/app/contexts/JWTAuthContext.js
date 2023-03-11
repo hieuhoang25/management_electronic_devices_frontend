@@ -2,7 +2,6 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios.js';
 import { MatxLoading } from 'app/components';
-import { redirect } from 'react-router-dom';
 
 const initialState = {
     isAuthenticated: false,
@@ -15,7 +14,7 @@ const isValidToken = (accessToken) => {
         return false;
     }
     const decodedToken = jwtDecode(accessToken);
-    console.log(decodedToken)
+
     const currentTime = Date.now() / 1000;
     return decodedToken.exp > currentTime;
 };
@@ -26,7 +25,7 @@ const roleOfUser = (accessToken) => {
     }
     const decodedToken = jwtDecode(accessToken);
     return decodedToken.roles[0];
-}
+};
 
 const setSession = (accessToken) => {
     if (accessToken) {
@@ -91,23 +90,21 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-
     const login = async (account) => {
         const response_login = await axios
             .post(process.env.REACT_APP_URL + 'login', account)
             .catch((error) => console.log(error));
-        
+
         const { access_token, error } = response_login.data;
-        if (error) {
-            return error;
+        if (response_login.data && error) {
+            return response_login.data;
         }
-        if (roleOfUser(access_token)==="SUPER_ADMIN"){
+        if (roleOfUser(access_token) === 'SUPER_ADMIN') {
             setSession(access_token);
             const response = await axios.get(
                 process.env.REACT_APP_URL + 'user/info',
             );
             const fullName = response.data.full_name;
-                  
             dispatch({
                 type: 'INIT',
                 payload: {
@@ -115,17 +112,18 @@ export const AuthProvider = ({ children }) => {
                     fullName,
                 },
             });
-        }
-        else{
+            return { request: 'success' };
+        } else {
             setSession(null);
             dispatch({
                 type: 'INIT',
                 payload: {
                     isAuthenticated: false,
-                    fullName:null,
+                    fullName: null,
                 },
             });
-            }
+            return { request: 'forbidden' };
+        }
     };
 
     // const register = async (email, username, password) => {
@@ -157,15 +155,15 @@ export const AuthProvider = ({ children }) => {
             try {
                 const access_token =
                     window.localStorage.getItem('access_token');
-                console.log(access_token);
+
                 if (access_token && isValidToken(access_token)) {
-                    if (roleOfUser(access_token)==="SUPER_ADMIN"){
+                    if (roleOfUser(access_token) === 'SUPER_ADMIN') {
                         setSession(access_token);
                         const response = await axios.get(
                             process.env.REACT_APP_URL + 'user/info',
                         );
                         const fullName = response.data.full_name;
-                              
+
                         dispatch({
                             type: 'INIT',
                             payload: {
@@ -173,17 +171,15 @@ export const AuthProvider = ({ children }) => {
                                 fullName,
                             },
                         });
-                    }
-                    else{
+                    } else {
                         dispatch({
                             type: 'INIT',
                             payload: {
                                 isAuthenticated: false,
-                                fullName : null,
+                                fullName: null,
                             },
                         });
-                        }
-                    
+                    }
                 } else {
                     dispatch({
                         type: 'INIT',

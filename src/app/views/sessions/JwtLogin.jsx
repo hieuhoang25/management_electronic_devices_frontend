@@ -54,8 +54,8 @@ const JwtLogin = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState('');
-
-    const {isAuthenticated , login } = useAuth();
+    // eslint-disable-next-line
+    const { isAuthenticated, login } = useAuth();
 
     const handleFormSubmit = async (values) => {
         let { userName, password } = values;
@@ -63,24 +63,22 @@ const JwtLogin = () => {
         setLoading(true);
         try {
             let response = await login(newObject);
-            if (response) {
-                setAlert(response);
+
+            if (response.error) {
+                setAlert(response.error);
                 setLoading(false);
                 return;
-            }
-            else{
-                    if (isAuthenticated) {
-                        navigate('/');
-                    }
-                    else{
-                        navigate('/session/403');
-                        }
+            } else {
+                if (response.request === 'forbidden') {
+                    navigate('/session/403');
+                } else {
+                    navigate('/');
                 }
-           
+            }
         } catch (e) {
+            console.log(e);
             setLoading(false);
         }
-        
     };
 
     return (
@@ -188,8 +186,6 @@ const JwtLogin = () => {
                                         >
                                             Login
                                         </LoadingButton>
-
-                                        
                                     </form>
                                 )}
                             </Formik>
