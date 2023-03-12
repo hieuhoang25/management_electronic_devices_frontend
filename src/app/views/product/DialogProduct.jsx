@@ -46,6 +46,7 @@ function DialogProduct({
     const [file, setFile] = useState({});
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openSnackBar, setOpenSnackBar] = useState(false);
+    const [load, setLoad] = useState(false);
     const handleClickOpenConfirm = () => {
         setOpenConfirm(true);
     };
@@ -61,6 +62,7 @@ function DialogProduct({
         promotion_id: '',
         image: '',
         description: '',
+        id: '',
     });
     //clean up img
     useEffect(() => {
@@ -108,7 +110,15 @@ function DialogProduct({
                     '?alt=media&token=' +
                     uuidv4(),
             );
-            setFormProduct(products);
+            setFormProduct({
+                product_name: products.product_name,
+                category_id: products.category_id,
+                brand_id: products.brand_id,
+                promotion_id: products.promotion_id,
+                image: products.image,
+                description: products.description,
+                id: products.id,
+            });
             getBrandProduct(products.brand_id);
             getPromotionProductWithPromotionId(products.promotion_id);
             getCategoryShowProduct(products.category_id);
@@ -162,7 +172,9 @@ function DialogProduct({
         handleChangeFormProduct(value.promotion_id, 'promotion_id');
     };
     const handleConfirmUpdate = async () => {
+        setLoad(true);
         await putProduct(formProduct);
+
         await axios
             .post(process.env.REACT_APP_BASE_URL_API_FILE, file, {
                 headers: {
@@ -182,6 +194,7 @@ function DialogProduct({
                 '?alt=media&token=' +
                 uuidv4(),
         );
+        setLoad(false);
         setOpenSnackBar(true);
         setOpenConfirm(false);
     };
@@ -199,7 +212,7 @@ function DialogProduct({
             };
         });
     };
-    console.log(brands);
+
     return (
         <Box>
             <Dialog
@@ -448,6 +461,7 @@ function DialogProduct({
                 handleClose={handleClose}
                 handleCloseConfirm={handleCloseConfirm}
                 handleConfirmUpdate={handleConfirmUpdate}
+                loading={load}
             />
 
             <Snackbar

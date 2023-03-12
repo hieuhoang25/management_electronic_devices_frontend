@@ -35,7 +35,6 @@ import {
     deleteProductVariant,
 } from 'app/redux/actions/ProductVariantAction';
 import { getProductAttribute } from 'app/redux/actions/ProductAttributeAction';
-
 import { v4 } from 'uuid';
 import Loadable from 'app/components/Loadable';
 

@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import {
     Button,
     Dialog,
@@ -11,6 +12,7 @@ function DialogConfirm({
     handleClose = () => {},
     handleCloseConfirm = () => {},
     handleConfirmUpdate = () => {},
+    loading = false,
 }) {
     return (
         <Dialog
@@ -31,9 +33,19 @@ function DialogConfirm({
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseConfirm}>Huỷ bỏ</Button>
-                <Button onClick={handleConfirmUpdate} autoFocus>
+                {/* <Button onClick={handleConfirmUpdate} autoFocus>
                     Đồng ý
-                </Button>
+                </Button> */}
+                <LoadingButton
+                    type="submit"
+                    color="primary"
+                    loading={loading}
+                    variant="contained"
+                    sx={{ my: 2 }}
+                    onClick={handleConfirmUpdate}
+                >
+                    Chấp nhận
+                </LoadingButton>
             </DialogActions>
         </Dialog>
     );
