@@ -11,7 +11,7 @@ import {
 
 const initalState = {
     listProduct: [],
-    listProductVariant: [],
+    // listProductVariant: [],
     inputNextStatus: true,
     breadCrum: {
         data: [

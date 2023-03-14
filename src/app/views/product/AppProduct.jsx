@@ -11,14 +11,13 @@ import { Container as ContainerTable } from '../material-kit/tables/AppTable';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
-import {
-    getProductsList,
-    changeStateTable,
-} from 'app/redux/actions/ProductAction';
+import { changeStateTable } from 'app/redux/actions/ProductAction';
 import { lazy, useState } from 'react';
 import Loadable from 'app/components/Loadable';
 import ButtonProduct from './ButtonProduct';
-import DialogCreateProduct from './DialogCreateProduct';
+import DialogCreateProduct from './Dialog/DialogCreateProduct';
+import DialogCreateProductVariant from './Dialog/DialogCreateProductVariant';
+import { getProductVariant } from 'app/redux/actions/ProductVariantAction';
 const SimpleTable = Loadable(lazy(() => import('./SimpleTable')));
 const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
@@ -131,8 +130,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const AppProduct = (props) => {
     // eslint-disable-next-line
-    const { getProductsList, products, changeStateTable } = props;
+    const { products, changeStateTable, getProductVariant, productVariant } =
+        props;
     const [openFormProduct, setOpenFormProduct] = useState(false);
+    const [openDialogProductV, setOenDialogProductV] = useState(false);
 
     const handleClickBack = () => {
         changeStateTable('product');
@@ -144,6 +145,18 @@ const AppProduct = (props) => {
     const handleClickCreate = () => {
         setOpenFormProduct(true);
     };
+    const handleClickCreateProductVariant = () => {
+        setOenDialogProductV(true);
+    };
+    const handleCloseDialogCreateProductVariant = () => {
+        getProductVariant(
+            5,
+            productVariant.pageNumber - 1,
+            productVariant.product_id,
+        );
+        setOenDialogProductV(false);
+    };
+
     return (
         <ContainerTable>
             <Box className="breadcrumb">
@@ -248,7 +261,7 @@ const AppProduct = (props) => {
                             <StyledButton
                                 variant="contained"
                                 color="primary"
-                                onClick={handleClickBack}
+                                onClick={handleClickCreateProductVariant}
                             >
                                 Thêm mới product variant
                             </StyledButton>
@@ -262,6 +275,12 @@ const AppProduct = (props) => {
                 <DialogCreateProduct
                     open={openFormProduct}
                     handleClose={handleCloseFormProduct}
+                />
+            )}
+            {openDialogProductV && (
+                <DialogCreateProductVariant
+                    open={openDialogProductV}
+                    handleClose={handleCloseDialogCreateProductVariant}
                 />
             )}
         </ContainerTable>
@@ -389,11 +408,13 @@ const AppProduct = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-    getProductsList: PropTypes.func.isRequired,
     changeStateTable: PropTypes.func.isRequired,
-
+    getProductVariant: PropTypes.func.isRequired,
     products: state.products,
+    productVariant: state.productVariant,
 });
-export default connect(mapStateToProps, { changeStateTable, getProductsList })(
-    AppProduct,
-);
+export default connect(mapStateToProps, {
+    changeStateTable,
+
+    getProductVariant,
+})(AppProduct);

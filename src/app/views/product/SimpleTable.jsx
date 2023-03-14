@@ -20,7 +20,7 @@ import {
     productVariantTableHeader,
 } from 'app/utils/constant';
 import { lazy, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { format, parseISO } from 'date-fns';
 import {
@@ -33,14 +33,17 @@ import ButtonProduct from './ButtonProduct';
 import {
     getProductVariant,
     deleteProductVariant,
+    getProductVSelectedFromStore,
+    setPageNumber,
 } from 'app/redux/actions/ProductVariantAction';
 import { getProductAttribute } from 'app/redux/actions/ProductAttributeAction';
 import { v4 } from 'uuid';
 import Loadable from 'app/components/Loadable';
+import DialogProductVariant from './Dialog/DialogProductVariant';
 
-const DialogProduct = Loadable(lazy(() => import('./DialogProduct')));
+const DialogProduct = Loadable(lazy(() => import('./Dialog/DialogProduct')));
 const DialogProductAttribute = Loadable(
-    lazy(() => import('./DialogProductAttribute')),
+    lazy(() => import('./Dialog/DialogProductAttribute')),
 );
 
 const StyledTable = styled(Table)(({ theme }) => ({
@@ -95,6 +98,7 @@ const SimpleTable = (props) => {
         productVariant,
         changeStateTable,
         deleteProductVariant,
+        getProductVSelectedFromStore,
     } = props;
     if (!products.listProduct.data) {
         products.listProduct.data = [];
@@ -103,29 +107,30 @@ const SimpleTable = (props) => {
     const [page, setPage] = useState(1);
     const [productList, setProductList] = useState([{}]);
     const [idSelected, setIdSelected] = useState(-1);
+    const [open, setOpen] = useState(false);
+    const [openDialogProduct, setOpenDialogProduct] = useState(false);
+    const [openDialogProductV, setOpenDialogProductV] = useState(false);
+    const dispatch = useDispatch();
 
     const handleChange = (event, value) => {
         if (products.stateTable === 'product') {
             getProductsList(5, value - 1);
         } else {
-            getProductVariant(1, value - 1, products.productId);
+            getProductVariant(5, value - 1, productVariant.product_id);
+            dispatch(setPageNumber(value));
         }
         setPage(value);
     };
 
-    const handleClickShowDetail = (id) => {
-        changeStateTable('productVariant');
-        getProductVariant(5, 0, id);
-    };
     useEffect(() => {
         if (products.stateTable === 'product') {
             getProductsList(5, page - 1);
+        } else {
         }
-        // setProductList(products.listProduct.data);
 
         // eslint-disable-next-line
-    }, [productList, setOpen]);
-    const [open, setOpen] = useState(false);
+    }, [productList, setOpen, setOpenDialogProductV]);
+
     function handleOpenProductAttribute(id) {
         // setIdSelected(id);
         getProductAttribute(id);
@@ -143,24 +148,38 @@ const SimpleTable = (props) => {
         } else {
             await deleteProductVariant(value, isDelted);
             await getProductVariant(5, 0, productVariant.product_id);
-            console.log(productVariant);
             setProductList(Math.random() * 100);
         }
     };
-
-    const [openDialogProduct, setOpenDialogProduct] = useState(false);
 
     function handleClosedialogProduct() {
         getProductsList(5, page - 1);
         setOpenDialogProduct(false);
     }
+    //PRODUCT VARIANT
+    const handleClickShowDetail = (id) => {
+        setIdSelected(id);
+        changeStateTable('productVariant');
+        getProductVariant(5, 0, id);
+    };
     const handleOpenDialogProduct = (id) => {
         getProductById(id);
         setIdSelected(id);
         setOpenDialogProduct(true);
     };
-    const handleOpenDiaLogPDVariant = (id) => {};
+    const handleOpenDiaLogProductV = async (id) => {
+        await getProductVSelectedFromStore(id);
+        setOpenDialogProductV(true);
+    };
 
+    const handleCloseDialogProductV = () => {
+        getProductVariant(
+            5,
+            productVariant.pageNumber - 1,
+            productVariant.product_id,
+        );
+        setOpenDialogProductV(false);
+    };
     return (
         <Box width="100%">
             <StyledTable>
@@ -434,7 +453,7 @@ const SimpleTable = (props) => {
                                                 size="small"
                                                 fullWidth
                                                 onClick={() => {
-                                                    handleOpenDiaLogPDVariant(
+                                                    handleOpenDiaLogProductV(
                                                         product.id,
                                                     );
                                                 }}
@@ -457,7 +476,11 @@ const SimpleTable = (props) => {
                             ? products.totalPage
                             : productVariant.totalPage
                     }
-                    page={page}
+                    page={
+                        products.stateTable === 'product'
+                            ? page
+                            : productVariant.pageNumber
+                    }
                     onChange={handleChange}
                 />
             </Stack>
@@ -475,6 +498,14 @@ const SimpleTable = (props) => {
                     productAttributeList={[]}
                 />
             )}
+            {openDialogProductV && (
+                <DialogProductVariant
+                    open={openDialogProductV}
+                    handleClose={handleCloseDialogProductV}
+                    id={idSelected}
+                    productVariantById={productVariant.productVariantById}
+                />
+            )}
         </Box>
     );
 };
@@ -490,6 +521,7 @@ const mapStateToProps = (state) => ({
     changeStateTable: PropTypes.func.isRequired,
     productVariant: state.productVariant,
     deleteProductVariant: state.productVariant,
+    getProductVSelectedFromStore: state.productVariant,
 });
 export default connect(mapStateToProps, {
     getProductVariant,
@@ -498,5 +530,6 @@ export default connect(mapStateToProps, {
     deleteProduct,
     getProductById,
     deleteProductVariant,
+    getProductVSelectedFromStore,
     changeStateTable,
 })(SimpleTable);

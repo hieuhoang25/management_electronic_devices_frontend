@@ -12,7 +12,7 @@ import {
     Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import ButtonProduct from './ButtonProduct';
+import ButtonProduct from '../ButtonProduct';
 import {
     addIdToStore,
     getProductAttribute,
