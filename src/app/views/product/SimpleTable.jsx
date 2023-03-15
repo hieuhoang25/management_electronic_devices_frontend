@@ -20,8 +20,7 @@ import {
     productVariantTableHeader,
 } from 'app/utils/constant';
 import { lazy, useEffect, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import { PropTypes } from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { format, parseISO } from 'date-fns';
 import {
     getProductsList,
@@ -86,35 +85,23 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 //end avatar
-const SimpleTable = (props) => {
-    const {
-        getProductsList,
-        products,
-        getProductVariant,
-        getProductAttribute,
-        productAttribute,
-        deleteProduct,
-        getProductById,
-        productVariant,
-        changeStateTable,
-        deleteProductVariant,
-        getProductVSelectedFromStore,
-    } = props;
-    if (!products.listProduct.data) {
-        products.listProduct.data = [];
-    }
-    //check null productAttribute
+const SimpleTable = () => {
     const [page, setPage] = useState(1);
     const [productList, setProductList] = useState([{}]);
     const [idSelected, setIdSelected] = useState(-1);
     const [open, setOpen] = useState(false);
     const [openDialogProduct, setOpenDialogProduct] = useState(false);
     const [openDialogProductV, setOpenDialogProductV] = useState(false);
+    const products = useSelector((state) => state.products);
+    const productVariant = useSelector((state) => state.productVariant);
+    const productAttribute = useSelector((state) => state.productAttribute);
     const dispatch = useDispatch();
-
+    if (!products.listProduct.data) {
+        products.listProduct.data = [];
+    }
     const handleChange = (event, value) => {
         if (products.stateTable === 'product') {
-            getProductsList(5, value - 1);
+            dispatch(getProductsList(5, value - 1));
         } else {
             getProductVariant(5, value - 1, productVariant.product_id);
             dispatch(setPageNumber(value));
@@ -124,7 +111,7 @@ const SimpleTable = (props) => {
 
     useEffect(() => {
         if (products.stateTable === 'product') {
-            getProductsList(5, page - 1);
+            dispatch(getProductsList(5, page - 1));
         } else {
         }
 
@@ -133,50 +120,52 @@ const SimpleTable = (props) => {
 
     function handleOpenProductAttribute(id) {
         // setIdSelected(id);
-        getProductAttribute(id);
+        dispatch(getProductAttribute(id));
         setOpen(true);
     }
 
     function handleClose() {
         setOpen(false);
     }
-    const handleDelete = async (value, isDelted, name) => {
+    const handleDelete = (value, isDelted, name) => {
         if (name === 'product') {
-            await deleteProduct(value, isDelted);
-            await getProductsList(5, page - 1);
+            dispatch(deleteProduct(value, isDelted));
+            dispatch(getProductsList(5, page - 1));
             setProductList(products.listProduct.data);
         } else {
-            await deleteProductVariant(value, isDelted);
-            await getProductVariant(5, 0, productVariant.product_id);
+            dispatch(deleteProductVariant(value, isDelted));
+            dispatch(getProductVariant(5, 0, productVariant.product_id));
             setProductList(Math.random() * 100);
         }
     };
 
     function handleClosedialogProduct() {
-        getProductsList(5, page - 1);
+        dispatch(getProductsList(5, page - 1));
         setOpenDialogProduct(false);
     }
     //PRODUCT VARIANT
     const handleClickShowDetail = (id) => {
         setIdSelected(id);
-        changeStateTable('productVariant');
-        getProductVariant(5, 0, id);
+        dispatch(changeStateTable('productVariant'));
+        dispatch(getProductVariant(5, 0, id));
     };
     const handleOpenDialogProduct = (id) => {
-        getProductById(id);
+        dispatch(getProductById(id));
         setIdSelected(id);
         setOpenDialogProduct(true);
     };
-    const handleOpenDiaLogProductV = async (id) => {
-        await getProductVSelectedFromStore(id);
+    const handleOpenDiaLogProductV = (id) => {
+        dispatch(getProductVSelectedFromStore(id));
         setOpenDialogProductV(true);
     };
 
     const handleCloseDialogProductV = () => {
-        getProductVariant(
-            5,
-            productVariant.pageNumber - 1,
-            productVariant.product_id,
+        dispatch(
+            getProductVariant(
+                5,
+                productVariant.pageNumber - 1,
+                productVariant.product_id,
+            ),
         );
         setOpenDialogProductV(false);
     };
@@ -510,26 +499,4 @@ const SimpleTable = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    products: state.products,
-    getProductsList: PropTypes.func.isRequired,
-    getProductVariant: PropTypes.func.isRequired,
-    productAttribute: state.productAttribute,
-    getProductAttribute: PropTypes.func.isRequired,
-    deleteProduct: PropTypes.func.isRequired,
-    getProductById: PropTypes.func.isRequired,
-    changeStateTable: PropTypes.func.isRequired,
-    productVariant: state.productVariant,
-    deleteProductVariant: state.productVariant,
-    getProductVSelectedFromStore: state.productVariant,
-});
-export default connect(mapStateToProps, {
-    getProductVariant,
-    getProductsList,
-    getProductAttribute,
-    deleteProduct,
-    getProductById,
-    deleteProductVariant,
-    getProductVSelectedFromStore,
-    changeStateTable,
-})(SimpleTable);
+export default SimpleTable;

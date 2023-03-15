@@ -30,8 +30,8 @@ export const createProductAttribute = (object) => async (dispatch) => {
             });
         });
 };
-export const updateProductAttribute = (object) => (dispatch) => {
-    axios
+export const updateProductAttribute = (object) => async (dispatch) => {
+    await axios
         .put(process.env.REACT_APP_BASE_URL + 'product-attribute', object)
         .then((res) => {
             dispatch({
@@ -40,8 +40,8 @@ export const updateProductAttribute = (object) => (dispatch) => {
             });
         });
 };
-export const deleteProductAttribute = (listId) => (dispatch) => {
-    axios
+export const deleteProductAttribute = (listId) => async (dispatch) => {
+    await axios
         .delete(process.env.REACT_APP_BASE_URL + 'product-attribute', {
             data: listId,
         })

@@ -182,15 +182,6 @@ const AppProduct = (props) => {
                             />
                         </Grid>
                         <Grid item xs={2}>
-                            {/* <Link to="stepperForm">
-                                <Fab
-                                    color="primary"
-                                    aria-label="Add"
-                                    className="button"
-                                >
-                                    <Icon>add</Icon>
-                                </Fab>
-                            </Link> */}
                             <ButtonProduct
                                 variant="contained"
                                 color="primary"
@@ -285,126 +276,6 @@ const AppProduct = (props) => {
             )}
         </ContainerTable>
     );
-    // <ContainerTable>
-    //     <Box className="breadcrumb">
-    //         <Breadcrumb routeSegments={products.breadCrum.data} />
-    //     </Box>
-    //     {products.stateTable === 'product' ? (
-    //         <SimpleCard title="Danh sách sản phẩm">
-    //             <Grid
-    //                 container
-    //                 flex={1}
-    //                 // direction="row"
-    //                 justifyContent="space-between"
-    //                 alignItems="center"
-    //             >
-    //                 <Grid xs={10} item>
-    //                     <TextField
-    //                         margin="normal"
-    //                         required
-    //                         id="outlined-required"
-    //                         label="Tìm kiếm"
-    //                         placeholder="Tìm kiếm theo tên sản phẩm"
-    //                         fullWidth
-    //                     />
-    //                 </Grid>
-    //                 <Grid item xs={2}>
-    //                     {/* <Link to="stepperForm">
-    //                         <Fab
-    //                             color="primary"
-    //                             aria-label="Add"
-    //                             className="button"
-    //                         >
-    //                             <Icon>add</Icon>
-    //                         </Fab>
-    //                     </Link> */}
-    //                     <ButtonProduct
-    //                         variant="contained"
-    //                         color="primary"
-    //                         size="medium"
-    //                         onClick={() => {
-    //                             handleClickCreate();
-    //                         }}
-    //                     >
-    //                         Thêm sản phẩm
-    //                     </ButtonProduct>
-    //                 </Grid>
-    //             </Grid>
-
-    //             <Grid2 container spacing={2}>
-    //                 <Grid2 xs={6} md={6}>
-    //                     <Autocomplete
-    //                         multiple
-    //                         id="tags-outlined"
-    //                         options={top100Films}
-    //                         getOptionLabel={(option) => option.title}
-    //                         filterSelectedOptions
-    //                         renderInput={(params) => (
-    //                             <TextField
-    //                                 {...params}
-    //                                 variant="outlined"
-    //                                 label="Lọc theo loại"
-    //                                 placeholder="Lọc theo loại"
-    //                                 fullWidth
-    //                             />
-    //                         )}
-    //                     />
-    //                 </Grid2>
-    //                 <Grid2 xs={6} md={6}>
-    //                     <Autocomplete
-    //                         multiple
-    //                         id="tags-outlined"
-    //                         options={top100Films}
-    //                         getOptionLabel={(option) => option.title}
-    //                         // defaultValue={[top100Films[13]]}
-    //                         filterSelectedOptions
-    //                         renderInput={(params) => (
-    //                             <TextField
-    //                                 {...params}
-    //                                 variant="outlined"
-    //                                 label="Lọc theo thuộc tính"
-    //                                 placeholder="Lọc theo thuộc tính"
-    //                                 fullWidth
-    //                             />
-    //                         )}
-    //                     />
-    //                 </Grid2>
-    //             </Grid2>
-    //             <SimpleTable />
-    //         </SimpleCard>
-    //     ) : (
-    //         <SimpleCard title="Danh sách sản phẩm">
-    //             <Grid container>
-    //                 <Grid>
-    //                     <StyledButton
-    //                         variant="contained"
-    //                         color="secondary"
-    //                         onClick={handleClickBack}
-    //                     >
-    //                         Quay về
-    //                     </StyledButton>
-    //                 </Grid>
-    //                 <Grid>
-    //                     <StyledButton
-    //                         variant="contained"
-    //                         color="primary"
-    //                         onClick={handleClickBack}
-    //                     >
-    //                         Thêm mới product variant
-    //                     </StyledButton>
-    //                 </Grid>
-    //             </Grid>
-
-    //             <SimpleTable />
-    //         </SimpleCard>
-    //     )}
-    //     {openFormProduct && (
-    //         <DialogCreateProduct
-    //             open={openFormProduct}
-    //             handleClose={handleCloseFormProduct}
-    //         />
-    //     )}
-    // </ContainerTable>
 };
 
 const mapStateToProps = (state) => ({
@@ -415,6 +286,5 @@ const mapStateToProps = (state) => ({
 });
 export default connect(mapStateToProps, {
     changeStateTable,
-
     getProductVariant,
 })(AppProduct);
