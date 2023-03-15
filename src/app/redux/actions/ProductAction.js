@@ -101,6 +101,7 @@ export const changeStateTable = (state) => {
         payload: state,
     };
 };
+
 getProductsList.propTypes = {
     size: PropTypes.number,
     page: PropTypes.number,
