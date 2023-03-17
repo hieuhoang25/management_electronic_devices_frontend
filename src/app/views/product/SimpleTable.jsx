@@ -28,6 +28,7 @@ import {
     getProductById,
     changeStateTable,
     setPageProduct,
+    getProductsFilters,
 } from 'app/redux/actions/ProductAction';
 import ButtonProduct from './ButtonProduct';
 import {
@@ -103,6 +104,22 @@ const SimpleTable = () => {
     }
     const handleChange = (event, value) => {
         if (products.stateTable === 'product') {
+            if (
+                products.stateDeleted.deleted !== -1 ||
+                products.keysearch !== ''
+            ) {
+                console.log(products);
+                dispatch(
+                    getProductsFilters(
+                        5,
+                        value - 1,
+                        products.keysearch,
+                        products.stateDeleted.deleted,
+                    ),
+                );
+                dispatch(setPageProduct(value));
+                return;
+            }
             dispatch(getProductsList(5, value - 1));
             dispatch(setPageProduct(value));
         } else {
@@ -117,6 +134,22 @@ const SimpleTable = () => {
 
     useEffect(() => {
         if (products.stateTable === 'product') {
+            if (
+                products.stateDeleted.deleted !== -1 ||
+                products.keysearch !== ''
+            ) {
+                console.log(products);
+                dispatch(
+                    getProductsFilters(
+                        5,
+                        products.pageNumber - 1,
+                        products.keysearch,
+                        products.stateDeleted.deleted,
+                    ),
+                );
+                return;
+            }
+
             dispatch(getProductsList(5, products.pageNumber - 1));
         } else {
             if (productVariant.product_id !== '') {
@@ -131,7 +164,13 @@ const SimpleTable = () => {
         }
 
         // eslint-disable-next-line
-    }, [bodyTable, setOpen, setOpenDialogProductV]);
+    }, [
+        bodyTable,
+        setOpen,
+        setOpenDialogProductV,
+        products.stateDeleted.deleted,
+        products.keysearch,
+    ]);
 
     function handleOpenProductAttribute(id) {
         // setIdSelected(id);
@@ -146,6 +185,22 @@ const SimpleTable = () => {
         if (name === 'product') {
             dispatch(deleteProduct(value, isDelted));
             dispatch(getProductsList(5, products.pageNumber - 1));
+            if (
+                products.stateDeleted.deleted !== -1 ||
+                products.keysearch !== ''
+            ) {
+                console.log(products);
+                dispatch(
+                    getProductsFilters(
+                        5,
+                        products.pageNumber - 1,
+                        products.keysearch,
+                        products.stateDeleted.deleted,
+                    ),
+                );
+                setBodyTable(products.listProduct.data);
+                return;
+            }
             setBodyTable(products.listProduct.data);
         } else {
             dispatch(deleteProductVariant(value, isDelted));
@@ -385,9 +440,9 @@ const SimpleTable = () => {
                                             src={
                                                 process.env
                                                     .REACT_APP_BASE_URL_FIREBASE +
-                                                product.image +
-                                                '?alt=media&token=' +
-                                                v4()
+                                                    product.image +
+                                                    '?alt=media&token=' +
+                                                    v4() || ''
                                             }
                                             key={new Date()
                                                 .getTime()
@@ -412,9 +467,9 @@ const SimpleTable = () => {
                                                 src={
                                                     process.env
                                                         .REACT_APP_BASE_URL_FIREBASE +
-                                                    product.image +
-                                                    '?alt=media&token=' +
-                                                    v4()
+                                                        product.image +
+                                                        '?alt=media&token=' +
+                                                        v4() || ''
                                                 }
                                             />
                                         </StyledBadge>

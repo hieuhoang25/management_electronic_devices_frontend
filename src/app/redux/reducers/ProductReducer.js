@@ -6,7 +6,10 @@ import {
     DELETE_PRODUCT,
     PUT_PRODUCT,
     POST_PRODUCT,
+    SET_STATE_DELETED,
     SET_PAGE_PRODUCT,
+    HANDLE_CHANGE_KEYSEARCH,
+    GET_PRODUCTS_FILTERS,
 } from '../actions/ProductAction';
 
 const initalState = {
@@ -23,10 +26,23 @@ const initalState = {
     totalPage: 0,
     pageNumber: 1,
     productById: {},
+
+    stateDeleted: {
+        label: 'Hiển thị tất cả',
+        deleted: -1,
+    },
+    keysearch: '',
 };
 const ProductReducer = (state = initalState, action) => {
     switch (action.type) {
         case LIST_PRODUCTS:
+            return {
+                ...state,
+                listProduct: action.payload,
+                totalPage: action.payload.totalPage,
+            };
+        case GET_PRODUCTS_FILTERS:
+            console.log(action.payload);
             return {
                 ...state,
                 listProduct: action.payload,
@@ -71,6 +87,16 @@ const ProductReducer = (state = initalState, action) => {
             return {
                 ...state,
                 pageNumber: action.payload,
+            };
+        case SET_STATE_DELETED:
+            return {
+                ...state,
+                stateDeleted: action.payload,
+            };
+        case HANDLE_CHANGE_KEYSEARCH:
+            return {
+                ...state,
+                keysearch: action.payload,
             };
         default:
             return state;
