@@ -8,6 +8,9 @@ export const GET_PRODUCT_BYID = 'getProductById';
 export const PUT_PRODUCT = 'putProduct';
 export const POST_PRODUCT = 'postProduct';
 export const SET_PAGE_PRODUCT = 'setPageProduct';
+export const SET_STATE_DELETED = 'setStateDeleted';
+export const HANDLE_CHANGE_KEYSEARCH = 'handleChangeKeysearch';
+export const GET_PRODUCTS_FILTERS = 'getProductsFilters';
 
 export const getProductsList = (size, page) => async (dispatch) => {
     await axios
@@ -25,6 +28,28 @@ export const getProductsList = (size, page) => async (dispatch) => {
             });
         });
 };
+export const getProductsFilters =
+    (size, page, search, isDeleted) => async (dispatch) => {
+        await axios
+            .get(
+                process.env.REACT_APP_BASE_URL +
+                    'product/search?size=' +
+                    size +
+                    '&page=' +
+                    page +
+                    '&search=' +
+                    search +
+                    '&isDelete=' +
+                    isDeleted,
+            )
+            .then((res) => {
+                console.log(res.data.data);
+                dispatch({
+                    type: GET_PRODUCTS_FILTERS,
+                    payload: res.data.data,
+                });
+            });
+    };
 export const getProductById = (id) => (dispatch) => {
     axios.get(process.env.REACT_APP_BASE_URL + 'product/' + id).then((res) =>
         dispatch({
@@ -84,12 +109,25 @@ export const changeStateTable = (state) => {
         payload: state,
     };
 };
+export const setStateDeleted = (state) => {
+    return {
+        type: SET_STATE_DELETED,
+        payload: state,
+    };
+};
 export const setPageProduct = (pageNumber) => {
     return {
         type: SET_PAGE_PRODUCT,
         payload: pageNumber,
     };
 };
+export const handleChangeKeysearch = (keysearch) => {
+    return {
+        type: HANDLE_CHANGE_KEYSEARCH,
+        payload: keysearch,
+    };
+};
+
 getProductsList.propTypes = {
     size: PropTypes.number,
     page: PropTypes.number,

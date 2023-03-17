@@ -14,7 +14,7 @@ import {
     TextField,
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import { forwardRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { getAllColor, handleChangeColor } from 'app/redux/actions/ColorAction';
