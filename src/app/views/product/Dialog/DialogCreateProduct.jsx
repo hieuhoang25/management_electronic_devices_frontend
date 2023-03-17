@@ -153,6 +153,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
                 'Content-Type': 'multipart/form-data',
             },
         });
+
         setLoad(false);
         setOpenSnackBar(true);
         setOpenConfirm(false);

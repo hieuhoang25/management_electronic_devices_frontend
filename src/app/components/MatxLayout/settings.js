@@ -11,7 +11,7 @@ export const MatxLayoutSettings = {
     themes: themes,
     layout1Settings, // open Layout1/Layout1Settings.js
 
-    secondarySidebar: {
+    secondarysidebar: {
         show: true,
         open: false,
         theme: 'slateDark1', // View all valid theme colors inside MatxTheme/themeColors.js

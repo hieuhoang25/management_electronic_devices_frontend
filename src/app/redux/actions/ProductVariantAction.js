@@ -3,7 +3,8 @@ export const LIST_PRODUCT_VARIANT = 'listProductVariant';
 export const DELETE_PRODUCT_VARIANT = 'deleteProductVariant';
 export const GET_PRODUCTV_FROM_STORE = 'getProductVSelectedFromStore ';
 export const CLEAR_PRODUCT_VARIANT = 'clearProductVariant';
-export const SET_PAGE_NUMBER = 'setPageNumber';
+export const SET_PAGE_NUMBER = 'setPageNumberProductVariant';
+export const CLEAR_STATE = 'clearStateProductVariant';
 
 export const getProductVariant = (size, page, id) => async (dispatch) => {
     await axios
@@ -44,9 +45,14 @@ export const getProductVSelectedFromStore = (id) => {
         payload: id,
     };
 };
-export const setPageNumber = (value) => {
+export const setPageNumberProductVariant = (value) => {
     return {
         type: SET_PAGE_NUMBER,
         payload: value,
+    };
+};
+export const clearStateProductVariant = () => {
+    return {
+        type: CLEAR_STATE,
     };
 };
