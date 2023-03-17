@@ -3,13 +3,14 @@ import {
     GET_PRODUCTV_FROM_STORE,
     CLEAR_PRODUCT_VARIANT,
     SET_PAGE_NUMBER,
+    CLEAR_STATE,
 } from '../actions/ProductVariantAction';
 
 const initalState = {
     data: [],
     product_id: '',
     productVariantById: {},
-    totalPage: '',
+    totalPage: 0,
     pageNumber: 1,
 };
 
@@ -41,6 +42,14 @@ const ProductVariantReducer = (state = initalState, action) => {
             return {
                 ...state,
                 pageNumber: action.payload,
+            };
+        case CLEAR_STATE:
+            return {
+                data: [],
+                product_id: '',
+                productVariantById: {},
+                totalPage: '',
+                pageNumber: 1,
             };
         default:
             return {

@@ -9,7 +9,7 @@ import {
 import { Breadcrumb, SimpleCard } from 'app/components';
 import { Container as ContainerTable } from '../material-kit/tables/AppTable';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { changeStateTable } from 'app/redux/actions/ProductAction';
 import { lazy, useState } from 'react';
@@ -17,7 +17,12 @@ import Loadable from 'app/components/Loadable';
 import ButtonProduct from './ButtonProduct';
 import DialogCreateProduct from './Dialog/DialogCreateProduct';
 import DialogCreateProductVariant from './Dialog/DialogCreateProductVariant';
-import { getProductVariant } from 'app/redux/actions/ProductVariantAction';
+import {
+    clearStateProductVariant,
+    getProductVariant,
+} from 'app/redux/actions/ProductVariantAction';
+import { clearStorageSelected } from 'app/redux/actions/StorageAction';
+import { clearColorSelected } from 'app/redux/actions/ColorAction';
 const SimpleTable = Loadable(lazy(() => import('./SimpleTable')));
 const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
@@ -134,9 +139,11 @@ const AppProduct = (props) => {
         props;
     const [openFormProduct, setOpenFormProduct] = useState(false);
     const [openDialogProductV, setOenDialogProductV] = useState(false);
+    const dispatch = useDispatch();
 
     const handleClickBack = () => {
         changeStateTable('product');
+        dispatch(clearStateProductVariant());
     };
 
     const handleCloseFormProduct = () => {
@@ -149,11 +156,14 @@ const AppProduct = (props) => {
         setOenDialogProductV(true);
     };
     const handleCloseDialogCreateProductVariant = () => {
+        console.log(1);
         getProductVariant(
             5,
             productVariant.pageNumber - 1,
             productVariant.product_id,
         );
+        dispatch(clearStorageSelected());
+        dispatch(clearColorSelected());
         setOenDialogProductV(false);
     };
 

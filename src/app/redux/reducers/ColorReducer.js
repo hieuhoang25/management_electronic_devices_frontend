@@ -1,4 +1,8 @@
-import { GET_ALL_COLOR, HANDLE_CHANGE_COLOR } from '../actions/ColorAction';
+import {
+    GET_ALL_COLOR,
+    HANDLE_CHANGE_COLOR,
+    CLEAR_COLOR_SELECTED,
+} from '../actions/ColorAction';
 
 const initalState = {
     data: [],
@@ -28,6 +32,11 @@ const ColorReducer = (state = initalState, action) => {
             return {
                 ...state,
                 colorSelected: action.payload,
+            };
+        case CLEAR_COLOR_SELECTED:
+            return {
+                ...state,
+                colorSelected: {},
             };
         default:
             return {

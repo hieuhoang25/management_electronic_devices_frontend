@@ -1,17 +1,16 @@
 import {
     LIST_PRODUCTS,
-    // LIST_PRODUCT_VARIANT,
     STATUS_DISABLE,
     CHANGE_STATE_TABLE,
     GET_PRODUCT_BYID,
     DELETE_PRODUCT,
     PUT_PRODUCT,
     POST_PRODUCT,
+    SET_PAGE_PRODUCT,
 } from '../actions/ProductAction';
 
 const initalState = {
     listProduct: [],
-    // listProductVariant: [],
     inputNextStatus: true,
     breadCrum: {
         data: [
@@ -22,6 +21,7 @@ const initalState = {
     productId: '',
     stateTable: 'product',
     totalPage: 0,
+    pageNumber: 1,
     productById: {},
 };
 const ProductReducer = (state = initalState, action) => {
@@ -39,7 +39,6 @@ const ProductReducer = (state = initalState, action) => {
             };
 
         case CHANGE_STATE_TABLE:
-            console.log(action.payload);
             return {
                 ...state,
                 stateTable: action.payload,
@@ -67,6 +66,11 @@ const ProductReducer = (state = initalState, action) => {
             return {
                 ...state,
                 productById: action.payload,
+            };
+        case SET_PAGE_PRODUCT:
+            return {
+                ...state,
+                pageNumber: action.payload,
             };
         default:
             return state;

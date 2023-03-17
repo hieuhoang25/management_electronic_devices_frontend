@@ -27,18 +27,20 @@ import {
     deleteProduct,
     getProductById,
     changeStateTable,
+    setPageProduct,
 } from 'app/redux/actions/ProductAction';
 import ButtonProduct from './ButtonProduct';
 import {
     getProductVariant,
     deleteProductVariant,
     getProductVSelectedFromStore,
-    setPageNumber,
+    setPageNumberProductVariant,
 } from 'app/redux/actions/ProductVariantAction';
 import { getProductAttribute } from 'app/redux/actions/ProductAttributeAction';
 import { v4 } from 'uuid';
 import Loadable from 'app/components/Loadable';
 import DialogProductVariant from './Dialog/DialogProductVariant';
+import { formatCurrency } from 'app/utils/utils';
 
 const DialogProduct = Loadable(lazy(() => import('./Dialog/DialogProduct')));
 const DialogProductAttribute = Loadable(
@@ -86,8 +88,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 //end avatar
 const SimpleTable = () => {
-    const [page, setPage] = useState(1);
-    const [productList, setProductList] = useState([{}]);
+    const [bodyTable, setBodyTable] = useState([{}]);
     const [idSelected, setIdSelected] = useState(-1);
     const [open, setOpen] = useState(false);
     const [openDialogProduct, setOpenDialogProduct] = useState(false);
@@ -95,6 +96,7 @@ const SimpleTable = () => {
     const products = useSelector((state) => state.products);
     const productVariant = useSelector((state) => state.productVariant);
     const productAttribute = useSelector((state) => state.productAttribute);
+    // const [page, setPage] = useState(products.pageNumber);
     const dispatch = useDispatch();
     if (!products.listProduct.data) {
         products.listProduct.data = [];
@@ -102,21 +104,34 @@ const SimpleTable = () => {
     const handleChange = (event, value) => {
         if (products.stateTable === 'product') {
             dispatch(getProductsList(5, value - 1));
+            dispatch(setPageProduct(value));
         } else {
-            getProductVariant(5, value - 1, productVariant.product_id);
-            dispatch(setPageNumber(value));
+            dispatch(
+                getProductVariant(5, value - 1, productVariant.product_id),
+            );
+            dispatch(setPageNumberProductVariant(value));
         }
-        setPage(value);
+        // dispatch(setPageProduct(value));
+        // dispatch(setPageNumberProductVariant(value));
     };
 
     useEffect(() => {
         if (products.stateTable === 'product') {
-            dispatch(getProductsList(5, page - 1));
+            dispatch(getProductsList(5, products.pageNumber - 1));
         } else {
+            if (productVariant.product_id !== '') {
+                dispatch(
+                    getProductVariant(
+                        5,
+                        productVariant.pageNumber - 1,
+                        productVariant.product_id,
+                    ),
+                );
+            }
         }
 
         // eslint-disable-next-line
-    }, [productList, setOpen, setOpenDialogProductV]);
+    }, [bodyTable, setOpen, setOpenDialogProductV]);
 
     function handleOpenProductAttribute(id) {
         // setIdSelected(id);
@@ -130,24 +145,31 @@ const SimpleTable = () => {
     const handleDelete = (value, isDelted, name) => {
         if (name === 'product') {
             dispatch(deleteProduct(value, isDelted));
-            dispatch(getProductsList(5, page - 1));
-            setProductList(products.listProduct.data);
+            dispatch(getProductsList(5, products.pageNumber - 1));
+            setBodyTable(products.listProduct.data);
         } else {
             dispatch(deleteProductVariant(value, isDelted));
-            dispatch(getProductVariant(5, 0, productVariant.product_id));
-            setProductList(Math.random() * 100);
+            dispatch(
+                getProductVariant(
+                    5,
+                    productVariant.pageNumber - 1,
+                    productVariant.product_id,
+                ),
+            );
+
+            setBodyTable(Math.random() * 100);
         }
     };
 
     function handleClosedialogProduct() {
-        dispatch(getProductsList(5, page - 1));
+        dispatch(getProductsList(5, products.pageNumber - 1));
         setOpenDialogProduct(false);
     }
     //PRODUCT VARIANT
-    const handleClickShowDetail = (id) => {
+    const handleClickShowDetail = async (id) => {
         setIdSelected(id);
         dispatch(changeStateTable('productVariant'));
-        dispatch(getProductVariant(5, 0, id));
+        dispatch(getProductVariant(5, productVariant.pageNumber - 1, id));
     };
     const handleOpenDialogProduct = (id) => {
         dispatch(getProductById(id));
@@ -170,7 +192,7 @@ const SimpleTable = () => {
         setOpenDialogProductV(false);
     };
     return (
-        <Box width="100%">
+        <Box width="100%" mt={3}>
             <StyledTable>
                 <TableHead sx={{ maxHeight: 440 }} overflow={'scroll'}>
                     <TableRow>
@@ -402,7 +424,7 @@ const SimpleTable = () => {
                                     {product.quantity}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {product.price}
+                                    {formatCurrency(product.price)}
                                 </TableCell>
                                 <TableCell align="center">
                                     {product.display_name}
@@ -457,17 +479,19 @@ const SimpleTable = () => {
                     )}
                 </TableBody>
             </StyledTable>
-            <Stack justifyContent="center" alignItems="center">
-                <Typography component="span">Page: {page}</Typography>
+            <Stack justifyContent="center" alignItems="center" mt={3}>
+                <Typography component="span">
+                    {/* Page: {products.pageNumber} */}
+                </Typography>
                 <Pagination
                     count={
                         products.stateTable === 'product'
                             ? products.totalPage
-                            : productVariant.totalPage
+                            : parseInt(productVariant.totalPage) || 1
                     }
                     page={
                         products.stateTable === 'product'
-                            ? page
+                            ? products.pageNumber
                             : productVariant.pageNumber
                     }
                     onChange={handleChange}

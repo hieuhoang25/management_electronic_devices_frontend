@@ -14,7 +14,7 @@ import {
     TextField,
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { getAllColor, handleChangeColor } from 'app/redux/actions/ColorAction';
@@ -25,6 +25,12 @@ import {
 import DialogConfirm from './DialogConfirm';
 import axios from 'axios.js';
 import { v4 as uuidv4 } from 'uuid';
+import NumericFormatCustom from '../NumericFormatCustom';
+
+NumericFormatCustom.propTypes = {
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+};
 function DialogCreateProductVariant({
     open,
     products = {},
@@ -185,6 +191,7 @@ function DialogCreateProductVariant({
         setOpenSnackBar(false);
     };
     const handleChangeForm = (value, name) => {
+        console.log(value);
         setFormProductVariant((pre) => {
             return {
                 ...pre,
@@ -245,7 +252,7 @@ function DialogCreateProductVariant({
                                 margin="dense"
                                 id="number"
                                 label="Số lượng"
-                                type="text"
+                                type="number"
                                 fullWidth
                                 value={formProductVariant.quantity || ''}
                                 onChange={(e) => {
@@ -254,14 +261,15 @@ function DialogCreateProductVariant({
                                         'quantity',
                                     );
                                 }}
+                                helperText=" "
                             />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField
+                            {/* <TextField
                                 margin="dense"
                                 id="name"
                                 label="Giá"
-                                type="number"
+                                type="text"
                                 fullWidth
                                 value={formProductVariant.price || ''}
                                 onChange={(e) => {
@@ -270,6 +278,24 @@ function DialogCreateProductVariant({
                                         'price',
                                     );
                                 }}
+                            /> */}
+                            <TextField
+                                label="Giá"
+                                value={formProductVariant.price || ''}
+                                onChange={(e) => {
+                                    handleChangeForm(
+                                        e.target.value || '',
+                                        'price',
+                                    );
+                                }}
+                                fullWidth
+                                name="numberformat"
+                                id="formatted-numberformat-input"
+                                InputProps={{
+                                    inputComponent: NumericFormatCustom,
+                                }}
+                                helperText=""
+                                margin="dense"
                             />
                         </Grid>
                     </Grid>

@@ -7,6 +7,7 @@ export const DELETE_PRODUCT = 'deleteProduct';
 export const GET_PRODUCT_BYID = 'getProductById';
 export const PUT_PRODUCT = 'putProduct';
 export const POST_PRODUCT = 'postProduct';
+export const SET_PAGE_PRODUCT = 'setPageProduct';
 
 export const getProductsList = (size, page) => async (dispatch) => {
     await axios
@@ -77,31 +78,18 @@ export const StatusDisable = (bool) => {
         payload: bool,
     };
 };
-// export const getProductVariant = (size, page, id) => (dispatch) => {
-//     axios
-//         .get(
-//             process.env.REACT_APP_BASE_URL +
-//                 'product-variant/' +
-//                 id +
-//                 '?size=' +
-//                 size +
-//                 '&page=' +
-//                 page,
-//         )
-//         .then((res) => {
-//             dispatch({
-//                 type: LIST_PRODUCT_VARIANT,
-//                 payload: res.data,
-//             });
-//         });
-// };
 export const changeStateTable = (state) => {
     return {
         type: CHANGE_STATE_TABLE,
         payload: state,
     };
 };
-
+export const setPageProduct = (pageNumber) => {
+    return {
+        type: SET_PAGE_PRODUCT,
+        payload: pageNumber,
+    };
+};
 getProductsList.propTypes = {
     size: PropTypes.number,
     page: PropTypes.number,

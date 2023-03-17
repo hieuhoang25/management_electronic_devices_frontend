@@ -1,6 +1,7 @@
 import {
     GET_ALL_STORAGE,
     HANDLE_CHANGE_STORAGE,
+    CLEAR_STORAGE_SELECTED,
 } from '../actions/StorageAction';
 
 const initalState = {
@@ -30,6 +31,11 @@ const StorageReducer = (state = initalState, action) => {
             return {
                 ...state,
                 storageSelected: action.payload,
+            };
+        case CLEAR_STORAGE_SELECTED:
+            return {
+                ...state,
+                storageSelected: {},
             };
         default:
             return {
