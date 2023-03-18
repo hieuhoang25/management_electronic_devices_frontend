@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
 import { Container as ContainerTable } from '../material-kit/tables/AppTable';
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { connect, useDispatch } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import {
@@ -185,6 +184,7 @@ const AppProduct = (props) => {
     const debouncedValue = useDebounce(searchValue, 1000);
     useEffect(() => {
         dispatch(handleChangeKeysearch(debouncedValue));
+        // eslint-disable-next-line
     }, [debouncedValue]);
     return (
         <ContainerTable>
@@ -222,6 +222,9 @@ const AppProduct = (props) => {
                                 disableClearable
                                 onChange={(e, value) =>
                                     handleChangeStateDeleted(value)
+                                }
+                                isOptionEqualToValue={(option, value) =>
+                                    option.id === value.id
                                 }
                                 renderInput={(params) => (
                                     <TextField

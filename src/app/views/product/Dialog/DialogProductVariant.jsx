@@ -306,6 +306,9 @@ function DialogProductVariant({
                                     },
                                     ...color.colorFilter,
                                 ]}
+                                isOptionEqualToValue={(option, value) =>
+                                    option.id === value.id
+                                }
                                 // getOptionLabel={(option) => option.brand_name}
                                 getOptionLabel={(option) =>
                                     typeof option === 'string'
@@ -355,6 +358,9 @@ function DialogProductVariant({
                                     typeof option === 'string'
                                         ? option ?? ''
                                         : option.storage_name ?? ''
+                                }
+                                isOptionEqualToValue={(option, value) =>
+                                    option.id === value.id
                                 }
                                 value={
                                     Object.keys(storage.storageSelected)

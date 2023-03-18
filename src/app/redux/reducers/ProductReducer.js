@@ -42,7 +42,6 @@ const ProductReducer = (state = initalState, action) => {
                 totalPage: action.payload.totalPage,
             };
         case GET_PRODUCTS_FILTERS:
-            console.log(action.payload);
             return {
                 ...state,
                 listProduct: action.payload,

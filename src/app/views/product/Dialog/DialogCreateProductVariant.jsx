@@ -319,6 +319,9 @@ function DialogCreateProductVariant({
                                         ? option ?? ''
                                         : option.color_name ?? ''
                                 }
+                                isOptionEqualToValue={(option, value) =>
+                                    option.id === value.id
+                                }
                                 value={
                                     Object.keys(color.colorSelected).length ===
                                     0
@@ -353,6 +356,9 @@ function DialogCreateProductVariant({
                                     typeof option === 'string'
                                         ? option ?? ''
                                         : option.storage_name ?? ''
+                                }
+                                isOptionEqualToValue={(option, value) =>
+                                    option.id === value.id
                                 }
                                 value={
                                     Object.keys(storage.storageSelected)

@@ -80,6 +80,7 @@ function DialogProductAttribute({ open, productAttributeList, handleClose }) {
 
         clearFormProductAttribute();
     };
+
     const clearFormProductAttribute = () => {
         setFormAttribute((pre) => ({
             ...pre,
