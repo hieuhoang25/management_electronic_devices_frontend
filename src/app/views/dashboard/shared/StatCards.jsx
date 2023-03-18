@@ -1,6 +1,10 @@
 import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
 import { Small } from 'app/components/Typography';
-
+import { PropTypes } from 'prop-types';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { lazy, useEffect, useState } from 'react';
+import {getStatisticSpecially} from 'app/redux/actions/StatisticAction';
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
@@ -10,7 +14,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
   background: theme.palette.background.paper,
   [theme.breakpoints.down('sm')]: { padding: '16px !important' },
 }));
-
 const ContentBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
@@ -27,14 +30,24 @@ const Heading = styled('h6')(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const StatCards = () => {
-  const cardList = [
-    { name: 'New Leads', amount: 3050, icon: 'group' },
-    { name: 'This week Sales', amount: '$80,500', icon: 'attach_money' },
-    { name: 'Inventory Status', amount: '8.5% Stock Surplus', icon: 'store' },
-    { name: 'Orders to deliver', amount: '305 Orders', icon: 'shopping_cart' },
-  ];
+const StatCards = (props) => {
+  const {getStatisticSpecially , statistic} = props
+   
+  useEffect(() => {
+    getStatisticSpecially();
+    // setProductList(products.listProduct.data);
 
+    // eslint-disable-next-line
+}, []);
+
+  const navigate = useNavigate();
+  const cardList = [
+    { name: 'Người dùng', amount: statistic.statisticSpecially.number_of_user, icon: 'group' , url: "/account"},
+    { name: 'Doanh thu tuần này', amount: statistic. statisticSpecially.week_envenue, icon: 'attach_money' , url: "/dashboard/default"},
+    { name: 'Tổng số lượng sản phẩm bán ra', amount: statistic. statisticSpecially.product_selled, icon: 'store' , url: '/product'},
+    { name: 'Đơn hàng đang chờ xác nhận', amount: statistic.statisticSpecially.order_yet_approved, icon: 'shopping_cart' , url: "/order"},
+  ];
+  console.log(statistic.statisticSpecially)
   return (
     <Grid container spacing={3} sx={{ mb: '24px' }}>
       {cardList.map((item, index) => (
@@ -49,7 +62,7 @@ const StatCards = () => {
             </ContentBox>
 
             <Tooltip title="View Details" placement="top">
-              <IconButton>
+              <IconButton onClick={()=> navigate(item.url)} >
                 <Icon>arrow_right_alt</Icon>
               </IconButton>
             </Tooltip>
@@ -59,5 +72,13 @@ const StatCards = () => {
     </Grid>
   );
 };
+const mapStateToProps = (state) => ({
+  getStatisticSpecially: PropTypes.func.isRequired,
 
-export default StatCards;
+  statistic: state.statistic,
+});
+export default connect(mapStateToProps, {getStatisticSpecially })(
+  StatCards
+);
+
+

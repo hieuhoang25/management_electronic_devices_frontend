@@ -1,0 +1,21 @@
+import PropTypes from 'prop-types';
+import axios from 'axios.js';
+
+export const STATISTIC_SPECICALLY = 'statisticSpecially';
+export const STATISTIC_REVENUEBYWEEK = 'statisticRevenueByWeek';
+export const STATISTIC_PRODUCT_SELLING_TOP = 'statisticProductSellingTop';
+
+export const getStatisticSpecially = () => (dispatch) => {
+    axios
+        .get(
+            process.env.REACT_APP_BASE_URL +
+                'statistic/statistic-pecially'
+        )
+        .then((res) => {
+            console.log(res.data);
+            dispatch({
+                type: STATISTIC_SPECICALLY,
+                payload: res.data,
+            });
+        });
+};

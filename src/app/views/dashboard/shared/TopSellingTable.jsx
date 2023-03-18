@@ -15,7 +15,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { Paragraph } from 'app/components/Typography';
-
+import { NavLink, useNavigate } from 'react-router-dom';
 const CardHeader = styled(Box)(() => ({
   display: 'flex',
   paddingLeft: '24px',
@@ -57,6 +57,7 @@ const Small = styled('small')(({ bgcolor }) => ({
 
 const TopSellingTable = () => {
   const { palette } = useTheme();
+  const navigate = useNavigate();
   const bgError = palette.error.main;
   const bgPrimary = palette.primary.main;
   const bgSecondary = palette.secondary.main;
@@ -64,7 +65,7 @@ const TopSellingTable = () => {
   return (
     <Card elevation={3} sx={{ pt: '20px', mb: 3 }}>
       <CardHeader>
-        <Title>top selling products</Title>
+        <Title>Top sản phẩm bán chạy</Title>
         <Select size="small" defaultValue="this_month">
           <MenuItem value="this_month">This Month</MenuItem>
           <MenuItem value="last_month">Last Month</MenuItem>
@@ -76,16 +77,16 @@ const TopSellingTable = () => {
           <TableHead>
             <TableRow>
               <TableCell sx={{ px: 3 }} colSpan={4}>
-                Name
+                Tên
               </TableCell>
               <TableCell sx={{ px: 0 }} colSpan={2}>
-                Revenue
+                Doanh thu
               </TableCell>
               <TableCell sx={{ px: 0 }} colSpan={2}>
-                Stock Status
+                Tồn kho
               </TableCell>
               <TableCell sx={{ px: 0 }} colSpan={1}>
-                Action
+                Chỉnh sửa
               </TableCell>
             </TableRow>
           </TableHead>
@@ -107,17 +108,17 @@ const TopSellingTable = () => {
                 <TableCell sx={{ px: 0 }} align="left" colSpan={2}>
                   {product.available ? (
                     product.available < 20 ? (
-                      <Small bgcolor={bgSecondary}>{product.available} available</Small>
+                      <Small bgcolor={bgSecondary}>{product.available} còn hàng</Small>
                     ) : (
-                      <Small bgcolor={bgPrimary}>in stock</Small>
+                      <Small bgcolor={bgPrimary}>còn hàng</Small>
                     )
                   ) : (
-                    <Small bgcolor={bgError}>out of stock</Small>
+                    <Small bgcolor={bgError}>hết hàng</Small>
                   )}
                 </TableCell>
 
                 <TableCell sx={{ px: 0 }} colSpan={1}>
-                  <IconButton>
+                  <IconButton onClick={()=> navigate("/product")}>
                     <Icon color="primary">edit</Icon>
                   </IconButton>
                 </TableCell>

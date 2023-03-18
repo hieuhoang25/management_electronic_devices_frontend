@@ -10,7 +10,7 @@ import ProductAttributeReducer from './ProductAttributeReducer';
 import BrandReducer from './BrandReducer';
 import PromotionReducer from './PromotionReducer';
 import ProductVariantReducer from './ProductVariantReducer';
-
+import StatisticReducer from './StatisticReduce'
 const RootReducer = combineReducers({
     notifications: NotificationReducer,
     navigations: NavigationReducer,
@@ -23,6 +23,7 @@ const RootReducer = combineReducers({
     brands: BrandReducer,
     promotions: PromotionReducer,
     productVariant: ProductVariantReducer,
+    statistic: StatisticReducer
 });
 
 export default RootReducer;
