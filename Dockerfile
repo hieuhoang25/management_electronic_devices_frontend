@@ -1,8 +1,8 @@
-FROM node:16.15.0-alpine
+FROM node:latest-alpine
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm install
 
