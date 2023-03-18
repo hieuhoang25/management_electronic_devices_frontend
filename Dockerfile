@@ -8,8 +8,6 @@ RUN npm install
 
 COPY . .
 
-COPY .env.development /app/.env
-
 EXPOSE 3001
 
 CMD ["npm", "start"]
