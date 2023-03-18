@@ -9,8 +9,8 @@ export const RESET_PRODUCT_ATTRIBUTE = 'resetProductAttribute';
 export const ADD_NEW_FORM = 'addNewForm';
 export const UPDATE_PRODUCTATB_IN_STORE = 'updateProductAtbInStore';
 
-export const getProductAttribute = (id) => (dispatch) => {
-    axios
+export const getProductAttribute = (id) => async (dispatch) => {
+    await axios
         .get(process.env.REACT_APP_BASE_URL + 'product-attribute/' + id)
         .then((res) => {
             dispatch({
@@ -20,8 +20,8 @@ export const getProductAttribute = (id) => (dispatch) => {
         });
 };
 
-export const createProductAttribute = (object) => (dispatch) => {
-    axios
+export const createProductAttribute = (object) => async (dispatch) => {
+    await axios
         .post(process.env.REACT_APP_BASE_URL + 'product-attribute', object)
         .then((res) => {
             dispatch({
@@ -30,8 +30,8 @@ export const createProductAttribute = (object) => (dispatch) => {
             });
         });
 };
-export const updateProductAttribute = (object) => (dispatch) => {
-    axios
+export const updateProductAttribute = (object) => async (dispatch) => {
+    await axios
         .put(process.env.REACT_APP_BASE_URL + 'product-attribute', object)
         .then((res) => {
             dispatch({
@@ -40,8 +40,8 @@ export const updateProductAttribute = (object) => (dispatch) => {
             });
         });
 };
-export const deleteProductAttribute = (listId) => (dispatch) => {
-    axios
+export const deleteProductAttribute = (listId) => async (dispatch) => {
+    await axios
         .delete(process.env.REACT_APP_BASE_URL + 'product-attribute', {
             data: listId,
         })

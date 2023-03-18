@@ -35,6 +35,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
     const [file, setFile] = useState({});
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openSnackBar, setOpenSnackBar] = useState(false);
+    const [load, setLoad] = useState(false);
     const handleClickOpenConfirm = () => {
         setOpenConfirm(true);
     };
@@ -129,6 +130,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
         handleChangeFormProduct(value.promotion_id, 'promotion_id');
     };
     const handleConfirmUpdate = async () => {
+        setLoad(true);
         var productResponse = {};
         await axios
             .post(
@@ -152,6 +154,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
             },
         });
 
+        setLoad(false);
         setOpenSnackBar(true);
         setOpenConfirm(false);
     };
@@ -410,6 +413,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
                 handleClose={handleClose}
                 handleCloseConfirm={handleCloseConfirm}
                 handleConfirmUpdate={handleConfirmUpdate}
+                loading={load}
             />
 
             <Snackbar

@@ -1,6 +1,10 @@
 import axios from 'axios.js';
 export const LIST_PRODUCT_VARIANT = 'listProductVariant';
 export const DELETE_PRODUCT_VARIANT = 'deleteProductVariant';
+export const GET_PRODUCTV_FROM_STORE = 'getProductVSelectedFromStore ';
+export const CLEAR_PRODUCT_VARIANT = 'clearProductVariant';
+export const SET_PAGE_NUMBER = 'setPageNumberProductVariant';
+export const CLEAR_STATE = 'clearStateProductVariant';
 
 export const getProductVariant = (size, page, id) => async (dispatch) => {
     await axios
@@ -34,4 +38,21 @@ export const deleteProductVariant = (id, isDelted) => async (dispatch) => {
                 type: DELETE_PRODUCT_VARIANT,
             });
         });
+};
+export const getProductVSelectedFromStore = (id) => {
+    return {
+        type: GET_PRODUCTV_FROM_STORE,
+        payload: id,
+    };
+};
+export const setPageNumberProductVariant = (value) => {
+    return {
+        type: SET_PAGE_NUMBER,
+        payload: value,
+    };
+};
+export const clearStateProductVariant = () => {
+    return {
+        type: CLEAR_STATE,
+    };
 };

@@ -12,40 +12,25 @@ import {
     Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import ButtonProduct from './ButtonProduct';
+import ButtonProduct from '../ButtonProduct';
 import {
     addIdToStore,
     getProductAttribute,
     deleteProductAttribute,
-    resetProductAttribute,
-    addNewForm,
     createProductAttribute,
     updateProductAttribute,
     updateProductAtbInStore,
 } from 'app/redux/actions/ProductAttributeAction';
-import { PropTypes } from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import DialogConfirm from './DialogConfirm';
 
-function DialogProductAttribute({
-    open,
-    productAttributeList,
-    handleClose,
-    ...props
-}) {
-    const {
-        addIdToStore,
-        productAttribute,
-        getProductAttribute,
-        deleteProductAttribute,
-        createProductAttribute,
-        updateProductAttribute,
-        updateProductAtbInStore,
-    } = props;
+function DialogProductAttribute({ open, productAttributeList, handleClose }) {
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openSnackBar, setOpenSnackBar] = useState(false);
+    const productAttribute = useSelector((state) => state.productAttribute);
+    const dispatch = useDispatch();
 
     const handleClickOpenConfirm = () => {
         setOpenConfirm(true);
@@ -55,15 +40,14 @@ function DialogProductAttribute({
         setOpenConfirm(false);
     };
     const handleAddIdToListDelete = (id) => {
-        addIdToStore(id);
+        dispatch(addIdToStore(id));
     };
     const handleReset = (idProduct) => {
-        getProductAttribute(idProduct);
+        dispatch(getProductAttribute(idProduct));
     };
-    const handleConfirmUpdate = async () => {
-        await deleteProductAttribute(productAttribute.listIdToDelete);
-        await updateProductAttribute(productAttribute.data);
-        console.log(productAttribute.data);
+    const handleConfirmUpdate = () => {
+        dispatch(deleteProductAttribute(productAttribute.listIdToDelete));
+        dispatch(updateProductAttribute(productAttribute.data));
         setOpenSnackBar(true);
         setOpenConfirm(false);
     };
@@ -86,16 +70,17 @@ function DialogProductAttribute({
             product_id: productAttribute.idProduct,
         }));
     };
-    const handleClickCreateAttribute = async () => {
+    const handleClickCreateAttribute = () => {
         const check = checkValidation(formAttribute);
         if (check) {
             return;
         }
-        await createProductAttribute(formAttribute);
-        await getProductAttribute(productAttribute.idProduct);
+        dispatch(createProductAttribute(formAttribute));
+        dispatch(getProductAttribute(productAttribute.idProduct));
 
         clearFormProductAttribute();
     };
+
     const clearFormProductAttribute = () => {
         setFormAttribute((pre) => ({
             ...pre,
@@ -108,7 +93,7 @@ function DialogProductAttribute({
             attribute_name: false,
             attribute_value: false,
         }));
-        getProductAttribute(productAttribute.idProduct);
+        dispatch(getProductAttribute(productAttribute.idProduct));
     };
 
     const [validate, setValidate] = useState({
@@ -141,8 +126,7 @@ function DialogProductAttribute({
         return check;
     };
     const handleChangeFormValue = (id, e) => {
-        console.log(typeof e.target.value);
-        updateProductAtbInStore(id, e.target.value);
+        dispatch(updateProductAtbInStore(id, e.target.value));
     };
 
     return (
@@ -316,31 +300,6 @@ function DialogProductAttribute({
                     </Button>
                 </DialogActions>
             </Dialog>
-
-            {/* dialog confirm  */}
-            {/* <Dialog
-                open={openConfirm}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                maxWidth="sm"
-            >
-                <DialogTitle id="alert-dialog-title" color="primary">
-                    {'XÁC NHẬN'}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Xác nhận cập nhật các thay đổi thông số của sản phẩm ,
-                        điều nay sẽ không hoàn tác được sau khi đã xác nhận
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseConfirm}>Huỷ bỏ</Button>
-                    <Button onClick={handleConfirmUpdate} autoFocus>
-                        Đồng ý
-                    </Button>
-                </DialogActions>
-            </Dialog> */}
             <DialogConfirm
                 openConfirm={openConfirm}
                 handleClose={handleClose}
@@ -365,24 +324,5 @@ function DialogProductAttribute({
         </>
     );
 }
-const mapStateToProps = (state) => ({
-    productAttribute: state.productAttribute,
-    addIdToStore: PropTypes.func.isRequired,
-    getProductAttribute: PropTypes.func.isRequired,
-    deleteProductAttribute: PropTypes.func.isRequired,
-    resetProductAttribute: PropTypes.func.isRequired,
-    addNewForm: PropTypes.func.isRequired,
-    createProductAttribute: PropTypes.func.isRequired,
-    updateProductAttribute: PropTypes.func.isRequired,
-    updateProductAtbInStore: PropTypes.func.isRequired,
-});
-export default connect(mapStateToProps, {
-    addIdToStore,
-    getProductAttribute,
-    deleteProductAttribute,
-    resetProductAttribute,
-    addNewForm,
-    createProductAttribute,
-    updateProductAttribute,
-    updateProductAtbInStore,
-})(DialogProductAttribute);
+
+export default DialogProductAttribute;

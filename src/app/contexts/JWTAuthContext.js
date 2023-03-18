@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const login = async (account) => {
         const response_login = await axios
-            .post(process.env.REACT_APP_URL + 'login', account)
+            .post(process.env.REACT_APP_URL + 'un/login', account)
             .catch((error) => console.log(error));
 
         const { access_token, error } = response_login.data;
