@@ -7,6 +7,7 @@ const initialState = {
     isAuthenticated: false,
     isInitialised: false,
     fullName: null,
+    role: 'na',
 };
 
 const isValidToken = (accessToken) => {
@@ -99,7 +100,10 @@ export const AuthProvider = ({ children }) => {
         if (response_login.data && error) {
             return response_login.data;
         }
-        if (roleOfUser(access_token) === 'SUPER_ADMIN') {
+        if (
+            roleOfUser(access_token) === 'SUPER_ADMIN' ||
+            roleOfUser(access_token) === 'ADMIN'
+        ) {
             setSession(access_token);
             const response = await axios.get(
                 process.env.REACT_APP_URL + 'user/info',
@@ -110,6 +114,7 @@ export const AuthProvider = ({ children }) => {
                 payload: {
                     isAuthenticated: true,
                     fullName,
+                    role: roleOfUser(access_token),
                 },
             });
             return { request: 'success' };
@@ -157,7 +162,10 @@ export const AuthProvider = ({ children }) => {
                     window.localStorage.getItem('access_token');
 
                 if (access_token && isValidToken(access_token)) {
-                    if (roleOfUser(access_token) === 'SUPER_ADMIN') {
+                    if (
+                        roleOfUser(access_token) === 'SUPER_ADMIN' ||
+                        roleOfUser(access_token) === 'ADMIN'
+                    ) {
                         setSession(access_token);
                         const response = await axios.get(
                             process.env.REACT_APP_URL + 'user/info',
@@ -169,6 +177,7 @@ export const AuthProvider = ({ children }) => {
                             payload: {
                                 isAuthenticated: true,
                                 fullName,
+                                role: roleOfUser(access_token),
                             },
                         });
                     } else {

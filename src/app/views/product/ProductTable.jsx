@@ -138,7 +138,6 @@ const SimpleTable = () => {
                 products.stateDeleted.deleted !== -1 ||
                 products.keysearch !== ''
             ) {
-                console.log(products);
                 dispatch(
                     getProductsFilters(
                         5,
