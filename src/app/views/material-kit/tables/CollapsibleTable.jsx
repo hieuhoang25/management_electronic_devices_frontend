@@ -17,7 +17,7 @@ import { TablePagination } from '@mui/material';
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
-    // console.log(row);
+    console.log(row);
 
     return (
         <React.Fragment>

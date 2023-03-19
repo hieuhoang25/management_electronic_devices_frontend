@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
-import { tableHeader } from 'app/utils/constant';
+import { accountTableHeader } from 'app/utils/constant';
 import { createDataTableAccount } from 'app/utils/objects';
 import CollapsibleTable from './CollapsibleTable';
 import { FilterTable } from './FilterTable';
@@ -23,14 +23,14 @@ const rows = [
         '2021-12-12',
         '2021-12-12',
         'quan 12',
-        [
-            {
-                date: '2022',
-                customerId: '123222',
-                amount: 444,
-                price: 1222,
-            },
-        ],
+        // [
+        //     {
+        //         date: '2022',
+        //         customerId: '123222',
+        //         amount: 444,
+        //         price: 1222,
+        //     },
+        // ],
     ),
     createDataTableAccount(
         'Testtt',
@@ -42,8 +42,8 @@ const rows = [
         [
             {
                 date: '2022',
-                customerId: '123222',
-                amount: 444,
+                customerId: '000',
+                amount: 2,
                 price: 222,
             },
         ],
@@ -70,7 +70,10 @@ const AppTable = () => {
             </SimpleCard>
 
             <SimpleCard title="Coolapsible Table">
-                <CollapsibleTable tableHeader={tableHeader} rows={rows} />
+                <CollapsibleTable
+                    tableHeader={accountTableHeader}
+                    rows={rows}
+                />
             </SimpleCard>
 
             <SimpleCard title="filter table">
