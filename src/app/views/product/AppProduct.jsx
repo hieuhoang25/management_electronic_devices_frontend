@@ -104,10 +104,10 @@ const AppProduct = (props) => {
                         <Grid xs={7} item>
                             <TextField
                                 // margin="normal"
-                                required
+
                                 id="outlined-required"
-                                label="Tìm kiếm"
-                                placeholder="Tìm kiếm theo tên sản phẩm"
+                                label="Tìm kiếm theo tên, thương hiệu, danh mục, khuyến mãi"
+                                placeholder="Tìm kiếm theo tên, thương hiệu, danh mục, khuyến mãi"
                                 fullWidth
                                 onChange={handleChangeSearchValue}
                             />

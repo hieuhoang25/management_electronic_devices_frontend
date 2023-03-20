@@ -157,7 +157,6 @@ function DialogProduct({
     };
 
     const handleClickBrand = (e, value) => {
-        console.log(value);
         if (value === null || value === undefined) {
             return;
         }
@@ -165,7 +164,6 @@ function DialogProduct({
         handleChangeFormProduct(value.brand_id, 'brand_id');
     };
     const handleClickPromotion = (e, value) => {
-        console.log(value);
         if (value === null || value === undefined) {
             return;
         }
@@ -213,7 +211,6 @@ function DialogProduct({
             };
         });
     };
-
     return (
         <Box>
             <Dialog

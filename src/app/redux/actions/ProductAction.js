@@ -12,7 +12,23 @@ export const SET_STATE_DELETED = 'setStateDeleted';
 export const HANDLE_CHANGE_KEYSEARCH = 'handleChangeKeysearch';
 export const GET_PRODUCTS_FILTERS = 'getProductsFilters';
 
-export const getProductsList = (size, page) => async (dispatch) => {
+export const getProductsList = (size, page) => async (dispatch, getState) => {
+    if (
+        getState().products.stateDeleted.deleted !== -1 ||
+        getState().products.keysearch !== ''
+    ) {
+        dispatch(
+            getProductsFilters(
+                5,
+                page,
+                getState().products.keysearch,
+                getState().products.stateDeleted.deleted,
+            ),
+        );
+        console.log('filters');
+        return;
+    }
+    console.log('not filters');
     await axios
         .get(
             process.env.REACT_APP_BASE_URL +
@@ -43,7 +59,6 @@ export const getProductsFilters =
                     isDeleted,
             )
             .then((res) => {
-                console.log(res.data.data);
                 dispatch({
                     type: GET_PRODUCTS_FILTERS,
                     payload: res.data.data,
