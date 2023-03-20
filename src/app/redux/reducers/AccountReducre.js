@@ -4,6 +4,7 @@ import {
     SET_PAGENUMBER_ACCOUNT,
     HANDLE_CHANGE_KEYSEARCH_ACCOUNT,
     HANDLE_CHANGE_ROLE,
+    GET_ACCOUNTS_FILTERS,
 } from '../actions/AccountAction';
 
 const initialState = {
@@ -25,6 +26,12 @@ const AccountReducer = (state = initialState, action) => {
         case UPDATE_ROLE:
             return {
                 ...state,
+            };
+        case GET_ACCOUNTS_FILTERS:
+            return {
+                ...state,
+                data: action.payload.data,
+                totalPage: action.payload.totalPage,
             };
         case SET_PAGENUMBER_ACCOUNT:
             return {
