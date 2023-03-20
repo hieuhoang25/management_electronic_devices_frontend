@@ -31,7 +31,7 @@ const GreenRadio = styled(Radio)(() => ({
 function Row(props) {
     const { row, callBack = () => {} } = props;
     const [open, setOpen] = React.useState(false);
-    const accounts = useSelector((state) => state.accounts);
+    // const accounts = useSelector((state) => state.accounts);
     const dispatch = useDispatch();
     function handleChangeRadio(roleId, accountId) {
         dispatch(updateRole(roleId, accountId));
@@ -168,7 +168,6 @@ export default function AccountTable({ tableHeader }) {
         setReload(!reload);
     };
     useEffect(() => {
-        console.log('callback');
         if (accounts.role.id !== -1 || accounts.keysearch !== '') {
             dispatch(
                 getAccountsFilter(
@@ -187,7 +186,7 @@ export default function AccountTable({ tableHeader }) {
     const callBackStateReload = () => {
         setReload(!reload);
     };
-    console.log(accounts);
+
     return (
         <Box width="100%" overflow="auto">
             <StyledTable>

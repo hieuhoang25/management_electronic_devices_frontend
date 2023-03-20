@@ -11,7 +11,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonProduct from '../ButtonProduct';
 import {
     addIdToStore,
@@ -30,6 +30,7 @@ function DialogProductAttribute({ open, productAttributeList, handleClose }) {
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openSnackBar, setOpenSnackBar] = useState(false);
     const productAttribute = useSelector((state) => state.productAttribute);
+    const [reload, setReload] = useState(true);
     const dispatch = useDispatch();
 
     const handleClickOpenConfirm = () => {
@@ -70,17 +71,20 @@ function DialogProductAttribute({ open, productAttributeList, handleClose }) {
             product_id: productAttribute.idProduct,
         }));
     };
-    const handleClickCreateAttribute = () => {
+    const handleClickCreateAttribute = async () => {
         const check = checkValidation(formAttribute);
         if (check) {
             return;
         }
         dispatch(createProductAttribute(formAttribute));
-        dispatch(getProductAttribute(productAttribute.idProduct));
+        setReload(!reload);
+        // dispatch(getProductAttribute(productAttribute.idProduct));
 
         clearFormProductAttribute();
     };
-
+    useEffect(() => {
+        dispatch(getProductAttribute(productAttribute.idProduct));
+    }, [reload]);
     const clearFormProductAttribute = () => {
         setFormAttribute((pre) => ({
             ...pre,

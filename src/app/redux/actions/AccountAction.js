@@ -8,6 +8,7 @@ export const HANDLE_CHANGE_ROLE = 'handleChangeRole';
 export const GET_ACCOUNTS_FILTERS = 'getAccountsFilter';
 
 export const getAccountList = (size, page) => async (dispatch) => {
+    console.log('account');
     await axios
         .get(
             process.env.REACT_APP_BASE_URL +
