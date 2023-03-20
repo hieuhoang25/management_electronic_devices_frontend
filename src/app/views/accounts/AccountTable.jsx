@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import {
     getAccountList,
+    getAccountsFilter,
     setPageNumberAccount,
     updateRole,
 } from 'app/redux/actions/AccountAction';
@@ -28,13 +29,14 @@ const GreenRadio = styled(Radio)(() => ({
 }));
 
 function Row(props) {
-    const { row } = props;
+    const { row, callBack = () => {} } = props;
     const [open, setOpen] = React.useState(false);
     const accounts = useSelector((state) => state.accounts);
     const dispatch = useDispatch();
     function handleChangeRadio(roleId, accountId) {
         dispatch(updateRole(roleId, accountId));
-        dispatch(getAccountList(2, accounts.pageNumber - 1));
+        // dispatch(getAccountList(2, accounts.pageNumber - 1));
+        callBack();
     }
     return (
         <React.Fragment>
@@ -166,15 +168,26 @@ export default function AccountTable({ tableHeader }) {
         setReload(!reload);
     };
     useEffect(() => {
-        console.log(accounts);
+        console.log('callback');
         if (accounts.role.id !== -1 || accounts.keysearch !== '') {
+            dispatch(
+                getAccountsFilter(
+                    2,
+                    accounts.pageNumber - 1,
+                    accounts.keysearch,
+                    accounts.role.id,
+                ),
+            );
             return;
         }
         dispatch(getAccountList(2, accounts.pageNumber - 1));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reload, accounts.role, accounts.keysearch]);
-
+    const callBackStateReload = () => {
+        setReload(!reload);
+    };
+    console.log(accounts);
     return (
         <Box width="100%" overflow="auto">
             <StyledTable>
@@ -189,9 +202,14 @@ export default function AccountTable({ tableHeader }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {accounts.data.map((row, index) => (
-                        <Row key={index} row={row} />
-                    ))}
+                    {accounts.data &&
+                        accounts.data.map((row, index) => (
+                            <Row
+                                key={index}
+                                row={row}
+                                callBack={callBackStateReload}
+                            />
+                        ))}
                 </TableBody>
             </StyledTable>
 
