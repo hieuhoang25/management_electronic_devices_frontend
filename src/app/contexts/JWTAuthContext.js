@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
-import axiosInstance from 'axios.js';
+// import axiosInstance from 'axios';
 import { MatxLoading } from 'app/components';
-import axios from 'axios';
+import axios from 'axios.js';
 import TokenService from 'app/service/tokenService';
 
 const initialState = {
@@ -11,7 +11,6 @@ const initialState = {
     fullName: null,
     role: 'na',
 };
-
 export const isValidToken = (accessToken) => {
     if (!accessToken) {
         return false;
@@ -30,15 +29,11 @@ const roleOfUser = (accessToken) => {
     return decodedToken.roles[0];
 };
 
-const setSession = (accessToken, refreshToken) => {
+const setSession = (accessToken) => {
     if (accessToken) {
         TokenService.setCookieAccessToken(accessToken);
-        TokenService.setCookieRefreshToken(refreshToken);
-        axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-        // axios.defaults.headers.common['x-auth-token'] = `Bearer ${accessToken}`;
     } else {
-        TokenService.removeAccessToken();
-        delete axiosInstance.defaults.headers.common.Authorization;
+        delete TokenService.removeAccessToken();
     }
 };
 
@@ -99,33 +94,32 @@ export const AuthProvider = ({ children }) => {
         const response_login = await axios
             .post(process.env.REACT_APP_URL + 'un/login', account)
             .catch((error) => console.log(error));
-        const { access_token, error, refresh_token } = response_login.data;
-        console.log(response_login);
+        const { error, access_token } = response_login.data;
         if (response_login.data && error) {
             return response_login.data;
         }
-
+        const role = response_login.data.roles[0].authority;
         if (
-            roleOfUser(access_token) === 'SUPER_ADMIN' ||
-            roleOfUser(access_token) === 'ADMIN'
+            role === 'SUPER_ADMIN' ||
+            role === 'ADMIN' ||
+            role === 'ROLE_ADMIN'
         ) {
-            setSession(access_token, refresh_token);
-            // const response = await axiosInstance.get(
-            //     process.env.REACT_APP_URL + 'user/info',
-            // );
-            // console.log(response);
-            // const fullName = response.data.full_name;
+            const response = await axios.get(
+                process.env.REACT_APP_URL + 'user/info',
+            );
+            setSession(access_token);
+            const fullName = response.data.full_name;
             dispatch({
                 type: 'INIT',
                 payload: {
                     isAuthenticated: true,
-                    // fullName,
-                    role: roleOfUser(access_token),
+                    fullName,
+                    role: role,
                 },
             });
             return { request: 'success' };
         } else {
-            setSession(null, null);
+            setSession(null);
             dispatch({
                 type: 'INIT',
                 payload: {
@@ -157,7 +151,6 @@ export const AuthProvider = ({ children }) => {
     // };
 
     const logout = () => {
-        setSession(null, null);
         dispatch({ type: 'LOGOUT' });
     };
 
@@ -166,22 +159,14 @@ export const AuthProvider = ({ children }) => {
             try {
                 const rs = await axios.post(
                     process.env.REACT_APP_URL + 'un/refresh-token',
-                    {
-                        refresh_token: TokenService.getCookieRefreshToken(),
-                    },
                 );
-                const { access_token, refresh_token } = rs.data;
-
-                setSession(access_token, refresh_token);
-
-                // const access_token = TokenService.getLocalAccessToken();
-                // const refreshToken = TokenService.getLocalRefreshToken();
+                TokenService.setCookieAccessToken(rs.data.access_token);
+                const access_token = TokenService.getCookieAccessToken();
                 if (access_token && isValidToken(access_token)) {
                     if (
                         roleOfUser(access_token) === 'SUPER_ADMIN' ||
                         roleOfUser(access_token) === 'ADMIN'
                     ) {
-                        setSession(access_token, refresh_token);
                         dispatch({
                             type: 'INIT',
                             payload: {
@@ -200,37 +185,13 @@ export const AuthProvider = ({ children }) => {
                         });
                     }
                 } else {
-                    try {
-                        // localStorage.removeItem('access_token');
-                        // var refresh_token = TokenService.getLocalRefreshToken();
-                        const rs = await axios.post(
-                            process.env.REACT_APP_URL + 'un/refresh-token',
-                            {
-                                refresh_token:
-                                    TokenService.getCookieRefreshToken(),
-                            },
-                        );
-
-                        const { access_token, refresh_token } = rs.data;
-
-                        setSession(access_token, refresh_token);
-                        dispatch({
-                            type: 'INIT',
-                            payload: {
-                                isAuthenticated: true,
-                                // fullName,
-                                role: roleOfUser(access_token),
-                            },
-                        });
-                    } catch (_error) {
-                        dispatch({
-                            type: 'INIT',
-                            payload: {
-                                isAuthenticated: false,
-                                fullName: null,
-                            },
-                        });
-                    }
+                    dispatch({
+                        type: 'INIT',
+                        payload: {
+                            isAuthenticated: false,
+                            user: null,
+                        },
+                    });
                 }
             } catch (err) {
                 console.error(err);

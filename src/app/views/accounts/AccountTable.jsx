@@ -31,11 +31,11 @@ const GreenRadio = styled(Radio)(() => ({
 function Row(props) {
     const { row, callBack = () => {} } = props;
     const [open, setOpen] = React.useState(false);
-    // const accounts = useSelector((state) => state.accounts);
+    const accounts = useSelector((state) => state.accounts);
     const dispatch = useDispatch();
     function handleChangeRadio(roleId, accountId) {
         dispatch(updateRole(roleId, accountId));
-        // dispatch(getAccountList(2, accounts.pageNumber - 1));
+        dispatch(getAccountList(2, accounts.pageNumber - 1));
         callBack();
     }
     return (
