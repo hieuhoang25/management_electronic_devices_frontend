@@ -502,11 +502,13 @@ const SimpleTable = () => {
                     onChange={handleChange}
                 />
             </Stack>
-            <DialogProductAttribute
-                open={open}
-                productAttributeList={productAttribute.data}
-                handleClose={handleClose}
-            />
+            {open && (
+                <DialogProductAttribute
+                    open={open}
+                    productAttributeList={productAttribute.data}
+                    handleClose={handleClose}
+                />
+            )}
             {openDialogProduct && (
                 <DialogProduct
                     open={openDialogProduct}

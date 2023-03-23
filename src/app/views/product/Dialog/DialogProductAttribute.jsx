@@ -84,6 +84,7 @@ function DialogProductAttribute({ open, productAttributeList, handleClose }) {
     };
     useEffect(() => {
         dispatch(getProductAttribute(productAttribute.idProduct));
+        // eslint-disable-next-line
     }, [reload]);
     const clearFormProductAttribute = () => {
         setFormAttribute((pre) => ({

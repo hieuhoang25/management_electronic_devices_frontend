@@ -1,7 +1,9 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
-import axios from 'axios.js';
+import axiosInstance from 'axios.js';
 import { MatxLoading } from 'app/components';
+import axios from 'axios';
+import TokenService from 'app/service/tokenService';
 
 const initialState = {
     isAuthenticated: false,
@@ -10,7 +12,7 @@ const initialState = {
     role: 'na',
 };
 
-const isValidToken = (accessToken) => {
+export const isValidToken = (accessToken) => {
     if (!accessToken) {
         return false;
     }
@@ -28,13 +30,15 @@ const roleOfUser = (accessToken) => {
     return decodedToken.roles[0];
 };
 
-const setSession = (accessToken) => {
+const setSession = (accessToken, refreshToken) => {
     if (accessToken) {
-        localStorage.setItem('access_token', accessToken);
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        TokenService.setCookieAccessToken(accessToken);
+        TokenService.setCookieRefreshToken(refreshToken);
+        axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        // axios.defaults.headers.common['x-auth-token'] = `Bearer ${accessToken}`;
     } else {
-        localStorage.removeItem('access_token');
-        delete axios.defaults.headers.common.Authorization;
+        TokenService.removeAccessToken();
+        delete axiosInstance.defaults.headers.common.Authorization;
     }
 };
 
@@ -95,31 +99,33 @@ export const AuthProvider = ({ children }) => {
         const response_login = await axios
             .post(process.env.REACT_APP_URL + 'un/login', account)
             .catch((error) => console.log(error));
-
-        const { access_token, error } = response_login.data;
+        const { access_token, error, refresh_token } = response_login.data;
+        console.log(response_login);
         if (response_login.data && error) {
             return response_login.data;
         }
+
         if (
             roleOfUser(access_token) === 'SUPER_ADMIN' ||
             roleOfUser(access_token) === 'ADMIN'
         ) {
-            setSession(access_token);
-            const response = await axios.get(
-                process.env.REACT_APP_URL + 'user/info',
-            );
-            const fullName = response.data.full_name;
+            setSession(access_token, refresh_token);
+            // const response = await axiosInstance.get(
+            //     process.env.REACT_APP_URL + 'user/info',
+            // );
+            // console.log(response);
+            // const fullName = response.data.full_name;
             dispatch({
                 type: 'INIT',
                 payload: {
                     isAuthenticated: true,
-                    fullName,
+                    // fullName,
                     role: roleOfUser(access_token),
                 },
             });
             return { request: 'success' };
         } else {
-            setSession(null);
+            setSession(null, null);
             dispatch({
                 type: 'INIT',
                 payload: {
@@ -132,7 +138,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     // const register = async (email, username, password) => {
-    //     const response = await axios.post('/api/auth/register', {
+    //     const response = await axiosInstance.post('/api/auth/register', {
     //         email,
     //         username,
     //         password,
@@ -151,32 +157,36 @@ export const AuthProvider = ({ children }) => {
     // };
 
     const logout = () => {
-        setSession(null);
+        setSession(null, null);
         dispatch({ type: 'LOGOUT' });
     };
 
     useEffect(() => {
         (async () => {
             try {
-                const access_token =
-                    window.localStorage.getItem('access_token');
+                const rs = await axios.post(
+                    process.env.REACT_APP_URL + 'un/refresh-token',
+                    {
+                        refresh_token: TokenService.getCookieRefreshToken(),
+                    },
+                );
+                const { access_token, refresh_token } = rs.data;
 
+                setSession(access_token, refresh_token);
+
+                // const access_token = TokenService.getLocalAccessToken();
+                // const refreshToken = TokenService.getLocalRefreshToken();
                 if (access_token && isValidToken(access_token)) {
                     if (
                         roleOfUser(access_token) === 'SUPER_ADMIN' ||
                         roleOfUser(access_token) === 'ADMIN'
                     ) {
-                        setSession(access_token);
-                        const response = await axios.get(
-                            process.env.REACT_APP_URL + 'user/info',
-                        );
-                        const fullName = response.data.full_name;
-
+                        setSession(access_token, refresh_token);
                         dispatch({
                             type: 'INIT',
                             payload: {
                                 isAuthenticated: true,
-                                fullName,
+                                // fullName,
                                 role: roleOfUser(access_token),
                             },
                         });
@@ -190,13 +200,37 @@ export const AuthProvider = ({ children }) => {
                         });
                     }
                 } else {
-                    dispatch({
-                        type: 'INIT',
-                        payload: {
-                            isAuthenticated: false,
-                            usfullNameer: null,
-                        },
-                    });
+                    try {
+                        // localStorage.removeItem('access_token');
+                        // var refresh_token = TokenService.getLocalRefreshToken();
+                        const rs = await axios.post(
+                            process.env.REACT_APP_URL + 'un/refresh-token',
+                            {
+                                refresh_token:
+                                    TokenService.getCookieRefreshToken(),
+                            },
+                        );
+
+                        const { access_token, refresh_token } = rs.data;
+
+                        setSession(access_token, refresh_token);
+                        dispatch({
+                            type: 'INIT',
+                            payload: {
+                                isAuthenticated: true,
+                                // fullName,
+                                role: roleOfUser(access_token),
+                            },
+                        });
+                    } catch (_error) {
+                        dispatch({
+                            type: 'INIT',
+                            payload: {
+                                isAuthenticated: false,
+                                fullName: null,
+                            },
+                        });
+                    }
                 }
             } catch (err) {
                 console.error(err);
