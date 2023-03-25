@@ -36,7 +36,10 @@ import {
     getProductVSelectedFromStore,
     setPageNumberProductVariant,
 } from 'app/redux/actions/ProductVariantAction';
-import { getProductAttribute } from 'app/redux/actions/ProductAttributeAction';
+import {
+    getProductAttribute,
+    RESET_PRODUCT_ATTRIBUTE,
+} from 'app/redux/actions/ProductAttributeAction';
 import { v4 } from 'uuid';
 import Loadable from 'app/components/Loadable';
 import DialogProductVariant from './Dialog/DialogProductVariant';
@@ -102,7 +105,6 @@ const SimpleTable = () => {
         products.listProduct.data = [];
     }
     const handleChange = (event, value) => {
-        console.log(value);
         if (products.stateTable === 'product') {
             dispatch(setPageProduct(value));
             dispatch(getProductsList(5, value - 1));
@@ -139,12 +141,14 @@ const SimpleTable = () => {
     ]);
 
     function handleOpenProductAttribute(id) {
-        // setIdSelected(id);
+        setIdSelected(id);
         dispatch(getProductAttribute(id));
         setOpen(true);
     }
-
     function handleClose() {
+        dispatch({
+            type: RESET_PRODUCT_ATTRIBUTE,
+        });
         setOpen(false);
     }
     const handleDelete = (value, isDelted, name) => {
@@ -507,6 +511,7 @@ const SimpleTable = () => {
                     open={open}
                     productAttributeList={productAttribute.data}
                     handleClose={handleClose}
+                    idProduct={idSelected}
                 />
             )}
             {openDialogProduct && (
