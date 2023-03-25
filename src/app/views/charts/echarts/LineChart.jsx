@@ -1,10 +1,22 @@
 import { useTheme } from '@mui/system';
 import ReactEcharts from 'echarts-for-react';
+import { lazy, useEffect, useState } from 'react';
+import {getStatisticRevenueByWeek} from 'app/redux/actions/StatisticAction';
+import { PropTypes } from 'prop-types';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 const LineChart = ({ height, color = [] }) => {
   const theme = useTheme();
+  const statistic = useSelector(state => state.statistic)
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(  getStatisticRevenueByWeek())
+   
+}, []);
+var  option = {}
+if (Object.keys(statistic.revenue).length !== 0){
 
-  const option = {
+   option = {
     grid: { top: '10%', bottom: '10%', left: '5%', right: '5%' },
     legend: {
       itemGap: 20,
@@ -13,7 +25,7 @@ const LineChart = ({ height, color = [] }) => {
     },
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'],
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
@@ -33,27 +45,43 @@ const LineChart = ({ height, color = [] }) => {
     },
     series: [
       {
-        data: [30, 40, 20, 50, 40, 80, 90],
+        data: [statistic.revenue.this_month.Mon|| 0, statistic.revenue.this_month.Tue|| 0,
+          statistic.revenue.this_month.Wed|| 0, statistic.revenue.this_month.Thu|| 0,
+          statistic.revenue.this_month.Fri || 0,  statistic.revenue.this_month.Sat|| 0, 
+          statistic.revenue.this_month.Sun|| 0],
         type: 'line',
-        stack: 'This month',
-        name: 'This month',
+        stack: 'Tháng này',
+        name: 'Tháng này',
         smooth: true,
         symbolSize: 4,
         lineStyle: { width: 4 },
       },
       {
-        data: [20, 50, 15, 50, 30, 70, 95],
+        data: [statistic.revenue.last_month.Mon|| 0, statistic.revenue.last_month.Tue|| 0,
+          statistic.revenue.last_month.Wed|| 0, statistic.revenue.last_month.Thu|| 0,
+          statistic.revenue.last_month.Fri || 0,  statistic.revenue.last_month.Sat|| 0, 
+          statistic.revenue.last_month.Sun|| 0],
         type: 'line',
-        stack: 'Last month',
-        name: 'Last month',
+        stack: 'Tháng trước',
+        name: 'Tháng trước',
         smooth: true,
         symbolSize: 4,
         lineStyle: { width: 4 },
       },
     ],
   };
+}
+  
 
   return <ReactEcharts style={{ height: height }} option={{ ...option, color: [...color] }} />;
 };
 
-export default LineChart;
+const mapStateToProps = (state) => ({
+  getStatisticRevenueByWeek: PropTypes.func.isRequired,
+
+  statistic: state.statistic,
+});
+export default 
+  LineChart
+;
+

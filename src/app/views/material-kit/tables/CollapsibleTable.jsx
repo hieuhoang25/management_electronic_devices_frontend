@@ -13,7 +13,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import styled from '@emotion/styled';
 import { TablePagination } from '@mui/material';
+import {  Button, Fab, Icon, } from '@mui/material';
 
+const StyledButton = styled(Button)(({ theme }) => ({
+    margin: theme.spacing(1),
+}));
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
@@ -36,12 +40,19 @@ function Row(props) {
                     </IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.fullname}
+                    {row.user_fullName}
                 </TableCell>
-                <TableCell align="center">{row.email} </TableCell>
-                <TableCell align="center">{row.phone}</TableCell>
-                <TableCell align="center">{row.createDate}</TableCell>
-                <TableCell align="center">{row.updateDate}</TableCell>
+                <TableCell align="center">{row.address}</TableCell>
+                <TableCell align="center">{row.created_date}</TableCell>
+                <TableCell align="center">{row.is_pay}</TableCell>
+                <TableCell align="center">
+
+                <StyledButton variant="contained" color="primary">
+                {row.status_name}
+                </StyledButton>
+                   
+                    
+                    </TableCell>
             </TableRow>
             <TableRow>
                 <TableCell
@@ -55,39 +66,43 @@ function Row(props) {
                                 gutterBottom
                                 component="div"
                             >
-                                History
+                                Chi tiết
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Date</TableCell>
-                                        <TableCell>Customer</TableCell>
+                                        <TableCell>Tên sản phầm</TableCell>
+                                        <TableCell>Màu</TableCell>
                                         <TableCell align="center">
-                                            Amount
+                                            Số lượng
                                         </TableCell>
                                         <TableCell align="center">
-                                            Total price ($)
+                                            Tổng giá ($)
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.history.map((historyRow) => (
-                                        <TableRow key={historyRow.date}>
+                                   
+                                 
+
+
+                                    {row.orderDetails.map((historyRow) => (
+                                        <TableRow key={historyRow.productVariant_color_name}>
                                             <TableCell
                                                 component="th"
                                                 scope="row"
                                             >
-                                                {historyRow.date}
+                                                {historyRow.productVariant_displayName}
                                             </TableCell>
                                             <TableCell>
-                                                {historyRow.customerId}
+                                                {historyRow.productVariant_color_name}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {historyRow.amount}
+                                                {historyRow.quantity}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {Math.round(historyRow.amount) /
-                                                    100}
+                                                {historyRow.price_sum}
+                            
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -132,7 +147,7 @@ const StyledTable = styled(Table)(() => ({
 export default function CollapsibleTable({ tableHeader, rows }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+    console.log(tableHeader)
     const handleChangePage = (_, newPage) => {
         setPage(newPage);
     };

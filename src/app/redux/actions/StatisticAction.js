@@ -34,3 +34,17 @@ export const statisticProductSellingTop = () => (dispatch) => {
             });
         });
 };
+export const getStatisticRevenueByWeek = () => (dispatch) => {
+    axios
+        .get(
+            process.env.REACT_APP_BASE_URL +
+                'statistic/revenuebyweek'
+        )
+        .then((res) => {
+            console.log(res.data);
+            dispatch({
+                type: STATISTIC_REVENUEBYWEEK,
+                payload: res.data,
+            });
+        })
+        };

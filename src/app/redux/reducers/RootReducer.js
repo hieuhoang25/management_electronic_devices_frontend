@@ -12,6 +12,7 @@ import PromotionReducer from './PromotionReducer';
 import ProductVariantReducer from './ProductVariantReducer';
 import ColorReducer from './ColorReducer';
 import StorageReducer from './StorageRecuder';
+import OrderReducer from './OrderReducer';
 
 import StatisticReducer from './StatisticReduce'
 const RootReducer = combineReducers({
@@ -28,7 +29,8 @@ const RootReducer = combineReducers({
     productVariant: ProductVariantReducer,
     color: ColorReducer,
     storage: StorageReducer,
-    statistic: StatisticReducer
+    statistic: StatisticReducer,
+    orders: OrderReducer,
 });
 
 export default RootReducer;

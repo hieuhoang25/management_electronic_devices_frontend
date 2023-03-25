@@ -1,11 +1,13 @@
 import {
     STATISTIC_SPECICALLY,
-    STATISTIC_PRODUCT_SELLING_TOP
+    STATISTIC_PRODUCT_SELLING_TOP,
+    STATISTIC_REVENUEBYWEEK
 } from '../actions/StatisticAction';
 
 const initalState = {
     statisticSpecially: {},
-    topSelling:[]
+    topSelling:[],
+    revenue: {}
 };
 
 const StatisticReduce = (state = initalState, action) => {
@@ -22,6 +24,12 @@ const StatisticReduce = (state = initalState, action) => {
                     ...state,
                     topSelling: action.payload
                 };
+        case STATISTIC_REVENUEBYWEEK:
+                console.log(state)
+            return {
+                    ...state,
+                    revenue: action.payload
+            };
         default:
             return state;
     }

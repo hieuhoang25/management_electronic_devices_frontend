@@ -5,12 +5,12 @@ import { PropTypes } from 'prop-types';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { orderTableHeader } from 'app/utils/constant';
-import { getAccountList } from 'app/redux/actions/AccountAction';
+import { getOrderList } from 'app/redux/actions/OrderAction';
 
 function AppOrder(props) {
-    const { getAccountList, accounts } = props;
+    const { getOrderList, orders } = props;
     useEffect(() => {
-        getAccountList();
+        getOrderList();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -19,7 +19,7 @@ function AppOrder(props) {
             <SimpleCard title="Quản lý đơn hàng">
                 <CollapsibleTable
                     tableHeader={orderTableHeader}
-                    rows={accounts.accountList}
+                    rows={orders.list}
                 />
             </SimpleCard>
         </Container>
@@ -27,7 +27,7 @@ function AppOrder(props) {
 }
 
 const mapStateToProps = (state) => ({
-    getAccountList: PropTypes.func.isRequired,
-    accounts: state.accounts,
+    getOrderList: PropTypes.func.isRequired,
+    orders: state.orders,
 });
-export default connect(mapStateToProps, { getAccountList })(AppOrder);
+export default connect(mapStateToProps, { getOrderList })(AppOrder);

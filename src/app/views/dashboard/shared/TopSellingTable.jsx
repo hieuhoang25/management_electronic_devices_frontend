@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { lazy, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { formatCurrency } from 'app/utils/utils';
 import { Paragraph } from 'app/components/Typography';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
@@ -115,7 +116,8 @@ const TopSellingTable = (props) => {
                 </TableCell>
 
                 <TableCell align="left" colSpan={2} sx={{ px: 0, textTransform: 'capitalize' }}>
-                  ${product.revenue > 999 ? (product.revenue / 1000).toFixed(1) + 'k' : product.revenue}
+                      {formatCurrency(product.revenue) }
+      
                 </TableCell>
 
                 <TableCell sx={{ px: 0 }} align="left" colSpan={2}>
@@ -144,38 +146,7 @@ const TopSellingTable = (props) => {
   );
 };
 
-const productList = [
-  {
-    imgUrl: '/assets/images/products/headphone-2.jpg',
-    name: 'earphone',
-    price: 100,
-    available: 15,
-  },
-  {
-    imgUrl: '/assets/images/products/headphone-3.jpg',
-    name: 'earphone',
-    price: 1500,
-    available: 30,
-  },
-  {
-    imgUrl: '/assets/images/products/iphone-2.jpg',
-    name: 'iPhone x',
-    price: 1900,
-    available: 35,
-  },
-  {
-    imgUrl: '/assets/images/products/iphone-1.jpg',
-    name: 'iPhone x',
-    price: 100,
-    available: 0,
-  },
-  {
-    imgUrl: '/assets/images/products/headphone-3.jpg',
-    name: 'Head phone',
-    price: 1190,
-    available: 5,
-  },
-];
+
 const mapStateToProps = (state) => ({
   getStatisticSpecially: PropTypes.func.isRequired,
 

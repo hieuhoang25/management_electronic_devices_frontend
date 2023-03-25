@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { lazy, useEffect, useState } from 'react';
+import { formatCurrency } from 'app/utils/utils';
 import {getStatisticSpecially} from 'app/redux/actions/StatisticAction';
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -43,7 +44,7 @@ const StatCards = (props) => {
   const navigate = useNavigate();
   const cardList = [
     { name: 'Người dùng', amount: statistic.statisticSpecially.number_of_user, icon: 'group' , url: "/account"},
-    { name: 'Doanh thu ', amount: statistic. statisticSpecially.week_envenue, icon: 'attach_money' , url: "/dashboard/default"},
+    { name: 'Doanh thu ', amount: formatCurrency(statistic. statisticSpecially.week_envenue), icon: 'attach_money' , url: "/dashboard/default"},
     { name: 'Tổng số lượng sản phẩm bán ra', amount: statistic. statisticSpecially.product_selled, icon: 'store' , url: '/product'},
     { name: 'Đơn hàng đang chờ xác nhận', amount: statistic.statisticSpecially.order_yet_approved, icon: 'shopping_cart' , url: "/order"},
   ];
