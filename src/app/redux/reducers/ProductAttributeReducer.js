@@ -22,7 +22,8 @@ const ProductAttributeReducer = (state = initalState, action) => {
                 ...state,
                 listIdToDelete: [],
                 data: action.payload.data,
-                idProduct: action.payload.data ? action.payload.product_id : '',
+                // idProduct: action.payload.data ? action.payload.product_id : '',
+                idProduct: action.payload.product_id,
             };
         }
         //thêm id cần xoá vào store
@@ -35,8 +36,8 @@ const ProductAttributeReducer = (state = initalState, action) => {
                 );
 
                 if (objWithIndex > -1) {
+                    // eslint-disable-next-line
                     loadData = state.data.splice(objWithIndex, 1);
-                    console.log(loadData);
                 }
             } else {
                 checkIdNotExist = [...state.listIdToDelete];
@@ -53,9 +54,11 @@ const ProductAttributeReducer = (state = initalState, action) => {
             };
         }
         case RESET_PRODUCT_ATTRIBUTE: {
+            console.log('RESET_PRODUCT_ATTRIBUTE');
             return {
                 ...state,
                 listIdToDelete: [],
+                data: [],
             };
         }
         case ADD_NEW_FORM: {

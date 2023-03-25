@@ -25,10 +25,10 @@ export const getProductsList = (size, page) => async (dispatch, getState) => {
                 getState().products.stateDeleted.deleted,
             ),
         );
-        console.log('filters');
+
         return;
     }
-    console.log('not filters');
+
     await axios
         .get(
             process.env.REACT_APP_BASE_URL +

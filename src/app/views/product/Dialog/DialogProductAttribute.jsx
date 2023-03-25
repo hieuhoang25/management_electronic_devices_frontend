@@ -26,7 +26,12 @@ import { Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import DialogConfirm from './DialogConfirm';
 
-function DialogProductAttribute({ open, productAttributeList, handleClose }) {
+function DialogProductAttribute({
+    open,
+    productAttributeList,
+    handleClose,
+    idProduct,
+}) {
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openSnackBar, setOpenSnackBar] = useState(false);
     const productAttribute = useSelector((state) => state.productAttribute);
@@ -51,6 +56,7 @@ function DialogProductAttribute({ open, productAttributeList, handleClose }) {
         dispatch(updateProductAttribute(productAttribute.data));
         setOpenSnackBar(true);
         setOpenConfirm(false);
+        setReload(!reload);
     };
 
     const handleCloseSnackBar = (event, reason) => {
@@ -62,13 +68,13 @@ function DialogProductAttribute({ open, productAttributeList, handleClose }) {
     const [formAttribute, setFormAttribute] = useState({
         attribute_name: '',
         attribute_value: '',
-        product_id: productAttribute.idProduct,
+        product_id: idProduct,
     });
     const handleAddFormAttribute = (e, name) => {
         setFormAttribute((pre) => ({
             ...pre,
             [name]: e.target.value,
-            product_id: productAttribute.idProduct,
+            product_id: idProduct,
         }));
     };
     const handleClickCreateAttribute = async () => {
@@ -83,7 +89,7 @@ function DialogProductAttribute({ open, productAttributeList, handleClose }) {
         clearFormProductAttribute();
     };
     useEffect(() => {
-        dispatch(getProductAttribute(productAttribute.idProduct));
+        dispatch(getProductAttribute(idProduct));
         // eslint-disable-next-line
     }, [reload]);
     const clearFormProductAttribute = () => {
@@ -98,7 +104,7 @@ function DialogProductAttribute({ open, productAttributeList, handleClose }) {
             attribute_name: false,
             attribute_value: false,
         }));
-        dispatch(getProductAttribute(productAttribute.idProduct));
+        dispatch(getProductAttribute(idProduct));
     };
 
     const [validate, setValidate] = useState({

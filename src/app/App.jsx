@@ -4,9 +4,8 @@ import { useRoutes } from 'react-router-dom';
 import { MatxTheme } from './components';
 import { AuthProvider } from './contexts/JWTAuthContext';
 import { SettingsProvider } from './contexts/SettingsContext';
-// import { Store } from './redux/Store';
 import routes from './routes';
-import Store from 'app/redux/Store';
+import Store from './redux/Store';
 import { PersistGate } from 'redux-persist/integration/react';
 let { store, persistor } = Store();
 
