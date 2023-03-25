@@ -14,8 +14,13 @@ import {
   TableRow,
   useTheme,
 } from '@mui/material';
+import { lazy, useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { Paragraph } from 'app/components/Typography';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { PropTypes } from 'prop-types';
+import {statisticProductSellingTop} from 'app/redux/actions/StatisticAction';
+import { connect } from 'react-redux';
 const CardHeader = styled(Box)(() => ({
   display: 'flex',
   paddingLeft: '24px',
@@ -55,21 +60,26 @@ const Small = styled('small')(({ bgcolor }) => ({
   boxShadow: '0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24)',
 }));
 
-const TopSellingTable = () => {
+const TopSellingTable = (props) => {
   const { palette } = useTheme();
   const navigate = useNavigate();
   const bgError = palette.error.main;
   const bgPrimary = palette.primary.main;
   const bgSecondary = palette.secondary.main;
+  const [data, setData] = useState(null);
+  const {statisticProductSellingTop , statistic} = props;
 
+  useEffect(() => {
+    statisticProductSellingTop();
+    // setProductList(products.listProduct.data);
+
+    // eslint-disable-next-line
+}, []);
   return (
     <Card elevation={3} sx={{ pt: '20px', mb: 3 }}>
       <CardHeader>
         <Title>Top sản phẩm bán chạy</Title>
-        <Select size="small" defaultValue="this_month">
-          <MenuItem value="this_month">This Month</MenuItem>
-          <MenuItem value="last_month">Last Month</MenuItem>
-        </Select>
+        
       </CardHeader>
 
       <Box overflow="auto">
@@ -92,23 +102,26 @@ const TopSellingTable = () => {
           </TableHead>
 
           <TableBody>
-            {productList.map((product, index) => (
+            {statistic.topSelling.map((product, index) => (
               <TableRow key={index} hover>
                 <TableCell colSpan={4} align="left" sx={{ px: 0, textTransform: 'capitalize' }}>
                   <Box display="flex" alignItems="center">
-                    <Avatar src={product.imgUrl} />
-                    <Paragraph sx={{ m: 0, ml: 4 }}>{product.name}</Paragraph>
+                    <Avatar src={process.env.REACT_APP_BASE_URL_FIREBASE +
+                    product.image +
+                    '?alt=media&token=' +
+                    uuidv4()} />
+                    <Paragraph sx={{ m: 0, ml: 4 }}>{product.product_name}</Paragraph>
                   </Box>
                 </TableCell>
 
                 <TableCell align="left" colSpan={2} sx={{ px: 0, textTransform: 'capitalize' }}>
-                  ${product.price > 999 ? (product.price / 1000).toFixed(1) + 'k' : product.price}
+                  ${product.revenue > 999 ? (product.revenue / 1000).toFixed(1) + 'k' : product.revenue}
                 </TableCell>
 
                 <TableCell sx={{ px: 0 }} align="left" colSpan={2}>
-                  {product.available ? (
-                    product.available < 20 ? (
-                      <Small bgcolor={bgSecondary}>{product.available} còn hàng</Small>
+                  {product.stock ? (
+                    product.stock < 20 ? (
+                      <Small bgcolor={bgSecondary}>{product.stock} còn hàng</Small>
                     ) : (
                       <Small bgcolor={bgPrimary}>còn hàng</Small>
                     )
@@ -163,5 +176,11 @@ const productList = [
     available: 5,
   },
 ];
+const mapStateToProps = (state) => ({
+  getStatisticSpecially: PropTypes.func.isRequired,
 
-export default TopSellingTable;
+  statistic: state.statistic,
+});
+export default  connect(mapStateToProps, {statisticProductSellingTop })(
+  TopSellingTable
+);

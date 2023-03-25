@@ -19,3 +19,18 @@ export const getStatisticSpecially = () => (dispatch) => {
             });
         });
 };
+
+export const statisticProductSellingTop = () => (dispatch) => {
+    axios
+        .get(
+            process.env.REACT_APP_BASE_URL +
+                'statistic/selling-top'
+        )
+        .then((res) => {
+            console.log(res.data);
+            dispatch({
+                type: STATISTIC_PRODUCT_SELLING_TOP,
+                payload: res.data,
+            });
+        });
+};
