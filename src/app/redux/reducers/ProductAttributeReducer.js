@@ -54,7 +54,6 @@ const ProductAttributeReducer = (state = initalState, action) => {
             };
         }
         case RESET_PRODUCT_ATTRIBUTE: {
-            console.log('RESET_PRODUCT_ATTRIBUTE');
             return {
                 ...state,
                 listIdToDelete: [],
@@ -68,7 +67,6 @@ const ProductAttributeReducer = (state = initalState, action) => {
             };
         }
         case PUT_PRODUCT_ATTRIBUTE: {
-            console.log();
             return {
                 ...state,
             };

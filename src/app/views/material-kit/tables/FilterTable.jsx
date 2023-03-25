@@ -61,7 +61,6 @@ export const FilterTable = () => {
 
     useEffect(() => {
         customerService.getCustomersLarge().then((data) => {
-            console.log(data);
             setCustomers1(getCustomers(data));
             setLoading1(false);
         });

@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import styled from '@emotion/styled';
-import { Grid, Pagination, Radio } from '@mui/material';
+import { Alert, Grid, Pagination, Radio, Snackbar } from '@mui/material';
 import { Stack } from '@mui/system';
 import { green } from '@mui/material/colors';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,15 +29,19 @@ const GreenRadio = styled(Radio)(() => ({
 }));
 
 function Row(props) {
-    const { row, callBack = () => {} } = props;
+    const { row, callBack = () => {}, setOpenSnackBar = () => {} } = props;
     const [open, setOpen] = React.useState(false);
     const accounts = useSelector((state) => state.accounts);
+
     const dispatch = useDispatch();
     function handleChangeRadio(roleId, accountId) {
+        setOpenSnackBar(true);
         dispatch(updateRole(roleId, accountId));
-        dispatch(getAccountList(2, accounts.pageNumber - 1));
+        dispatch(getAccountList(5, accounts.pageNumber - 1));
         callBack();
+        setOpenSnackBar(true);
     }
+
     return (
         <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -162,16 +166,23 @@ export default function AccountTable({ tableHeader }) {
     const accounts = useSelector((state) => state.accounts);
     const dispatch = useDispatch();
     const [reload, setReload] = useState(true);
-
+    const [openSnackBar, setOpenSnackBar] = useState();
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackBar(false);
+    };
     const handleChangePage = (_, newPage) => {
         dispatch(setPageNumberAccount(newPage));
         setReload(!reload);
     };
+
     useEffect(() => {
         if (accounts.role.id !== -1 || accounts.keysearch !== '') {
             dispatch(
                 getAccountsFilter(
-                    2,
+                    5,
                     accounts.pageNumber - 1,
                     accounts.keysearch,
                     accounts.role.id,
@@ -179,7 +190,7 @@ export default function AccountTable({ tableHeader }) {
             );
             return;
         }
-        dispatch(getAccountList(2, accounts.pageNumber - 1));
+        dispatch(getAccountList(5, accounts.pageNumber - 1));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reload, accounts.role, accounts.keysearch]);
@@ -207,6 +218,8 @@ export default function AccountTable({ tableHeader }) {
                                 key={index}
                                 row={row}
                                 callBack={callBackStateReload}
+                                setOpenSnackBar={setOpenSnackBar}
+                                openSnackBar={openSnackBar}
                             />
                         ))}
                 </TableBody>
@@ -219,6 +232,20 @@ export default function AccountTable({ tableHeader }) {
                     onChange={handleChangePage}
                 />
             </Stack>
+            <Snackbar
+                open={openSnackBar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackBar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="success"
+                    md={{ width: '100%' }}
+                >
+                    'Cập nhật thành công'
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }

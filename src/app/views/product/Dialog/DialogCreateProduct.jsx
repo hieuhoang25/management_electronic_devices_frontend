@@ -56,7 +56,6 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
     //clean up img
     useEffect(() => {
         return () => {
-            console.log('cleanup');
             image && URL.revokeObjectURL(image);
         };
     }, [image]);

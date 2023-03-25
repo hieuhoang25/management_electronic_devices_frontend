@@ -86,7 +86,6 @@ const NotificationBar = ({ container }) => {
 
     const handleDrawerToggle = () => {
         setPanelOpen(!panelOpen);
-        console.log(notifications);
     };
 
     const { palette } = useTheme();

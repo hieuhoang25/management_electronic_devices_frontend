@@ -67,7 +67,6 @@ function DialogProduct({
     //clean up img
     useEffect(() => {
         return () => {
-            console.log('cleanup');
             image && URL.revokeObjectURL(image);
         };
     }, [image]);
@@ -103,7 +102,6 @@ function DialogProduct({
         getCategory();
 
         if (Object.keys(products).length !== 0) {
-            console.log(111);
             setImage(
                 process.env.REACT_APP_BASE_URL_FIREBASE +
                     products.image +

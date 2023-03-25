@@ -13,7 +13,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import styled from '@emotion/styled';
 import { TablePagination } from '@mui/material';
-import {  Button, Fab, Icon, } from '@mui/material';
+import { Button } from '@mui/material';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(1),
@@ -21,7 +21,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
-    console.log(row);
 
     return (
         <React.Fragment>
@@ -46,13 +45,10 @@ function Row(props) {
                 <TableCell align="center">{row.created_date}</TableCell>
                 <TableCell align="center">{row.is_pay}</TableCell>
                 <TableCell align="center">
-
-                <StyledButton variant="contained" color="primary">
-                {row.status_name}
-                </StyledButton>
-                   
-                    
-                    </TableCell>
+                    <StyledButton variant="contained" color="primary">
+                        {row.status_name}
+                    </StyledButton>
+                </TableCell>
             </TableRow>
             <TableRow>
                 <TableCell
@@ -82,27 +78,30 @@ function Row(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                   
-                                 
-
-
                                     {row.orderDetails.map((historyRow) => (
-                                        <TableRow key={historyRow.productVariant_color_name}>
+                                        <TableRow
+                                            key={
+                                                historyRow.productVariant_color_name
+                                            }
+                                        >
                                             <TableCell
                                                 component="th"
                                                 scope="row"
                                             >
-                                                {historyRow.productVariant_displayName}
+                                                {
+                                                    historyRow.productVariant_displayName
+                                                }
                                             </TableCell>
                                             <TableCell>
-                                                {historyRow.productVariant_color_name}
+                                                {
+                                                    historyRow.productVariant_color_name
+                                                }
                                             </TableCell>
                                             <TableCell align="center">
                                                 {historyRow.quantity}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {historyRow.price_sum}
-                            
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -147,7 +146,7 @@ const StyledTable = styled(Table)(() => ({
 export default function CollapsibleTable({ tableHeader, rows }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    console.log(tableHeader)
+
     const handleChangePage = (_, newPage) => {
         setPage(newPage);
     };

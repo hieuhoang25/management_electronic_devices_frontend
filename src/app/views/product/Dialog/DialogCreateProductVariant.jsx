@@ -87,7 +87,6 @@ function DialogCreateProductVariant({
     } = props;
 
     useEffect(() => {
-        console.log('reload');
         getAllColor();
         getAllStorage();
         setImage(
@@ -126,8 +125,9 @@ function DialogCreateProductVariant({
     };
 
     const checkErrorMessage = (errorMessage) => {
-        if (errorMessage) {
-            setMessageSnackbar(errorMessage);
+        if (Object.keys(errorMessage).length > 0) {
+            setMessageSnackbar(errorMessage.message);
+
             setTypeOfSeverity('error');
             setLoad(false);
             setOpenSnackBar(true);
@@ -138,7 +138,7 @@ function DialogCreateProductVariant({
     };
     const handleConfirmUpdate = async () => {
         setLoad(true);
-        var errorMessage;
+        var errorMessage = {};
         var productVariantResponse = {};
         await axios
             .post(
@@ -146,11 +146,14 @@ function DialogCreateProductVariant({
                 formProductVariant,
             )
             .then((res) => (productVariantResponse = res.data))
-            .catch((error) => (errorMessage = error));
-        console.log(productVariantResponse);
+            .catch(({ response }) => {
+                errorMessage = {
+                    statusCode: response.status,
+                    message: response.data,
+                };
+            });
 
         try {
-            console.log(file);
             let blob = file.slice(0, file.size, 'image/png');
             let newFile = new File([blob], productVariantResponse.image, {
                 type: 'image/png',
@@ -166,8 +169,11 @@ function DialogCreateProductVariant({
                 .then((response) => {
                     // console.log(response.data);
                 })
-                .catch((error) => {
-                    errorMessage = error;
+                .catch(({ response }) => {
+                    errorMessage = {
+                        statusCode: response.status,
+                        message: response.data,
+                    };
                 });
         } catch (error) {
             console.log('upload file dialogcreate productvariant : ' + error);
@@ -191,7 +197,6 @@ function DialogCreateProductVariant({
         setOpenSnackBar(false);
     };
     const handleChangeForm = (value, name) => {
-        console.log(value);
         setFormProductVariant((pre) => {
             return {
                 ...pre,
