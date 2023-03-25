@@ -1,4 +1,4 @@
-FROM node:16.15.0-alpine
+FROM node:latest
 
 WORKDIR /app
 
@@ -8,8 +8,6 @@ RUN npm install
 
 COPY . .
 
-COPY .env.development /app/.env
-
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["npm", "start"]

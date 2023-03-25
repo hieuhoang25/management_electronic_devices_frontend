@@ -15,6 +15,11 @@ export const navigations = [
         icon: 'shopping_cart',
         path: '/order',
     },
+    {
+        name: 'Màu sắc,dung lượng',
+        icon: 'border_color',
+        path: '/color-storage',
+    },
     { label: 'PAGES', type: 'label' },
     {
         name: 'Session/Auth',

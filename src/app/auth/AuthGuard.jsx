@@ -15,32 +15,36 @@ import { Navigate, useLocation } from 'react-router-dom';
 // };
 
 const AuthGuard = ({ children }) => {
-  let {
-    isAuthenticated,
-    // user
-  } = useAuth();
-  const { pathname } = useLocation();
+    let {
+        isAuthenticated,
+        // user
+    } = useAuth();
+    const { pathname } = useLocation();
 
-  //   const routes = flat(AllPages);
+    //   const routes = flat(AllPages);
 
-  //   const hasPermission = userHasPermission(pathname, user, routes);
-  //   let authenticated = isAuthenticated && hasPermission;
+    //   const hasPermission = userHasPermission(pathname, user, routes);
+    //   let authenticated = isAuthenticated && hasPermission;
 
-  // // IF YOU NEED ROLE BASED AUTHENTICATION,
-  // // UNCOMMENT ABOVE LINES
-  // // AND COMMENT OUT BELOW authenticated VARIABLE
+    // // IF YOU NEED ROLE BASED AUTHENTICATION,
+    // // UNCOMMENT ABOVE LINES
+    // // AND COMMENT OUT BELOW authenticated VARIABLE
 
-  let authenticated = isAuthenticated;
+    let authenticated = isAuthenticated;
 
-  return (
-    <>
-      {authenticated ? (
-        children
-      ) : (
-        <Navigate replace to="/session/signin" state={{ from: pathname }} />
-      )}
-    </>
-  );
+    return (
+        <>
+            {authenticated ? (
+                children
+            ) : (
+                <Navigate
+                    replace
+                    to="/session/signin"
+                    state={{ from: pathname }}
+                />
+            )}
+        </>
+    );
 };
 
 export default AuthGuard;

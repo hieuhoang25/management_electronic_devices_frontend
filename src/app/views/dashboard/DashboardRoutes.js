@@ -5,7 +5,7 @@ import { authRoles } from '../../auth/authRoles';
 const Analytics = Loadable(lazy(() => import('./Analytics')));
 
 const dashboardRoutes = [
-  { path: '/dashboard/default', element: <Analytics />, auth: authRoles.admin },
+    { path: '/dashboard/default', element: <Analytics />, auth: authRoles.sa },
 ];
 
 export default dashboardRoutes;

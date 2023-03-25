@@ -9,6 +9,7 @@ import MatxLayout from './components/MatxLayout/MatxLayout';
 import AccountsRouter from './views/accounts/AccountsRouter';
 import ProductRouter from './views/product/ProductRouter';
 import OrderRouter from './views/orders/OrderRouter';
+import ColorStorageRouter from './views/color-storage/ColorStorageRouter';
 
 const routes = [
     {
@@ -24,6 +25,7 @@ const routes = [
             ...ProductRouter,
             ...AccountsRouter,
             ...OrderRouter,
+            ...ColorStorageRouter,
         ],
     },
     ...sessionRoutes,

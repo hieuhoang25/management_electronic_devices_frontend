@@ -1,15 +1,17 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
-import axios from 'axios.js';
+// import axiosInstance from 'axios';
 import { MatxLoading } from 'app/components';
+import axios from 'axios.js';
+import TokenService from 'app/service/tokenService';
 
 const initialState = {
     isAuthenticated: false,
     isInitialised: false,
     fullName: null,
+    role: 'na',
 };
-
-const isValidToken = (accessToken) => {
+export const isValidToken = (accessToken) => {
     if (!accessToken) {
         return false;
     }
@@ -29,11 +31,9 @@ const roleOfUser = (accessToken) => {
 
 const setSession = (accessToken) => {
     if (accessToken) {
-        localStorage.setItem('access_token', accessToken);
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        TokenService.setCookieAccessToken(accessToken);
     } else {
-        localStorage.removeItem('access_token');
-        delete axios.defaults.headers.common.Authorization;
+        delete TokenService.removeAccessToken();
     }
 };
 
@@ -94,22 +94,27 @@ export const AuthProvider = ({ children }) => {
         const response_login = await axios
             .post(process.env.REACT_APP_URL + 'un/login', account)
             .catch((error) => console.log(error));
-
-        const { access_token, error } = response_login.data;
+        const { error, access_token } = response_login.data;
         if (response_login.data && error) {
             return response_login.data;
         }
-        if (roleOfUser(access_token) === 'SUPER_ADMIN') {
-            setSession(access_token);
+        const role = response_login.data.roles[0].authority;
+        if (
+            role === 'SUPER_ADMIN' ||
+            role === 'ADMIN' ||
+            role === 'ROLE_ADMIN'
+        ) {
             const response = await axios.get(
                 process.env.REACT_APP_URL + 'user/info',
             );
+            setSession(access_token);
             const fullName = response.data.full_name;
             dispatch({
                 type: 'INIT',
                 payload: {
                     isAuthenticated: true,
                     fullName,
+                    role: role,
                 },
             });
             return { request: 'success' };
@@ -127,7 +132,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     // const register = async (email, username, password) => {
-    //     const response = await axios.post('/api/auth/register', {
+    //     const response = await axiosInstance.post('/api/auth/register', {
     //         email,
     //         username,
     //         password,
@@ -146,29 +151,28 @@ export const AuthProvider = ({ children }) => {
     // };
 
     const logout = () => {
-        setSession(null);
         dispatch({ type: 'LOGOUT' });
     };
 
     useEffect(() => {
         (async () => {
             try {
-                const access_token =
-                    window.localStorage.getItem('access_token');
-
+                const rs = await axios.post(
+                    process.env.REACT_APP_URL + 'un/refresh-token',
+                );
+                TokenService.setCookieAccessToken(rs.data.access_token);
+                const access_token = TokenService.getCookieAccessToken();
                 if (access_token && isValidToken(access_token)) {
-                    if (roleOfUser(access_token) === 'SUPER_ADMIN') {
-                        setSession(access_token);
-                        const response = await axios.get(
-                            process.env.REACT_APP_URL + 'user/info',
-                        );
-                        const fullName = response.data.full_name;
-
+                    if (
+                        roleOfUser(access_token) === 'SUPER_ADMIN' ||
+                        roleOfUser(access_token) === 'ADMIN'
+                    ) {
                         dispatch({
                             type: 'INIT',
                             payload: {
                                 isAuthenticated: true,
-                                fullName,
+                                // fullName,
+                                role: roleOfUser(access_token),
                             },
                         });
                     } else {
@@ -185,7 +189,7 @@ export const AuthProvider = ({ children }) => {
                         type: 'INIT',
                         payload: {
                             isAuthenticated: false,
-                            usfullNameer: null,
+                            user: null,
                         },
                     });
                 }

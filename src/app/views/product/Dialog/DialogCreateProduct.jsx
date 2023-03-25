@@ -227,7 +227,6 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
                                 isOptionEqualToValue={(option, value) =>
                                     option.category_name === value.category_name
                                 }
-                                // value={formProduct.category_id}
                                 renderInput={(params) => (
                                     <TextField {...params} label="Danh mục" />
                                 )}
@@ -262,13 +261,11 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
                                 disablePortal
                                 id="combo-box-demo"
                                 options={brands.data}
-                                // getOptionLabel={(option) => option.brand_name}
                                 getOptionLabel={(option) =>
                                     typeof option === 'string'
                                         ? option ?? ''
                                         : option.brand_name ?? ''
                                 }
-                                // value={brands.brandOfProduct}
                                 onChange={(e, value) => {
                                     handleClickBrand(e, value);
                                 }}
@@ -285,7 +282,6 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
                                 // disablePortal
                                 disableClearable
                                 id="combo-box-demo"
-                                // options={promotions.promotionFilterOfProduct}
                                 options={[
                                     {
                                         promotion_name: 'Không có khuyến mãi',
@@ -299,22 +295,17 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
                                         : option.promotion_name ?? ''
                                 }
                                 isOptionEqualToValue={(option, value) =>
-                                    option.promotion_name ===
-                                    value.promotion_name
+                                    option.promotion_id === value.promotion_id
                                 }
-                                // value={{
-                                //     promotion_name: 'Không có khuyến mãi',
-                                //     promotion_id: '',
-                                // }}
                                 onChange={(e, value) => {
                                     handleClickPromotion(e, value);
-                                    // handleChangeFormProduct(
-                                    //     value.promotion_id || '',
-                                    //     'promotion_id',
-                                    // );
                                 }}
                                 renderInput={(params) => (
-                                    <TextField {...params} label="Khuyến mãi" />
+                                    <TextField
+                                        {...params}
+                                        key={params.promotion_id}
+                                        label="Khuyến mãi"
+                                    />
                                 )}
                             />
                         </Grid>
@@ -365,7 +356,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
                                 variant="square"
                                 alt="Hình ánh sản phẩm"
                                 src={image || ''}
-                                key={new Date().getTime().toString()}
+                                // key={new Date().getTime().toString()}
                             />
                         </Grid>
                     </Grid>

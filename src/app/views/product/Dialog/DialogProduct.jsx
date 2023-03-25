@@ -118,6 +118,7 @@ function DialogProduct({
                 image: products.image,
                 description: products.description,
                 id: products.id,
+                is_delete: products.is_delete,
             });
             getBrandProduct(products.brand_id);
             getPromotionProductWithPromotionId(products.promotion_id);
@@ -156,7 +157,6 @@ function DialogProduct({
     };
 
     const handleClickBrand = (e, value) => {
-        console.log(value);
         if (value === null || value === undefined) {
             return;
         }
@@ -164,7 +164,6 @@ function DialogProduct({
         handleChangeFormProduct(value.brand_id, 'brand_id');
     };
     const handleClickPromotion = (e, value) => {
-        console.log(value);
         if (value === null || value === undefined) {
             return;
         }
@@ -212,7 +211,6 @@ function DialogProduct({
             };
         });
     };
-
     return (
         <Box>
             <Dialog
@@ -265,7 +263,7 @@ function DialogProduct({
                                     handleClickCategory(e, value);
                                 }}
                                 isOptionEqualToValue={(option, value) =>
-                                    option.category_name === value.category_name
+                                    option.category_id === value.category_id
                                 }
                                 value={categories.categoryOfProduct}
                                 renderInput={(params) => (
@@ -284,6 +282,9 @@ function DialogProduct({
                                 onChange={(e, value) => {
                                     handleClickSubCategory(e, value);
                                 }}
+                                isOptionEqualToValue={(option, value) =>
+                                    option.category_id === value.category_id
+                                }
                                 value={categories.subCategoryOfProduct}
                                 renderInput={(params) => (
                                     <TextField
@@ -318,6 +319,9 @@ function DialogProduct({
                                         label="Thuơng hiệu"
                                     />
                                 )}
+                                isOptionEqualToValue={(option, value) =>
+                                    option.brand_id === value.brand_id
+                                }
                             />
                         </Grid>
                         <Grid item xs={6}>
