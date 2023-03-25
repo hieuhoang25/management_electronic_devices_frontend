@@ -43,7 +43,7 @@ const StatCards = (props) => {
   const navigate = useNavigate();
   const cardList = [
     { name: 'Người dùng', amount: statistic.statisticSpecially.number_of_user, icon: 'group' , url: "/account"},
-    { name: 'Doanh thu tuần này', amount: statistic. statisticSpecially.week_envenue, icon: 'attach_money' , url: "/dashboard/default"},
+    { name: 'Doanh thu ', amount: statistic. statisticSpecially.week_envenue, icon: 'attach_money' , url: "/dashboard/default"},
     { name: 'Tổng số lượng sản phẩm bán ra', amount: statistic. statisticSpecially.product_selled, icon: 'store' , url: '/product'},
     { name: 'Đơn hàng đang chờ xác nhận', amount: statistic.statisticSpecially.order_yet_approved, icon: 'shopping_cart' , url: "/order"},
   ];
