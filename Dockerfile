@@ -2,7 +2,7 @@ FROM node:16-alpine
 
 WORKDIR /app
 
-RUN npm install -g react-scripts
+RUN npm install --save react react-dom react-scripts
 
 COPY package.json .
 
