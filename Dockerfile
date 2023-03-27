@@ -4,7 +4,7 @@ WORKDIR /app
 
 #RUN npm install --save react react-dom react-scripts
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm install
 
@@ -14,6 +14,6 @@ COPY .env.production .env
 
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["npm", "start"]
