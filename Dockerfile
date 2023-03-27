@@ -1,10 +1,10 @@
-FROM node:16-alpine
+FROM node:16.15
 
 WORKDIR /app
 
-RUN npm install --save react react-dom react-scripts
+#RUN npm install --save react react-dom react-scripts
 
-COPY package.json .
+COPY package*.json .
 
 RUN npm install
 
