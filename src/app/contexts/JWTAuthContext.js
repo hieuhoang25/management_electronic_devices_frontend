@@ -160,7 +160,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         (async () => {
             try {
-                const rs = await axios.post(
+                const rs = await axios.get(
                     process.env.REACT_APP_URL + 'un/refresh-token',
                 );
                 TokenService.setCookieAccessToken(rs.data.access_token);

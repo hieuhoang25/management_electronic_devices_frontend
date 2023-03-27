@@ -1,19 +1,23 @@
-FROM node:16-alpine
+FROM node:16.16.0
 
 WORKDIR /app
 
-RUN npm install -g react-scripts
+COPY package.json ./
 
-COPY package.json .
+COPY package-lock.json ./
+
+COPY ./ ./
+
+RUN npm i react-scripts
 
 RUN npm install
-
-COPY . .
 
 COPY .env.production .env
 
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["npm", "start"]
+
+
