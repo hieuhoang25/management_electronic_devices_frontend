@@ -1,8 +1,8 @@
-version: "2"
+version: "3"
 
 services:
   frontend:
-    container_name: "feadmin-container"
+    container_name: "manager-ui"
     build: .
     environment:
       - REACT_APP_BASE_URL=http://vongtayyeuthuong.shop/api/admin/
