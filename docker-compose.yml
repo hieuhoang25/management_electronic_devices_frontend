@@ -5,10 +5,10 @@ services:
     container_name: "manager-ui"
     build: .
     environment:
-      - REACT_APP_BASE_URL=https://vongtayyeuthuong.shop/api/admin/
-      - REACT_APP_URL=https://vongtayyeuthuong.shop/api/
+      - REACT_APP_BASE_URL=https://api.bonikphone.shop/api/admin/
+      - REACT_APP_URL=https://api.bonikphone.shop/api/
       - REACT_APP_BASE_URL_FIREBASE=https://firebasestorage.googleapis.com/v0/b/bonik-f7b39.appspot.com/o/
-      - REACT_APP_BASE_URL_API_FILE=https://vongtayyeuthuong.shop/api/files
+      - REACT_APP_BASE_URL_API_FILE=https://api.bonikphone.shop/api/files
     ports:
       - '3001:3001'
     volumes:
