@@ -102,7 +102,9 @@ const Layout1Topbar = () => {
         }
         updateSidebarMode({ mode });
     };
-
+    // const handleLogout = () => {
+    //     logout();
+    // };
     return (
         <TopbarRoot>
             <TopbarContainer>

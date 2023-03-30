@@ -21,7 +21,7 @@ export const isValidToken = (accessToken) => {
     return decodedToken.exp > currentTime;
 };
 
-const roleOfUser = (accessToken) => {
+export const roleOfUser = (accessToken) => {
     if (!accessToken) {
         return false;
     }
@@ -59,6 +59,7 @@ const reducer = (state, action) => {
             };
         }
         case 'LOGOUT': {
+            TokenService.removeAccessToken();
             return {
                 ...state,
                 isAuthenticated: false,
@@ -84,7 +85,7 @@ const AuthContext = createContext({
     ...initialState,
     method: 'JWT',
     login: () => Promise.resolve(),
-    logout: () => {},
+    logout: () => Promise.resolve(),
     // register: () => Promise.resolve(),
 });
 
@@ -92,6 +93,7 @@ export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     var errorMessage;
     const login = async (account) => {
+        TokenService.removeAccessToken();
         const response_login = await axios
             .post(process.env.REACT_APP_URL + 'un/login', account)
             .catch(({ response }) => (errorMessage = response.data));
@@ -154,6 +156,11 @@ export const AuthProvider = ({ children }) => {
     // };
 
     const logout = () => {
+        console.log(2);
+        axios
+            .post(process.env.REACT_APP_URL + 'un/logout')
+            .then((res) => console.log(res.data))
+            .catch((error) => console.log(error));
         dispatch({ type: 'LOGOUT' });
     };
 
