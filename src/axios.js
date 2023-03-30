@@ -13,7 +13,10 @@ axiosInstance.interceptors.response.use(
 
         if (originalConfig.url !== '/un/login' && err.response) {
             // Access Token was expired
-            console.log(err.response.status);
+            if (err.response.status === 403) {
+                window.location.reload('');
+                return;
+            }
             if (err.response.status === 401 && !originalConfig._retry) {
                 originalConfig._retry = true;
                 try {
@@ -23,12 +26,11 @@ axiosInstance.interceptors.response.use(
                             window.location.reload(''); //handle when refreshtoken expired
                         });
                     console.log(roleOfUser(rs.data.access_token));
-                    if (
-                        !rs.data.access_token ||
-                        roleOfUser(rs.data.access_token) === 'USER'
-                    ) {
-                        window.location.reload('');
-                    }
+                    // if (
+                    //     !rs.data.access_token
+                    // ) {
+                    //     window.location.reload('');
+                    // }
                     TokenService.setCookieAccessToken(rs.data.access_token);
 
                     return axiosInstance(originalConfig);
