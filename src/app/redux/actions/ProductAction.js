@@ -17,7 +17,7 @@ export const getProductsList = (size, page) => async (dispatch, getState) => {
         getState().products.stateDeleted.deleted !== -1 ||
         getState().products.keysearch !== ''
     ) {
-        dispatch(
+        await dispatch(
             getProductsFilters(
                 5,
                 page,
@@ -28,7 +28,6 @@ export const getProductsList = (size, page) => async (dispatch, getState) => {
 
         return;
     }
-
     await axios
         .get(
             process.env.REACT_APP_BASE_URL +
@@ -46,24 +45,28 @@ export const getProductsList = (size, page) => async (dispatch, getState) => {
 };
 export const getProductsFilters =
     (size, page, search, isDeleted) => async (dispatch) => {
-        await axios
-            .get(
-                process.env.REACT_APP_BASE_URL +
-                    'product/search?size=' +
-                    size +
-                    '&page=' +
-                    page +
-                    '&search=' +
-                    search +
-                    '&isDelete=' +
-                    isDeleted,
-            )
-            .then((res) => {
-                dispatch({
-                    type: GET_PRODUCTS_FILTERS,
-                    payload: res.data.data,
-                });
-            });
+        const rs = await axios.get(
+            process.env.REACT_APP_BASE_URL +
+                'product/search?size=' +
+                size +
+                '&page=' +
+                page +
+                '&search=' +
+                search +
+                '&isDelete=' +
+                isDeleted,
+        );
+        // .then((res) => {
+        //     console.log(res);
+        //     dispatch({
+        //         type: GET_PRODUCTS_FILTERS,
+        //         payload: res.data.data,
+        //     });
+        // });
+        await dispatch({
+            type: GET_PRODUCTS_FILTERS,
+            payload: rs.data.data,
+        });
     };
 export const getProductById = (id) => (dispatch) => {
     axios.get(process.env.REACT_APP_BASE_URL + 'product/' + id).then((res) =>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -14,11 +13,15 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import styled from '@emotion/styled';
 import { TablePagination } from '@mui/material';
 import { Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getOrderList } from 'app/redux/actions/OrderAction';
+import { format, parseISO } from 'date-fns';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(1),
 }));
-function Row(props) {
+function Row({ ...props }) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
 
@@ -42,7 +45,12 @@ function Row(props) {
                     {row.user_fullName}
                 </TableCell>
                 <TableCell align="center">{row.address}</TableCell>
-                <TableCell align="center">{row.created_date}</TableCell>
+                <TableCell align="center">
+                    {format(
+                        parseISO(row.created_date, 1),
+                        'yyyy-MM-dd HH:mm:ss',
+                    ).toString()}
+                </TableCell>
                 <TableCell align="center">{row.is_pay}</TableCell>
                 <TableCell align="center">
                     <StyledButton variant="contained" color="primary">
@@ -79,11 +87,7 @@ function Row(props) {
                                 </TableHead>
                                 <TableBody>
                                     {row.orderDetails.map((historyRow) => (
-                                        <TableRow
-                                            key={
-                                                historyRow.productVariant_color_name
-                                            }
-                                        >
+                                        <TableRow key={historyRow.id}>
                                             <TableCell
                                                 component="th"
                                                 scope="row"
@@ -115,22 +119,22 @@ function Row(props) {
     );
 }
 
-Row.propTypes = {
-    row: PropTypes.shape({
-        fullname: PropTypes.string.isRequired,
-        email: PropTypes.string.isRequired,
-        phone: PropTypes.string.isRequired,
-        history: PropTypes.arrayOf(
-            PropTypes.shape({
-                amount: PropTypes.number.isRequired,
-                customerId: PropTypes.number.isRequired,
-                date: PropTypes.number.isRequired,
-            }),
-        ).isRequired,
-        createDate: PropTypes.string.isRequired,
-        updateDate: PropTypes.string.isRequired,
-    }).isRequired,
-};
+// Row.propTypes = {
+//     row: PropTypes.shape({
+//         fullname: PropTypes.string.isRequired,
+//         email: PropTypes.string.isRequired,
+//         phone: PropTypes.string.isRequired,
+//         history: PropTypes.arrayOf(
+//             PropTypes.shape({
+//                 amount: PropTypes.number.isRequired,
+//                 customerId: PropTypes.number.isRequired,
+//                 date: PropTypes.number.isRequired,
+//             }),
+//         ).isRequired,
+//         createDate: PropTypes.string.isRequired,
+//         updateDate: PropTypes.string.isRequired,
+//     }).isRequired,
+// };
 // start compare
 const StyledTable = styled(Table)(() => ({
     whiteSpace: 'pre',
@@ -143,13 +147,20 @@ const StyledTable = styled(Table)(() => ({
 }));
 
 //end compare
-export default function CollapsibleTable({ tableHeader, rows }) {
+export default function CollapsibleTable({ tableHeader }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const dispatch = useDispatch();
+    const orders = useSelector((state) => state.orders);
 
     const handleChangePage = (_, newPage) => {
         setPage(newPage);
     };
+    useEffect(() => {
+        dispatch(getOrderList());
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -174,12 +185,17 @@ export default function CollapsibleTable({ tableHeader, rows }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows
+                    {/* {rows
                         .slice(
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage,
                         )
                         .map((row, index) => (
+                            <Row key={index} row={row} />
+                        ))} */}
+
+                    {orders.list.length > 0 &&
+                        orders.list.map((row, index) => (
                             <Row key={index} row={row} />
                         ))}
                 </TableBody>
@@ -190,7 +206,7 @@ export default function CollapsibleTable({ tableHeader, rows }) {
                 page={page}
                 component="div"
                 rowsPerPage={rowsPerPage}
-                count={rows.length}
+                count={orders.list.length}
                 onPageChange={handleChangePage}
                 rowsPerPageOptions={[5, 10, 25]}
                 onRowsPerPageChange={handleChangeRowsPerPage}

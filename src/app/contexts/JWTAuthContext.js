@@ -156,7 +156,6 @@ export const AuthProvider = ({ children }) => {
     // };
 
     const logout = () => {
-        console.log(2);
         axios
             .post(process.env.REACT_APP_URL + 'un/logout')
             .then((res) => console.log(res.data))
@@ -170,6 +169,7 @@ export const AuthProvider = ({ children }) => {
                 const rs = await axios.get(
                     process.env.REACT_APP_URL + 'un/refresh-token',
                 );
+
                 TokenService.setCookieAccessToken(rs.data.access_token);
                 const access_token = TokenService.getCookieAccessToken();
                 if (access_token && isValidToken(access_token)) {
@@ -210,7 +210,7 @@ export const AuthProvider = ({ children }) => {
                     });
                 }
             } catch (err) {
-                console.error(err);
+                console.log(err.response.data.message);
                 dispatch({
                     type: 'INIT',
                     payload: {

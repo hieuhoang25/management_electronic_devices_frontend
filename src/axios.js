@@ -1,13 +1,14 @@
 import axios from 'axios';
 import TokenService from 'app/service/tokenService';
-import { roleOfUser } from 'app/contexts/JWTAuthContext';
 const axiosInstance = axios.create({
     withCredentials: true,
 });
+
 axiosInstance.interceptors.response.use(
     (res) => {
         return res;
     },
+
     async (err) => {
         const originalConfig = err.config;
 
@@ -18,6 +19,7 @@ axiosInstance.interceptors.response.use(
                 return;
             }
             if (err.response.status === 401 && !originalConfig._retry) {
+                console.log('Get new token');
                 originalConfig._retry = true;
                 try {
                     const rs = await axiosInstance
@@ -25,7 +27,6 @@ axiosInstance.interceptors.response.use(
                         .catch((error) => {
                             window.location.reload(''); //handle when refreshtoken expired
                         });
-                    console.log(roleOfUser(rs.data.access_token));
                     // if (
                     //     !rs.data.access_token
                     // ) {

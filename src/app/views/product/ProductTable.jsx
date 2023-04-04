@@ -44,6 +44,7 @@ import { v4 } from 'uuid';
 import Loadable from 'app/components/Loadable';
 import DialogProductVariant from './Dialog/DialogProductVariant';
 import { formatCurrency } from 'app/utils/utils';
+import Loading from 'app/components/MatxLoading';
 
 const DialogProduct = Loadable(lazy(() => import('./Dialog/DialogProduct')));
 const DialogProductAttribute = Loadable(
@@ -99,6 +100,7 @@ const SimpleTable = () => {
     const products = useSelector((state) => state.products);
     const productVariant = useSelector((state) => state.productVariant);
     const productAttribute = useSelector((state) => state.productAttribute);
+    const [loading, setLoading] = useState(false);
     // const [page, setPage] = useState(products.pageNumber);
     const dispatch = useDispatch();
     if (!products.listProduct.data) {
@@ -117,19 +119,27 @@ const SimpleTable = () => {
     };
 
     useEffect(() => {
+        setLoading(true);
+
         if (products.stateTable === 'product') {
-            dispatch(getProductsList(5, products.pageNumber - 1));
+            (async () => {
+                await dispatch(getProductsList(5, products.pageNumber - 1));
+            })();
         } else {
             if (productVariant.product_id !== '') {
-                dispatch(
-                    getProductVariant(
-                        5,
-                        productVariant.pageNumber - 1,
-                        productVariant.product_id,
-                    ),
-                );
+                (async () => {
+                    await dispatch(
+                        getProductVariant(
+                            5,
+                            productVariant.pageNumber - 1,
+                            productVariant.product_id,
+                        ),
+                    );
+                })();
             }
         }
+
+        setLoading(false);
 
         // eslint-disable-next-line
     }, [
@@ -151,14 +161,15 @@ const SimpleTable = () => {
         });
         setOpen(false);
     }
-    const handleDelete = (value, isDelted, name) => {
+    const handleDelete = async (value, isDelted, name) => {
+        setLoading(true);
         if (name === 'product') {
-            dispatch(deleteProduct(value, isDelted));
-            dispatch(getProductsList(5, products.pageNumber - 1));
+            await dispatch(deleteProduct(value, isDelted));
+            await dispatch(getProductsList(5, products.pageNumber - 1));
             setBodyTable(products.listProduct.data);
         } else {
-            dispatch(deleteProductVariant(value, isDelted));
-            dispatch(
+            await dispatch(deleteProductVariant(value, isDelted));
+            await dispatch(
                 getProductVariant(
                     5,
                     productVariant.pageNumber - 1,
@@ -168,6 +179,7 @@ const SimpleTable = () => {
 
             setBodyTable(Math.random() * 100);
         }
+        setLoading(false);
     };
 
     function handleClosedialogProduct() {
@@ -200,7 +212,9 @@ const SimpleTable = () => {
         );
         setOpenDialogProductV(false);
     };
-    return (
+    return loading ? (
+        <Loading />
+    ) : (
         <Box width="100%" mt={3}>
             <StyledTable>
                 <TableHead sx={{ maxHeight: 440 }} overflow={'scroll'}>

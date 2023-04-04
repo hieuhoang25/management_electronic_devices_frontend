@@ -82,7 +82,7 @@ function DialogProductAttribute({
         if (check) {
             return;
         }
-        dispatch(createProductAttribute(formAttribute));
+        await dispatch(createProductAttribute(formAttribute));
         setReload(!reload);
         // dispatch(getProductAttribute(productAttribute.idProduct));
 

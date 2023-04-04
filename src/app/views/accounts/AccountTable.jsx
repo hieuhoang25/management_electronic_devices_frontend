@@ -23,6 +23,7 @@ import {
     updateRole,
 } from 'app/redux/actions/AccountAction';
 import { useEffect } from 'react';
+import Loading from 'app/components/MatxLoading';
 const GreenRadio = styled(Radio)(() => ({
     color: green[400],
     '&$checked': { color: green[600] },
@@ -41,7 +42,6 @@ function Row(props) {
         callBack();
         setOpenSnackBar(true);
     }
-
     return (
         <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -166,7 +166,8 @@ export default function AccountTable({ tableHeader }) {
     const accounts = useSelector((state) => state.accounts);
     const dispatch = useDispatch();
     const [reload, setReload] = useState(true);
-    const [openSnackBar, setOpenSnackBar] = useState();
+    const [openSnackBar, setOpenSnackBar] = useState(false);
+    const [loading, setLoading] = useState(false);
     const handleCloseSnackBar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -177,10 +178,11 @@ export default function AccountTable({ tableHeader }) {
         dispatch(setPageNumberAccount(newPage));
         setReload(!reload);
     };
-
-    useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(async () => {
+        setLoading(true);
         if (accounts.role.id !== -1 || accounts.keysearch !== '') {
-            dispatch(
+            await dispatch(
                 getAccountsFilter(
                     5,
                     accounts.pageNumber - 1,
@@ -188,17 +190,21 @@ export default function AccountTable({ tableHeader }) {
                     accounts.role.id,
                 ),
             );
+            setLoading(false);
             return;
         }
-        dispatch(getAccountList(5, accounts.pageNumber - 1));
-
+        await dispatch(getAccountList(5, accounts.pageNumber - 1));
+        setLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reload, accounts.role, accounts.keysearch]);
     const callBackStateReload = () => {
         setReload(!reload);
     };
-
-    return (
+    return loading === true ? (
+        <>
+            <Loading />
+        </>
+    ) : (
         <Box width="100%" overflow="auto">
             <StyledTable>
                 <TableHead>
@@ -234,7 +240,7 @@ export default function AccountTable({ tableHeader }) {
             </Stack>
             <Snackbar
                 open={openSnackBar}
-                autoHideDuration={3000}
+                autoHideDuration={1500}
                 onClose={handleCloseSnackBar}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >

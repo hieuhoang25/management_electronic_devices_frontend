@@ -71,7 +71,6 @@ const ProductReducer = (state = initalState, action) => {
             };
 
         case PUT_PRODUCT: {
-            // console.log(action.payload);
             return {
                 ...state,
                 productById: action.payload,

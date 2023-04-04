@@ -8,21 +8,25 @@ export const HANDLE_CHANGE_ROLE = 'handleChangeRole';
 export const GET_ACCOUNTS_FILTERS = 'getAccountsFilter';
 
 export const getAccountList = (size, page) => async (dispatch) => {
-    await axios
-        .get(
-            process.env.REACT_APP_BASE_URL +
-                'account' +
-                '?size=' +
-                size +
-                '&page=' +
-                page,
-        )
-        .then((res) => {
-            dispatch({
-                type: GET_ACCOUNT_LIST,
-                payload: res.data,
-            });
-        });
+    const res = await axios.get(
+        process.env.REACT_APP_BASE_URL +
+            'account' +
+            '?size=' +
+            size +
+            '&page=' +
+            page,
+    );
+    // .then((res) => {
+    //     console.log(res.data);
+    //     dispatch({
+    //         type: GET_ACCOUNT_LIST,
+    //         payload: res.data,
+    //     });
+    // });
+    dispatch({
+        type: GET_ACCOUNT_LIST,
+        payload: res.data,
+    });
 };
 export const getAccountsFilter =
     (size, page, search, roleId) => async (dispatch) => {
