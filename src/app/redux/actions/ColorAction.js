@@ -4,7 +4,7 @@ export const HANDLE_CHANGE_COLOR = 'handleChangeColor';
 export const CLEAR_COLOR_SELECTED = 'clearColorSelected';
 
 export const getAllColor = () => (dispatch) => {
-    axios.get(process.env.REACT_APP_BASE_URL + 'color').then((res) => {
+    axios.get('/api/admin/color').then((res) => {
         dispatch({
             type: GET_ALL_COLOR,
             payload: res.data,

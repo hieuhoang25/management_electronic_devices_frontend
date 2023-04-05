@@ -133,7 +133,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
         var productResponse = {};
         await axios
             .post(
-                process.env.REACT_APP_BASE_URL + 'product',
+                '/api/admin/' + 'product',
 
                 formProduct,
             )
@@ -147,7 +147,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
         });
         const formData = new FormData();
         formData.append('file', newFile);
-        await axios.post(process.env.REACT_APP_BASE_URL_API_FILE, formData, {
+        await axios.post('/api/files', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

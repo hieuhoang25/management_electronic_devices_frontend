@@ -4,14 +4,7 @@ module.exports = function (app) {
     app.use(
         '/api',
         createProxyMiddleware({
-            target: 'http://localhost:8080',
-            changeOrigin: true,
-        }),
-    );
-    app.use(
-        '/api',
-        createProxyMiddleware({
-            target: 'http://vongtayyeuthuong.shop',
+            target: process.env.REACT_APP_BASE_URL,
             changeOrigin: true,
         }),
     );

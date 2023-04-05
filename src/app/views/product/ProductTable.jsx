@@ -117,25 +117,25 @@ const SimpleTable = () => {
             dispatch(setPageNumberProductVariant(value));
         }
     };
-
-    useEffect(() => {
+    // eslint-disable-next-line
+    useEffect(async () => {
         setLoading(true);
 
         if (products.stateTable === 'product') {
-            (async () => {
-                await dispatch(getProductsList(5, products.pageNumber - 1));
-            })();
+            await Promise.resolve(
+                dispatch(getProductsList(5, products.pageNumber - 1)),
+            );
         } else {
             if (productVariant.product_id !== '') {
-                (async () => {
-                    await dispatch(
+                await Promise.resolve(
+                    dispatch(
                         getProductVariant(
                             5,
                             productVariant.pageNumber - 1,
                             productVariant.product_id,
                         ),
-                    );
-                })();
+                    ),
+                );
             }
         }
 

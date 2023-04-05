@@ -9,8 +9,7 @@ export const CLEAR_STATE = 'clearStateProductVariant';
 export const getProductVariant = (size, page, id) => async (dispatch) => {
     await axios
         .get(
-            process.env.REACT_APP_BASE_URL +
-                'product-variant/' +
+            '/api/admin/product-variant/' +
                 id +
                 '?size=' +
                 size +
@@ -26,13 +25,7 @@ export const getProductVariant = (size, page, id) => async (dispatch) => {
 };
 export const deleteProductVariant = (id, isDelted) => async (dispatch) => {
     await axios
-        .delete(
-            process.env.REACT_APP_BASE_URL +
-                'product-variant/' +
-                id +
-                '/' +
-                isDelted,
-        )
+        .delete('/api/admin/product-variant/' + id + '/' + isDelted)
         .then(() => {
             dispatch({
                 type: DELETE_PRODUCT_VARIANT,

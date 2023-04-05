@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (account) => {
         TokenService.removeAccessToken();
         const response_login = await axios
-            .post(process.env.REACT_APP_URL + 'un/login', account)
+            .post('/api/un/login', account)
             .catch(({ response }) => (errorMessage = response.data));
 
         if (errorMessage && !response_login) {
@@ -109,9 +109,7 @@ export const AuthProvider = ({ children }) => {
             role === 'ADMIN' ||
             role === 'ROLE_ADMIN'
         ) {
-            const response = await axios.get(
-                process.env.REACT_APP_URL + 'user/info',
-            );
+            const response = await axios.get('/api/user/info');
             setSession(access_token);
             const fullName = response.data.full_name;
             dispatch({
@@ -166,9 +164,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         (async () => {
             try {
-                const rs = await axios.get(
-                    process.env.REACT_APP_URL + 'un/refresh-token',
-                );
+                const rs = await axios.get('/api/un/refresh-token');
 
                 TokenService.setCookieAccessToken(rs.data.access_token);
                 const access_token = TokenService.getCookieAccessToken();
@@ -177,9 +173,7 @@ export const AuthProvider = ({ children }) => {
                         roleOfUser(access_token) === 'SUPER_ADMIN' ||
                         roleOfUser(access_token) === 'ADMIN'
                     ) {
-                        const response = await axios.get(
-                            process.env.REACT_APP_URL + 'user/info',
-                        );
+                        const response = await axios.get('/api/user/info');
 
                         const fullName = response.data.full_name;
 

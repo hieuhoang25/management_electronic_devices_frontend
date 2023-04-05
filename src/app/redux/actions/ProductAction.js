@@ -29,13 +29,7 @@ export const getProductsList = (size, page) => async (dispatch, getState) => {
         return;
     }
     await axios
-        .get(
-            process.env.REACT_APP_BASE_URL +
-                'product?size=' +
-                size +
-                '&page=' +
-                page,
-        )
+        .get('/api/admin/product?size=' + size + '&page=' + page)
         .then((res) => {
             dispatch({
                 type: LIST_PRODUCTS,
@@ -46,8 +40,7 @@ export const getProductsList = (size, page) => async (dispatch, getState) => {
 export const getProductsFilters =
     (size, page, search, isDeleted) => async (dispatch) => {
         const rs = await axios.get(
-            process.env.REACT_APP_BASE_URL +
-                'product/search?size=' +
+            '/api/admin/product/search?size=' +
                 size +
                 '&page=' +
                 page +
@@ -63,13 +56,14 @@ export const getProductsFilters =
         //         payload: res.data.data,
         //     });
         // });
-        await dispatch({
+        console.log(rs);
+        dispatch({
             type: GET_PRODUCTS_FILTERS,
             payload: rs.data.data,
         });
     };
 export const getProductById = (id) => (dispatch) => {
-    axios.get(process.env.REACT_APP_BASE_URL + 'product/' + id).then((res) =>
+    axios.get('/api/admin/product/' + id).then((res) =>
         dispatch({
             type: GET_PRODUCT_BYID,
             payload: res.data,
@@ -77,20 +71,16 @@ export const getProductById = (id) => (dispatch) => {
     );
 };
 export const deleteProduct = (id, isDelted) => (dispatch) => {
-    axios
-        .delete(
-            process.env.REACT_APP_BASE_URL + 'product/' + id + '/' + isDelted,
-        )
-        .then(() => {
-            dispatch({
-                type: DELETE_PRODUCT,
-            });
+    axios.delete('/api/admin/product/' + id + '/' + isDelted).then(() => {
+        dispatch({
+            type: DELETE_PRODUCT,
         });
+    });
 };
 export const putProduct = (product) => (dispatch) => {
     axios
         .put(
-            process.env.REACT_APP_BASE_URL + 'product/',
+            '/api/admin/product/',
 
             product,
         )
@@ -104,7 +94,7 @@ export const putProduct = (product) => (dispatch) => {
 export const postProduct = (product) => (dispatch) => {
     axios
         .post(
-            process.env.REACT_APP_BASE_URL + 'product',
+            '/api/admin/product',
 
             product,
         )

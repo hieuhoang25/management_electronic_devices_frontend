@@ -173,7 +173,7 @@ function DialogProduct({
         await putProduct(formProduct);
 
         await axios
-            .post(process.env.REACT_APP_BASE_URL_API_FILE, file, {
+            .post('/api/files', file, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

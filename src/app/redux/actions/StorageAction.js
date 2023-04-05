@@ -4,7 +4,7 @@ export const HANDLE_CHANGE_STORAGE = 'handleChangeStorage';
 export const CLEAR_STORAGE_SELECTED = 'clearStorageSelected';
 
 export const getAllStorage = () => (dispatch) => {
-    axios.get(process.env.REACT_APP_BASE_URL + 'storage').then((res) => {
+    axios.get('/api/admin/storage').then((res) => {
         dispatch({
             type: GET_ALL_STORAGE,
             payload: res.data,

@@ -141,10 +141,7 @@ function DialogCreateProductVariant({
         var errorMessage = {};
         var productVariantResponse = {};
         await axios
-            .post(
-                process.env.REACT_APP_BASE_URL + 'product-variant',
-                formProductVariant,
-            )
+            .post('/api/admin/product-variant', formProductVariant)
             .then((res) => (productVariantResponse = res.data))
             .catch(({ response }) => {
                 errorMessage = {
@@ -161,7 +158,7 @@ function DialogCreateProductVariant({
             const formData = new FormData();
             formData.append('file', newFile);
             await axios
-                .post(process.env.REACT_APP_BASE_URL_API_FILE, formData, {
+                .post('/api/files', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
