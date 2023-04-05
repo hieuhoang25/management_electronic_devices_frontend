@@ -6,7 +6,7 @@ export const HANDLE_CHANGE_CATEGORY = 'handleChangleCategory';
 export const HANDLE_CHANGE_SUBCATEGORY = 'handleChangeSubcategory';
 
 export const getCategory = () => (dispatch) => {
-    axios.get('/api/admin/category').then((res) => {
+    axios.get(process.env.REACT_APP_BASE_URL + 'category').then((res) => {
         dispatch({
             type: GET_CATEGORY,
             payload: res.data,
@@ -14,7 +14,7 @@ export const getCategory = () => (dispatch) => {
     });
 };
 export const getCategoryShowProduct = (categoryId) => (dispatch) => {
-    axios.get('/api/admin/category').then((res) => {
+    axios.get(process.env.REACT_APP_BASE_URL + 'category').then((res) => {
         dispatch({
             type: GET_CATEGORY_SHOW_PRODUCT,
             payload: { data: res.data, id: categoryId },
