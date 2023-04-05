@@ -9,8 +9,12 @@ export const GET_ACCOUNTS_FILTERS = 'getAccountsFilter';
 
 export const getAccountList = (size, page) => async (dispatch) => {
     const res = await axios.get(
-        // eslint-disable-next-line
-        '/api/admin/account' + '?size=' + size + '&page=' + page,
+        process.env.REACT_APP_BASE_URL +
+            'account' +
+            '?size=' +
+            size +
+            '&page=' +
+            page,
     );
     // .then((res) => {
     //     console.log(res.data);
@@ -28,7 +32,8 @@ export const getAccountsFilter =
     (size, page, search, roleId) => async (dispatch) => {
         await axios
             .get(
-                '/api/admin/account/search?size=' +
+                process.env.REACT_APP_BASE_URL +
+                    'account/search?size=' +
                     size +
                     '&page=' +
                     page +
@@ -47,7 +52,8 @@ export const getAccountsFilter =
 export const updateRole = (roleId, accountId) => async (dispatch) => {
     await axios
         .get(
-            '/api/admin/account/updateRole' +
+            process.env.REACT_APP_BASE_URL +
+                'account/updateRole' +
                 '?roleId=' +
                 roleId +
                 '&accountId=' +
