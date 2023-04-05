@@ -137,14 +137,17 @@ function DialogProductVariant({
         setLoad(true);
         var errorMessage;
         await axios
-            .put('/api/admin/product-variant', formProductVariant)
+            .put(
+                process.env.REACT_APP_BASE_URL + 'product-variant',
+                formProductVariant,
+            )
             .then((res) => {})
             .catch((error) => (errorMessage = error));
 
         try {
             file.has('file');
             await axios
-                .post('/api/files', file, {
+                .post(process.env.REACT_APP_BASE_URL_API_FILE, file, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

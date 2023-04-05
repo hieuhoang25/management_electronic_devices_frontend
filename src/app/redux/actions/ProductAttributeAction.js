@@ -10,33 +10,39 @@ export const ADD_NEW_FORM = 'addNewForm';
 export const UPDATE_PRODUCTATB_IN_STORE = 'updateProductAtbInStore';
 
 export const getProductAttribute = (id) => async (dispatch) => {
-    await axios.get('/api/admin/product-attribute/' + id).then((res) => {
-        dispatch({
-            type: GET_PRODUCT_ATTRIBUTE,
-            payload: { data: res.data, product_id: id },
+    await axios
+        .get(process.env.REACT_APP_BASE_URL + 'product-attribute/' + id)
+        .then((res) => {
+            dispatch({
+                type: GET_PRODUCT_ATTRIBUTE,
+                payload: { data: res.data, product_id: id },
+            });
         });
-    });
 };
 
 export const createProductAttribute = (object) => async (dispatch) => {
-    await axios.post('/api/admin/product-attribute', object).then((res) => {
-        dispatch({
-            type: POST_PRODUCT_ATTRIBUTE,
-            payload: res.data,
+    await axios
+        .post(process.env.REACT_APP_BASE_URL + 'product-attribute', object)
+        .then((res) => {
+            dispatch({
+                type: POST_PRODUCT_ATTRIBUTE,
+                payload: res.data,
+            });
         });
-    });
 };
 export const updateProductAttribute = (object) => async (dispatch) => {
-    await axios.put('/api/admin/product-attribute', object).then((res) => {
-        dispatch({
-            type: PUT_PRODUCT_ATTRIBUTE,
-            // payload: res.data,
+    await axios
+        .put(process.env.REACT_APP_BASE_URL + 'product-attribute', object)
+        .then((res) => {
+            dispatch({
+                type: PUT_PRODUCT_ATTRIBUTE,
+                // payload: res.data,
+            });
         });
-    });
 };
 export const deleteProductAttribute = (listId) => async (dispatch) => {
     await axios
-        .delete('/api/admin/product-attribute', {
+        .delete(process.env.REACT_APP_BASE_URL + 'product-attribute', {
             data: listId,
         })
         .then((res) => {
@@ -47,12 +53,14 @@ export const deleteProductAttribute = (listId) => async (dispatch) => {
         });
 };
 export const resetProductAttribute = (id) => (dispatch) => {
-    axios.get('/api/admin/product-attribute/' + id).then((res) => {
-        dispatch({
-            type: ADD_ID_TO_STORE,
-            payload: res.data,
+    axios
+        .get(process.env.REACT_APP_BASE_URL + 'product-attribute/' + id)
+        .then((res) => {
+            dispatch({
+                type: ADD_ID_TO_STORE,
+                payload: res.data,
+            });
         });
-    });
 };
 // thêm vào store list id để call api xoá các id có trong list
 export const addIdToStore = (id) => {

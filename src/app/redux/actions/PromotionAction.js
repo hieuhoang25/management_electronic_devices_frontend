@@ -7,12 +7,14 @@ export const GET_ALL_PROMOTION = 'getAllPromotion';
 
 export const getPromotionProductWithPromotionId =
     (promotionId) => (dispatch) => {
-        axios.get('/api/admin/promotion-product').then((res) => {
-            dispatch({
-                type: GET_PROMOTION_PRODUCT_WITH_PROMOTIONID,
-                payload: { data: res.data, promotionId: promotionId },
+        axios
+            .get(process.env.REACT_APP_BASE_URL + 'promotion-product')
+            .then((res) => {
+                dispatch({
+                    type: GET_PROMOTION_PRODUCT_WITH_PROMOTIONID,
+                    payload: { data: res.data, promotionId: promotionId },
+                });
             });
-        });
     };
 export const handleChangePromotion = (promotionOfProduct) => {
     return {
@@ -22,10 +24,12 @@ export const handleChangePromotion = (promotionOfProduct) => {
 };
 
 export const getAllPromotion = () => (dispatch) => {
-    axios.get('/api/admin/promotion-product').then((res) => {
-        dispatch({
-            type: GET_ALL_PROMOTION,
-            payload: res.data,
+    axios
+        .get(process.env.REACT_APP_BASE_URL + 'promotion-product')
+        .then((res) => {
+            dispatch({
+                type: GET_ALL_PROMOTION,
+                payload: res.data,
+            });
         });
-    });
 };
