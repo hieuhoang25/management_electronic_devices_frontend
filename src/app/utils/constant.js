@@ -15,7 +15,8 @@ export const orderTableHeader = [
     'Họ và tên',
     'Đia chỉ',
     'Thời gian',
-    "Thanh toán",
+    'Tổng tiền',
+    'Thanh toán',
     'Trạng thái',
 ];
 export const productTableHeader = [

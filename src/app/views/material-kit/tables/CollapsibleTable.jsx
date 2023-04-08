@@ -17,13 +17,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getOrderList } from 'app/redux/actions/OrderAction';
 import { format, parseISO } from 'date-fns';
+import axiosInstance from 'axios.js';
+import { useState } from 'react';
+import Loading from 'app/components/MatxLoading';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(1),
 }));
 function Row({ ...props }) {
-    const { row } = props;
+    const { row, reload, setReload, setLoading } = props;
     const [open, setOpen] = React.useState(false);
+    const handleChangeStatusOrder = (object) => {
+        setLoading(true);
+        axiosInstance
+            .post(process.env.REACT_APP_BASE_URL + 'order/status-change', {
+                order: object,
+            })
+            .then((res) => {
+                setReload(!reload);
+                console.log(res);
+            });
+    };
 
     return (
         <React.Fragment>
@@ -51,9 +65,19 @@ function Row({ ...props }) {
                         'yyyy-MM-dd HH:mm:ss',
                     ).toString()}
                 </TableCell>
+                <TableCell align="center">SUM</TableCell>
                 <TableCell align="center">{row.is_pay}</TableCell>
                 <TableCell align="center">
-                    <StyledButton variant="contained" color="primary">
+                    <StyledButton
+                        disabled={
+                            row.status_name === 'Hoàn thành' ? true : false
+                        }
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            handleChangeStatusOrder(row);
+                        }}
+                    >
                         {row.status_name}
                     </StyledButton>
                 </TableCell>
@@ -152,22 +176,32 @@ export default function CollapsibleTable({ tableHeader }) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const dispatch = useDispatch();
     const orders = useSelector((state) => state.orders);
+    const [reload, setReload] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const handleChangePage = (_, newPage) => {
         setPage(newPage);
     };
-    useEffect(() => {
-        dispatch(getOrderList());
+    // eslint-disable-next-line
+    useEffect(async () => {
+        setLoading(true);
 
+        await dispatch(getOrderList());
+
+        setLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [reload]);
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
 
-    return (
+    return loading === true ? (
+        <>
+            <Loading />
+        </>
+    ) : (
         <Box width="100%" overflow="auto">
             <StyledTable>
                 <TableHead>
@@ -196,7 +230,13 @@ export default function CollapsibleTable({ tableHeader }) {
 
                     {orders.list.length > 0 &&
                         orders.list.map((row, index) => (
-                            <Row key={index} row={row} />
+                            <Row
+                                key={index}
+                                row={row}
+                                reload={reload}
+                                setReload={setReload}
+                                setLoading={setLoading}
+                            />
                         ))}
                 </TableBody>
             </StyledTable>
