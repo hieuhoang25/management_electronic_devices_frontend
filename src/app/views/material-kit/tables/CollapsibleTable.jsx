@@ -68,8 +68,10 @@ function Row({ ...props }) {
                     ).toString()}
                 </TableCell>
 
-                <TableCell align="center">{row.sum}</TableCell>
-                <TableCell align="center">{row.is_pay}</TableCell>
+                <TableCell align="center">
+                  {formatCurrency(row.sum)}</TableCell>
+                <TableCell align="center">{row.is_pay ? (<Alert severity="success">Đã TT</Alert>):
+                (<Alert severity="warning">Chưa TT</Alert>)}</TableCell>
                 <TableCell align="center">
                     <StyledButton
                         disabled={
