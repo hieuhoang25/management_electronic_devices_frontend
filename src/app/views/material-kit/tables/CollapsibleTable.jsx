@@ -17,7 +17,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getOrderList } from 'app/redux/actions/OrderAction';
 import { format, parseISO } from 'date-fns';
-
+import { formatCurrency } from 'app/utils/utils';
+import Alert from '@mui/material/Alert';
 const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(1),
 }));
@@ -51,7 +52,10 @@ function Row({ ...props }) {
                         'yyyy-MM-dd HH:mm:ss',
                     ).toString()}
                 </TableCell>
-                <TableCell align="center">{row.is_pay}</TableCell>
+                <TableCell align="center">{
+                row.is_pay ? (<Alert severity="success">Đã thanh toán</Alert>) : 
+                (<Alert severity="warning">Chưa thanh toán</Alert>)
+                }</TableCell>
                 <TableCell align="center">
                     <StyledButton variant="contained" color="primary">
                         {row.status_name}
@@ -105,7 +109,7 @@ function Row({ ...props }) {
                                                 {historyRow.quantity}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {historyRow.price_sum}
+                                            {formatCurrency(historyRow.price_sum)}
                                             </TableCell>
                                         </TableRow>
                                     ))}
