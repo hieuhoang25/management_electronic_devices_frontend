@@ -200,6 +200,7 @@ export default function AccountTable({ tableHeader }) {
     const callBackStateReload = () => {
         setReload(!reload);
     };
+    console.log(accounts);
     return loading === true ? (
         <>
             <Loading />
