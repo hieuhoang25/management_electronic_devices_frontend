@@ -7,13 +7,15 @@ import { SettingsProvider } from './contexts/SettingsContext';
 import routes from './routes';
 import Store from './redux/Store';
 import { PersistGate } from 'redux-persist/integration/react';
+
 let { store, persistor } = Store();
 
 const App = () => {
     const content = useRoutes(routes);
 
     return (
-        <Provider store={store}>
+        <div>
+            <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <SettingsProvider>
                     <MatxTheme>
@@ -23,6 +25,9 @@ const App = () => {
                 </SettingsProvider>
             </PersistGate>
         </Provider>
+    
+        </div>
+        
     );
 };
 

@@ -6,6 +6,10 @@ import {
     MenuItem,
     useMediaQuery,
 } from '@mui/material';
+import {
+    Alert,
+    Snackbar
+} from '@mui/material';
 import { Box, styled, useTheme } from '@mui/system';
 import { MatxMenu, MatxSearchBox } from 'app/components';
 import { themeShadows } from 'app/components/MatxTheme/themeColors';
@@ -17,7 +21,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Span } from '../../../components/Typography';
 import NotificationBar from '../../NotificationBar/NotificationBar';
-
+import { useState , useEffect} from 'react';
+import AlertTitle from '@mui/material/AlertTitle';
+import { Client } from '@stomp/stompjs';
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
@@ -75,11 +81,42 @@ const StyledItem = styled(MenuItem)(({ theme }) => ({
 //     display: 'inherit',
 //     [theme.breakpoints.down('md')]: { display: 'none !important' },
 // }));
+const SOCKET_URL =process.env.REACT_APP_SOCKET_URL;
 
 const Layout1Topbar = () => {
+    const [message, setMessage] = useState('');
+
+    let onConnected = () => {
+        console.log("Connected!!")
+        client.subscribe('/topic/server', function (msg) {
+            console.log(msg.body)
+          if (msg.body) {
+                setMessage(msg.body)
+                setOpenSnackBar(true);
+          }
+        });
+      }
+  
+      let onDisconnected = () => {
+        console.log("Disconnected!!")
+      }
+      const client = new Client({
+        brokerURL: SOCKET_URL,
+        reconnectDelay: 5000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+        onConnect: onConnected,
+        onDisconnect: onDisconnected
+      });
+      
+    useEffect(()=>{
+          client.activate();
+    },[message])
+
     const theme = useTheme();
     const { settings, updateSettings } = useSettings();
     const { logout, fullName } = useAuth();
+    const [openSnackBar, setOpenSnackBar] = useState(false);
 
     const isMdScreen = useMediaQuery(theme.breakpoints.down('md'));
     const updateSidebarMode = (sidebarSettings) => {
@@ -87,7 +124,13 @@ const Layout1Topbar = () => {
             layout1Settings: { leftSidebar: { ...sidebarSettings } },
         });
     };
-
+    
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackBar(false);
+    };
     const handleSidebarToggle = () => {
         let { layout1Settings } = settings;
         let mode;
@@ -166,6 +209,22 @@ const Layout1Topbar = () => {
                     </MatxMenu>
                 </Box>
             </TopbarContainer>
+            <Snackbar
+                open={openSnackBar}
+                autoHideDuration={1500}
+                onClose={handleCloseSnackBar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="info"
+                    md={{ width: '100%' }}
+                >
+            <AlertTitle>{message}</AlertTitle>
+                <strong>Hãy xác nhận đơn hàng này!</strong>
+                  
+                </Alert>
+            </Snackbar>
         </TopbarRoot>
     );
 };

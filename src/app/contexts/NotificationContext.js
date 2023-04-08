@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer } from 'react'
-import axios from 'axios'
-
+import axios from 'axios.js';
+import TokenService from 'app/service/tokenService';
 const reducer = (state, action) => {
     switch (action.type) {
         case 'LOAD_NOTIFICATIONS': {
@@ -26,6 +26,13 @@ const reducer = (state, action) => {
         }
     }
 }
+const setSession = (accessToken) => {
+    if (accessToken) {
+        TokenService.setCookieAccessToken(accessToken);
+    } else {
+        delete TokenService.removeAccessToken();
+    }
+};
 
 const NotificationContext = createContext({
     notifications: [],
@@ -37,12 +44,11 @@ const NotificationContext = createContext({
 
 export const NotificationProvider = ({ settings, children }) => {
     const [state, dispatch] = useReducer(reducer, [])
-
+    // setSession(TokenService.getCookieAccessToken())
     const deleteNotification = async (notificationID) => {
         try {
-            const res = await axios.post('/api/notification/delete', {
-                id: notificationID,
-            })
+            const res = await axios.delete(process.env.REACT_APP_BASE_URL+`notification/delete/${notificationID}`)
+            console.log(res.data)
             dispatch({
                 type: 'DELETE_NOTIFICATION',
                 payload: res.data,
@@ -54,7 +60,8 @@ export const NotificationProvider = ({ settings, children }) => {
 
     const clearNotifications = async () => {
         try {
-            const res = await axios.post('/api/notification/delete-all')
+            const res = await axios.delete(process.env.REACT_APP_BASE_URL+'notification/delete-all')
+            console.log(res.data)
             dispatch({
                 type: 'CLEAR_NOTIFICATIONS',
                 payload: res.data,
@@ -66,11 +73,13 @@ export const NotificationProvider = ({ settings, children }) => {
 
     const getNotifications = async () => {
         try {
-            const res = await axios.get('/api/notification')
+            const res = await axios.get(process.env.REACT_APP_BASE_URL+'notification')
+            console.log(res.data)
             dispatch({
                 type: 'LOAD_NOTIFICATIONS',
                 payload: res.data,
             })
+            
         } catch (e) {
             console.error(e)
         }
@@ -80,6 +89,7 @@ export const NotificationProvider = ({ settings, children }) => {
             const res = await axios.post('/api/notification/add', {
                 notification,
             })
+            
             dispatch({
                 type: 'CREATE_NOTIFICATION',
                 payload: res.data,

@@ -14,7 +14,7 @@ import {
     Typography,
 } from '@mui/material';
 // eslint-disable-next-line
-
+import Chip from '@mui/material/Chip';
 import {
     productTableHeader,
     productVariantTableHeader,
@@ -305,13 +305,14 @@ const SimpleTable = () => {
                                 <TableCell align="center">
                                     {format(
                                         parseISO(product.create_date, 1),
-                                        'yyyy-MM-dd HH:mm:ss',
+                                        'HH:mm:ss dd/MM/yyyy ',
                                     ).toString()}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {product.promotion_name
+                                <Chip label={product.promotion_name
                                         ? product.promotion_name
-                                        : 'Không có'}
+                                        : 'Không có'} color="success" />
+                                    
                                 </TableCell>
                                 {/* <TableCell align="center">
                                     {product.is_delete ? 'true' : 'false'}

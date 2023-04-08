@@ -114,7 +114,7 @@ const NotificationBar = ({ container }) => {
                     <Box sx={{ width: sideNavWidth }}>
                         <Notification>
                             <Icon color="primary">notifications</Icon>
-                            <h5>Notifications</h5>
+                            <h5>Thông báo</h5>
                         </Notification>
 
                         {notifications?.map((notification) => (
@@ -154,7 +154,7 @@ const NotificationBar = ({ container }) => {
                                                         notification.timestamp,
                                                     ),
                                                 )}
-                                                ago
+                                                trước
                                             </Small>
                                         </CardLeftContent>
                                         <Box sx={{ px: 2, pt: 1, pb: 2 }}>
@@ -172,7 +172,7 @@ const NotificationBar = ({ container }) => {
                         {!!notifications?.length && (
                             <Box sx={{ color: secondary }}>
                                 <Button onClick={clearNotifications}>
-                                    Clear Notifications
+                                <Icon className="delete_forever">delete_forever</Icon>  Xoá hết thông báo
                                 </Button>
                             </Box>
                         )}

@@ -49,7 +49,7 @@ function Row({ ...props }) {
                 <TableCell align="center">
                     {format(
                         parseISO(row.created_date, 1),
-                        'yyyy-MM-dd HH:mm:ss',
+                        'HH:mm:ss dd/MM/yyyy',
                     ).toString()}
                 </TableCell>
                 <TableCell align="center">{

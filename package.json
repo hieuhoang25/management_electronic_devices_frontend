@@ -11,6 +11,7 @@
     "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "^5.0.6",
     "@reduxjs/toolkit": "^1.9.1",
+    "@stomp/stompjs": "^7.0.0",
     "autosuggest-highlight": "^3.2.0",
     "axios": "^0.24.0",
     "babel-polyfill": "^6.26.0",
