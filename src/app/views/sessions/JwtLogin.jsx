@@ -6,6 +6,9 @@ import useAuth from 'app/hooks/useAuth';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import {
+    Snackbar
+} from '@mui/material';
 import * as Yup from 'yup';
 
 const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
@@ -56,7 +59,13 @@ const JwtLogin = () => {
     const [alert, setAlert] = useState('');
     // eslint-disable-next-line
     const { isAuthenticated, login } = useAuth();
-
+    const [openSnackBar, setOpenSnackBar] = useState(false);
+    const handleCloseSnackBar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackBar(false);
+    };
     const handleFormSubmit = async (values) => {
         let { userName, password } = values;
 
@@ -64,9 +73,10 @@ const JwtLogin = () => {
         setLoading(true);
         try {
             let response = await login(newObject);
-
+        
             if (response.error) {
                 setAlert(response.error);
+                console.log(response);
                 setLoading(false);
                 return;
             } else {
@@ -78,6 +88,8 @@ const JwtLogin = () => {
             }
         } catch (e) {
             console.log(e);
+            setOpenSnackBar(true);
+            setAlert("Tài khoản và mật khẩu không chính xác!");
             setLoading(false);
         }
     };
@@ -174,7 +186,7 @@ const JwtLogin = () => {
                                                         .main,
                                                 }}
                                             >
-                                                Forgot password?
+                                                Quên mật khẩu?
                                             </NavLink>
                                         </FlexBox>
 
@@ -185,12 +197,26 @@ const JwtLogin = () => {
                                             variant="contained"
                                             sx={{ my: 2 }}
                                         >
-                                            Login
+                                            Đăng nhập
                                         </LoadingButton>
                                     </form>
                                 )}
                             </Formik>
-                            {alert && <Alert severity="warning">{alert}</Alert>}
+                            <Snackbar
+                      open={openSnackBar}
+                    autoHideDuration={1500}
+                     onClose={handleCloseSnackBar}
+                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+                <Alert
+                    onClose={handleCloseSnackBar}
+                    severity="warning"
+                    md={{ width: '100%' }}
+                >
+                  {alert}
+                </Alert>
+            </Snackbar>
+                          
                         </ContentBox>
                     </Grid>
                 </Grid>
