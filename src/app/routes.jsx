@@ -10,6 +10,8 @@ import AccountsRouter from './views/accounts/AccountsRouter';
 import ProductRouter from './views/product/ProductRouter';
 import OrderRouter from './views/orders/OrderRouter';
 import ColorStorageRouter from './views/color-storage/ColorStorageRouter';
+import CategoryRouter from './views/category/CategoryRouter';
+import BrandRouter from './views/brands/BrandRouter';
 
 const routes = [
     {
@@ -26,6 +28,8 @@ const routes = [
             ...AccountsRouter,
             ...OrderRouter,
             ...ColorStorageRouter,
+            ...CategoryRouter,
+            ...BrandRouter,
         ],
     },
     ...sessionRoutes,

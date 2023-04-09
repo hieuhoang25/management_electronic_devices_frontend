@@ -86,12 +86,11 @@ function Row(props) {
                                 value="ADMIN"
                                 color="default"
                                 onChange={(e) => {
-                                    handleChangeRadio(3, row.id);
+                                    handleChangeRadio(2, row.id);
                                 }}
                                 name="radio-button-demo"
                                 checked={
-                                    row.authorities[0].role_name ===
-                                    'SUPER_ADMIN'
+                                    row.authorities[0].role_name === 'ADMIN'
                                 }
                                 inputProps={{ 'aria-label': 'B' }}
                             />
@@ -181,6 +180,7 @@ export default function AccountTable({ tableHeader }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
         setLoading(true);
+
         if (accounts.role.id !== -1 || accounts.keysearch !== '') {
             await dispatch(
                 getAccountsFilter(
@@ -200,7 +200,7 @@ export default function AccountTable({ tableHeader }) {
     const callBackStateReload = () => {
         setReload(!reload);
     };
-    console.log(accounts);
+
     return loading === true ? (
         <>
             <Loading />
@@ -212,7 +212,11 @@ export default function AccountTable({ tableHeader }) {
                     <TableRow>
                         <TableCell />
                         {tableHeader.map((value, index) => (
-                            <TableCell align="center" key={index}>
+                            <TableCell
+                                sx={{ fontSize: '100%' }}
+                                align="center"
+                                key={index}
+                            >
                                 {value}
                             </TableCell>
                         ))}

@@ -68,10 +68,14 @@ function Row({ ...props }) {
                     ).toString()}
                 </TableCell>
 
+                <TableCell align="center">{formatCurrency(row.sum)}</TableCell>
                 <TableCell align="center">
-                  {formatCurrency(row.sum)}</TableCell>
-                <TableCell align="center">{row.is_pay ? (<Alert severity="success">Đã TT</Alert>):
-                (<Alert severity="warning">Chưa TT</Alert>)}</TableCell>
+                    {row.is_pay ? (
+                        <Alert severity="success">Đã TT</Alert>
+                    ) : (
+                        <Alert severity="warning">Chưa TT</Alert>
+                    )}
+                </TableCell>
                 <TableCell align="center">
                     <StyledButton
                         disabled={
@@ -134,7 +138,9 @@ function Row({ ...props }) {
                                                 {historyRow.quantity}
                                             </TableCell>
                                             <TableCell align="center">
-                                            {formatCurrency(historyRow.price_sum)}
+                                                {formatCurrency(
+                                                    historyRow.price_sum,
+                                                )}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -214,9 +220,18 @@ export default function CollapsibleTable({ tableHeader }) {
                         <TableCell />
                         {tableHeader.map((value, index) =>
                             index === 0 ? ( // mặc đinh giá trị đầu tiên ko có align = center
-                                <TableCell key={index}>{value} </TableCell>
+                                <TableCell
+                                    sx={{ fontSize: '100%' }}
+                                    key={index}
+                                >
+                                    {value}{' '}
+                                </TableCell>
                             ) : (
-                                <TableCell align="center" key={index}>
+                                <TableCell
+                                    sx={{ fontSize: '100%' }}
+                                    align="center"
+                                    key={index}
+                                >
                                     {value}
                                 </TableCell>
                             ),
@@ -234,15 +249,20 @@ export default function CollapsibleTable({ tableHeader }) {
                         ))} */}
 
                     {orders.list.length > 0 &&
-                        orders.list.map((row, index) => (
-                            <Row
-                                key={index}
-                                row={row}
-                                reload={reload}
-                                setReload={setReload}
-                                setLoading={setLoading}
-                            />
-                        ))}
+                        orders.list
+                            .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage,
+                            )
+                            .map((row, index) => (
+                                <Row
+                                    key={index}
+                                    row={row}
+                                    reload={reload}
+                                    setReload={setReload}
+                                    setLoading={setLoading}
+                                />
+                            ))}
                 </TableBody>
             </StyledTable>
 

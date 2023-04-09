@@ -38,3 +38,8 @@ export const productVariantTableHeader = [
     'Dung lượng',
     'Hành động',
 ];
+export const colorTableHeader = ['Tên màu', 'Hành động'];
+export const storageTableHeader = ['Dung lượng', 'Hành động'];
+export const categoryTableHeader = ['Tên danh mục lớn', 'Hành động'];
+export const categoryTableChildHeader = ['Tên danh mục con', 'Hành động'];
+export const brandTableHeader = ['Tên thương hiệu', 'Hành động'];

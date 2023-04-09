@@ -1,16 +1,16 @@
 import {
     Box,
-    Icon,
-    IconButton,
-    Pagination,
+    Grid,
     Stack,
     styled,
     Table,
     TableBody,
     TableCell,
     TableHead,
+    TablePagination,
     TableRow,
 } from '@mui/material';
+import ButtonProduct from '../product/ButtonProduct';
 
 const StyledTable = styled(Table)(({ theme }) => ({
     whiteSpace: 'pre',
@@ -22,98 +22,117 @@ const StyledTable = styled(Table)(({ theme }) => ({
     },
 }));
 
-const subscribarList = [
-    {
-        name: 'john doe',
-        date: '18 january, 2019',
-        amount: 1000,
-        status: 'close',
-        company: 'ABC Fintech LTD.',
-    },
-    {
-        name: 'kessy bryan',
-        date: '10 january, 2019',
-        amount: 9000,
-        status: 'open',
-        company: 'My Fintech LTD.',
-    },
-    {
-        name: 'james cassegne',
-        date: '8 january, 2019',
-        amount: 5000,
-        status: 'close',
-        company: 'Collboy Tech LTD.',
-    },
-    {
-        name: 'lucy brown',
-        date: '1 january, 2019',
-        amount: 89000,
-        status: 'open',
-        company: 'ABC Fintech LTD.',
-    },
-    {
-        name: 'lucy brown',
-        date: '1 january, 2019',
-        amount: 89000,
-        status: 'open',
-        company: 'ABC Fintech LTD.',
-    },
-    {
-        name: 'lucy brown',
-        date: '1 january, 2019',
-        amount: 89000,
-        status: 'open',
-        company: 'ABC Fintech LTD.',
-    },
-];
+const ColorStorageTable = ({ ...props }) => {
+    const {
+        tableHeader,
+        data,
+        tableName,
+        page,
+        rowsPerPage,
+        handleChangeRowsPerPage,
+        handleChangePage,
+    } = props;
 
-const ColorStorageTable = () => {
     return (
         <Box width="100%" overflow="auto">
             <StyledTable>
                 <TableHead>
                     <TableRow>
-                        <TableCell align="left">Name</TableCell>
-                        <TableCell align="center">Company</TableCell>
-                        <TableCell align="center">Start Date</TableCell>
-                        <TableCell align="center">Status</TableCell>
-                        <TableCell align="center">Amount</TableCell>
-                        <TableCell align="right">Action</TableCell>
+                        {tableHeader.map((value, index) => (
+                            <TableCell
+                                key={index}
+                                sx={{ fontSize: '100%' }}
+                                align="center"
+                            >
+                                {value}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
 
                 <TableBody>
-                    {subscribarList.map((subscriber, index) => (
-                        <TableRow key={index}>
-                            <TableCell align="left">
-                                {subscriber.name}
-                            </TableCell>
-                            <TableCell align="center">
-                                {subscriber.company}
-                            </TableCell>
-                            <TableCell align="center">
-                                {subscriber.date}
-                            </TableCell>
-                            <TableCell align="center">
-                                {subscriber.status}
-                            </TableCell>
-                            <TableCell align="center">
-                                ${subscriber.amount}
-                            </TableCell>
-                            <TableCell align="right">
-                                <IconButton>
-                                    <Icon color="error">close</Icon>
-                                </IconButton>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    {tableName === 'color'
+                        ? data
+                              .slice(
+                                  page * rowsPerPage,
+                                  page * rowsPerPage + rowsPerPage,
+                              )
+                              .map((subscriber, index) => (
+                                  <TableRow key={index}>
+                                      <TableCell align="center">
+                                          {subscriber.color_name}
+                                      </TableCell>
+                                      <TableCell align="center">
+                                          <Grid
+                                              container
+                                              justifyContent="center"
+                                          >
+                                              <Grid
+                                                  item
+                                                  maxWidth="50"
+                                                  align="center"
+                                              >
+                                                  <ButtonProduct
+                                                      variant="contained"
+                                                      color="primary"
+                                                      size="small"
+                                                      onClick={() => {}}
+                                                  >
+                                                      Chỉnh sửa
+                                                  </ButtonProduct>
+                                              </Grid>
+                                          </Grid>
+                                      </TableCell>
+                                  </TableRow>
+                              ))
+                        : data
+                              .slice(
+                                  page * rowsPerPage,
+                                  page * rowsPerPage + rowsPerPage,
+                              )
+                              .map((subscriber, index) => (
+                                  <TableRow key={index}>
+                                      <TableCell align="center">
+                                          {subscriber.storage_name}
+                                      </TableCell>
+                                      <TableCell align="center">
+                                          <Grid
+                                              container
+                                              justifyContent="center"
+                                          >
+                                              <Grid
+                                                  item
+                                                  maxWidth="50"
+                                                  align="center"
+                                              >
+                                                  <ButtonProduct
+                                                      variant="contained"
+                                                      color="primary"
+                                                      size="small"
+                                                      onClick={() => {}}
+                                                  >
+                                                      Chỉnh sửa
+                                                  </ButtonProduct>
+                                              </Grid>
+                                          </Grid>
+                                      </TableCell>
+                                  </TableRow>
+                              ))}
                 </TableBody>
             </StyledTable>
             <Stack justifyContent="center" alignItems="center" mt={3}>
-                <Pagination
-                    count={10}
-                    page={1}
-                    // onChange={handleChangePage}
+                <TablePagination
+                    title="a"
+                    sx={{ px: 2 }}
+                    page={page}
+                    component="div"
+                    rowsPerPage={rowsPerPage}
+                    count={data.length}
+                    onPageChange={handleChangePage}
+                    rowsPerPageOptions={[5, 10, 25]}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    nextIconButtonProps={{ 'aria-label': 'Next Page' }}
+                    backIconButtonProps={{ 'aria-label': 'Previous Page' }}
                 />
             </Stack>
         </Box>

@@ -16,7 +16,7 @@ const AccountTable = Loadable(lazy(() => import('./AccountTable')));
 const listRole = [
     { label: 'Hiển thị tất cả', id: -1 },
     { label: 'User', id: 1 },
-    { label: 'Admin', id: 3 },
+    { label: 'Admin', id: 2 },
 ];
 function AppAccount() {
     const [searchValue, setSearchValue] = useState('');

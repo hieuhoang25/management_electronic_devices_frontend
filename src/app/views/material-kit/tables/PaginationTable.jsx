@@ -1,7 +1,6 @@
 import {
     Box,
-    Icon,
-    IconButton,
+    Grid,
     styled,
     Table,
     TableBody,
@@ -10,7 +9,8 @@ import {
     TablePagination,
     TableRow,
 } from '@mui/material';
-import { useState } from 'react';
+import Loading from 'app/components/MatxLoading';
+import ButtonProduct from 'app/views/product/ButtonProduct';
 
 const StyledTable = styled(Table)(() => ({
     whiteSpace: 'pre',
@@ -22,128 +22,151 @@ const StyledTable = styled(Table)(() => ({
     },
 }));
 
-const subscribarList = [
-    {
-        name: 'john doe1',
-        date: '18 january, 2019',
-        amount: 1000,
-        status: 'close',
-        company: 'ABC Fintech LTD.',
-    },
-    {
-        name: 'kessy bryan',
-        date: '10 january, 2019',
-        amount: 9000,
-        status: 'open',
-        company: 'My Fintech LTD.',
-    },
-    {
-        name: 'kessy bryan',
-        date: '10 january, 2019',
-        amount: 9000,
-        status: 'open',
-        company: 'My Fintech LTD.',
-    },
-    {
-        name: 'james cassegne',
-        date: '8 january, 2019',
-        amount: 5000,
-        status: 'close',
-        company: 'Collboy Tech LTD.',
-    },
-    {
-        name: 'lucy brown',
-        date: '1 january, 2019',
-        amount: 89000,
-        status: 'open',
-        company: 'ABC Fintech LTD.',
-    },
-    {
-        name: 'lucy brown',
-        date: '1 january, 2019',
-        amount: 89000,
-        status: 'open',
-        company: 'ABC Fintech LTD.',
-    },
-    {
-        name: 'lucy brown',
-        date: '1 january, 2019',
-        amount: 89000,
-        status: 'open',
-        company: 'ABC Fintech LTD.',
-    },
-    {
-        name: 'lucy brown',
-        date: '1 january, 2019',
-        amount: 89000,
-        status: 'open',
-        company: 'ABC Fintech LTD.',
-    },
-    {
-        name: 'lucy brown',
-        date: '1 january, 2019',
-        amount: 89000,
-        status: 'open',
-        company: 'ABC Fintech LTD.',
-    },
-];
+// const subscribarList = [
+//     {
+//         name: 'john doe1',
+//         date: '18 january, 2019',
+//         amount: 1000,
+//         status: 'close',
+//         company: 'ABC Fintech LTD.',
+//     },
+//     {
+//         name: 'kessy bryan',
+//         date: '10 january, 2019',
+//         amount: 9000,
+//         status: 'open',
+//         company: 'My Fintech LTD.',
+//     },
+//     {
+//         name: 'kessy bryan',
+//         date: '10 january, 2019',
+//         amount: 9000,
+//         status: 'open',
+//         company: 'My Fintech LTD.',
+//     },
+//     {
+//         name: 'james cassegne',
+//         date: '8 january, 2019',
+//         amount: 5000,
+//         status: 'close',
+//         company: 'Collboy Tech LTD.',
+//     },
+//     {
+//         name: 'lucy brown',
+//         date: '1 january, 2019',
+//         amount: 89000,
+//         status: 'open',
+//         company: 'ABC Fintech LTD.',
+//     },
+//     {
+//         name: 'lucy brown',
+//         date: '1 january, 2019',
+//         amount: 89000,
+//         status: 'open',
+//         company: 'ABC Fintech LTD.',
+//     },
+//     {
+//         name: 'lucy brown',
+//         date: '1 january, 2019',
+//         amount: 89000,
+//         status: 'open',
+//         company: 'ABC Fintech LTD.',
+//     },
+//     {
+//         name: 'lucy brown',
+//         date: '1 january, 2019',
+//         amount: 89000,
+//         status: 'open',
+//         company: 'ABC Fintech LTD.',
+//     },
+//     {
+//         name: 'lucy brown',
+//         date: '1 january, 2019',
+//         amount: 89000,
+//         status: 'open',
+//         company: 'ABC Fintech LTD.',
+//     },
+// ];
 
-const PaginationTable = () => {
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+const PaginationTable = ({ ...props }) => {
+    const {
+        tableHeader,
+        data = [],
+        page,
+        rowsPerPage,
+        handleChangeRowsPerPage,
+        handleChangePage,
+        tableName,
+        loading = false,
+        // eslint-disable-next-line
+        setLoading,
+    } = props;
 
-    const handleChangePage = (_, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
-
-    return (
+    return loading === true ? (
+        <Loading />
+    ) : (
         <Box width="100%" overflow="auto" marginTop={3}>
             <StyledTable>
                 <TableHead>
                     <TableRow>
-                        <TableCell align="left">Name</TableCell>
-                        <TableCell align="center">Quantity</TableCell>
-                        <TableCell align="center">Brand</TableCell>
-                        <TableCell align="center">Create Date</TableCell>
-                        <TableCell align="center">Update Date</TableCell>
-                        <TableCell align="right">Action</TableCell>
+                        {tableHeader &&
+                            tableHeader.map((value, index) => (
+                                <TableCell
+                                    sx={{ fontSize: '100%' }}
+                                    align="center"
+                                    key={index}
+                                >
+                                    {value}
+                                </TableCell>
+                            ))}
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {subscribarList
-                        .slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage,
-                        )
-                        .map((subscriber, index) => (
-                            <TableRow key={index}>
-                                <TableCell align="left">
-                                    {subscriber.name}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {subscriber.company}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {subscriber.date}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {subscriber.status}
-                                </TableCell>
-                                <TableCell align="center">
-                                    ${subscriber.amount}
-                                </TableCell>
-                                <TableCell align="right">
-                                    <IconButton>
-                                        <Icon color="primary">visibility</Icon>
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                    {tableName === 'brand' &&
+                        data.length > 0 &&
+                        data
+                            .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage,
+                            )
+                            .map((subscriber, index) => (
+                                <TableRow key={index}>
+                                    <TableCell align="center">
+                                        {subscriber.brand_name}
+                                    </TableCell>
+                                    <TableCell>
+                                        <Grid
+                                            container
+                                            spacing={2}
+                                            justifyContent="center"
+                                        >
+                                            <Grid item md={3}>
+                                                <ButtonProduct
+                                                    variant="contained"
+                                                    color="primary"
+                                                    size="small"
+                                                    fullWidth
+                                                    onClick={() => {}}
+                                                >
+                                                    Sửa
+                                                </ButtonProduct>
+                                            </Grid>
+
+                                            <Grid item md={3}>
+                                                <ButtonProduct
+                                                    variant="contained"
+                                                    color="error"
+                                                    size="small"
+                                                    fullWidth
+                                                    onClick={() => {}}
+                                                >
+                                                    Xoá
+                                                </ButtonProduct>
+                                            </Grid>
+                                        </Grid>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                 </TableBody>
             </StyledTable>
 
@@ -152,7 +175,7 @@ const PaginationTable = () => {
                 page={page}
                 component="div"
                 rowsPerPage={rowsPerPage}
-                count={subscribarList.length}
+                count={data.length}
                 onPageChange={handleChangePage}
                 rowsPerPageOptions={[5, 10, 25]}
                 onRowsPerPageChange={handleChangeRowsPerPage}

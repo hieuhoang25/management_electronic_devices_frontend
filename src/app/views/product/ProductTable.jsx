@@ -222,22 +222,38 @@ const SimpleTable = () => {
                         {products.stateTable === 'product'
                             ? productTableHeader.map((value, index) =>
                                   index === 0 ? (
-                                      <TableCell align="left" key={index}>
+                                      <TableCell
+                                          sx={{ fontSize: '100%' }}
+                                          align="left"
+                                          key={index}
+                                      >
                                           {value}
                                       </TableCell>
                                   ) : (
-                                      <TableCell align="center" key={index}>
+                                      <TableCell
+                                          sx={{ fontSize: '100%' }}
+                                          align="center"
+                                          key={index}
+                                      >
                                           {value}
                                       </TableCell>
                                   ),
                               )
                             : productVariantTableHeader.map((value, index) =>
                                   index === 0 ? (
-                                      <TableCell align="left" key={index}>
+                                      <TableCell
+                                          sx={{ fontSize: '100%' }}
+                                          align="left"
+                                          key={index}
+                                      >
                                           {value}
                                       </TableCell>
                                   ) : (
-                                      <TableCell align="center" key={index}>
+                                      <TableCell
+                                          sx={{ fontSize: '100%' }}
+                                          align="center"
+                                          key={index}
+                                      >
                                           {value}
                                       </TableCell>
                                   ),
@@ -309,10 +325,14 @@ const SimpleTable = () => {
                                     ).toString()}
                                 </TableCell>
                                 <TableCell align="center">
-                                <Chip label={product.promotion_name
-                                        ? product.promotion_name
-                                        : 'Không có'} color="success" />
-                                    
+                                    <Chip
+                                        label={
+                                            product.promotion_name
+                                                ? product.promotion_name
+                                                : 'Không có'
+                                        }
+                                        color="success"
+                                    />
                                 </TableCell>
                                 {/* <TableCell align="center">
                                     {product.is_delete ? 'true' : 'false'}
@@ -337,7 +357,7 @@ const SimpleTable = () => {
 
                                         <Grid item md={6} xs={12}>
                                             <ButtonProduct
-                                                variant="outlined"
+                                                variant="contained"
                                                 color="error"
                                                 size="small"
                                                 fullWidth
@@ -358,8 +378,8 @@ const SimpleTable = () => {
                                     <Grid container spacing={2}>
                                         <Grid item md={6} xs={12}>
                                             <ButtonProduct
-                                                variant="outlined"
-                                                color="primary"
+                                                variant="contained"
+                                                color="secondary"
                                                 size="small"
                                                 fullWidth
                                                 onClick={() => {
@@ -374,7 +394,7 @@ const SimpleTable = () => {
 
                                         <Grid item md={6} xs={12}>
                                             <ButtonProduct
-                                                variant="outlined"
+                                                variant="contained"
                                                 color="success"
                                                 size="small"
                                                 fullWidth
