@@ -14,7 +14,6 @@ const App = () => {
     const content = useRoutes(routes);
 
     return (
-        <div>
             <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <SettingsProvider>
@@ -25,9 +24,6 @@ const App = () => {
                 </SettingsProvider>
             </PersistGate>
         </Provider>
-    
-        </div>
-        
     );
 };
 
