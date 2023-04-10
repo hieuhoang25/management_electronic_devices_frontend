@@ -25,7 +25,7 @@ function SnackbarCusom({ ...props }) {
                 setMessage('Cập nhật ');
                 break;
             case 'create':
-                setMessage('Thêm');
+                setMessage('Thêm ');
                 break;
             case 'delete':
                 setMessage('Xoá ');
@@ -34,10 +34,11 @@ function SnackbarCusom({ ...props }) {
                 break;
         }
     }, [response, type]);
+
     useEffect(() => {
         if (response.status !== 200) {
             setStateSnackbar({
-                message: message + 'thất bại' + response.data.error || '',
+                message: message + 'thất bại: ' + response.data.error || '',
                 status: 'error',
                 open: true,
             });
@@ -49,12 +50,12 @@ function SnackbarCusom({ ...props }) {
             });
         }
         // eslint-disable-next-line
-    }, [message]);
+    }, [response, message]);
 
     return (
         <Snackbar
             open={stateSnackbar.open}
-            autoHideDuration={1500}
+            autoHideDuration={3000}
             onClose={handleCloseSnackBar}
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
@@ -67,21 +68,6 @@ function SnackbarCusom({ ...props }) {
             </Alert>
         </Snackbar>
     );
-    //     <Snackbar
-    //         open={openSnackBar}
-    //         autoHideDuration={1500}
-    //         onClose={handleCloseSnackBar}
-    //         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-    //     >
-    //         <Alert
-    //             onClose={handleCloseSnackBar}
-    //             severity={status}
-    //             md={{ width: '100%' }}
-    //         >
-    //             {message}
-    //         </Alert>
-    //     </Snackbar>
-    // );
 }
 
 export default SnackbarCusom;

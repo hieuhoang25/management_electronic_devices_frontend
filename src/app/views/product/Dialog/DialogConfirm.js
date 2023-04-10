@@ -32,7 +32,13 @@ function DialogConfirm({
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseConfirm}>Huỷ bỏ</Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleCloseConfirm}
+                >
+                    Huỷ bỏ
+                </Button>
                 {/* <Button onClick={handleConfirmUpdate} autoFocus>
                     Đồng ý
                 </Button> */}

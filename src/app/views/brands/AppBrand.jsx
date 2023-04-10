@@ -6,7 +6,9 @@ import { Container } from '../material-kit/auto-complete/AppAutoComplete';
 import styled from '@emotion/styled';
 import { Button, Grid } from '@mui/material';
 import DialogBonik from '../material-kit/dialog/DialogBonik';
-const StyledButton = styled(Button)(({ theme }) => ({
+import { useEffect } from 'react';
+import axios from 'axios.js';
+export const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(1),
 }));
 export const formBrand = [{ label: 'Tên thương hiệu', type: 'text' }];
@@ -15,6 +17,8 @@ function AppBrand() {
     const [rowsPerPageBrand, setRowsPerPageBrand] = useState(5);
     const [form, setForm] = useState({});
     const [reRender, setReRender] = useState(true);
+    const [data, setData] = useState();
+    const [loading, setLoading] = useState(false);
     const handleChangePageBrand = (_, newPage) => {
         setPageBrand(newPage);
     };
@@ -35,7 +39,15 @@ function AppBrand() {
         setRowsPerPageBrand(+event.target.value);
         setPageBrand(0);
     };
+    // eslint-disable-next-line
+    useEffect(async () => {
+        const res = await axios
+            .get(process.env.REACT_APP_BASE_URL + 'brand')
+            .catch((error) => console.log(error));
+        setData(res.data);
 
+        // eslint-disable-next-line
+    }, [reRender]);
     return (
         <Container>
             <SimpleCard title="Quản lý thương hiệu">
@@ -61,6 +73,9 @@ function AppBrand() {
                     handleChangePage={handleChangePageBrand}
                     reRender={reRender}
                     setReRender={setReRender}
+                    data={data}
+                    loading={loading}
+                    setLoading={setLoading}
                 />
             </SimpleCard>
             {open && (

@@ -15,6 +15,8 @@ import { useEffect, useState } from 'react';
 import DialogBonik from '../dialog/DialogBonik';
 import { formBrand } from 'app/views/brands/AppBrand';
 import axios from 'axios.js';
+import SnackbarCusom from '../dialog/SnackbarCustom';
+import DialogConfirm from 'app/views/product/Dialog/DialogConfirm';
 
 const StyledTable = styled(Table)(() => ({
     whiteSpace: 'pre',
@@ -101,20 +103,29 @@ const PaginationTable = ({ ...props }) => {
         tableName,
         reRender,
         setReRender,
+        loading,
+        setLoading,
         // eslint-disable-next-line
     } = props;
     const [open, setOpen] = useState(false);
     const [brandSelected, setBrandSelected] = useState();
     const [form, setForm] = useState({});
-    const [loading, setLoading] = useState(false);
+
     const [data, setData] = useState([]);
+    const [snackBar, setSnackbar] = useState({ response: null, type: '' });
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const [loadButton, setLoadButton] = useState(false);
+    const [idSelected, setIdSelected] = useState();
 
     function handleClickOpen(object) {
         setForm(object);
         setBrandSelected(object);
         setOpen(true);
     }
-
+    const handleCloseConfirm = () => {
+        setOpenConfirm(false);
+        setReRender(!reRender);
+    };
     function handleClose() {
         setForm('');
         setOpen(false);
@@ -132,6 +143,25 @@ const PaginationTable = ({ ...props }) => {
         setLoading(false);
         // eslint-disable-next-line
     }, [reRender]);
+    const handleDelete = async (id) => {
+        setIdSelected(id);
+        setOpenConfirm(true);
+    };
+    const handleConfirmUpdate = async () => {
+        setLoadButton(true);
+        setOpenConfirm(true);
+        if (tableName === 'brand') {
+            let res = await axios
+                .delete(process.env.REACT_APP_BASE_URL + 'brand/' + idSelected)
+                .catch((error) => (res = error.response));
+
+            setSnackbar((pre) => {
+                return { ...pre, type: 'delete', response: res };
+            });
+        }
+
+        setLoadButton(false);
+    };
     return loading === true ? (
         <Loading />
     ) : (
@@ -192,7 +222,11 @@ const PaginationTable = ({ ...props }) => {
                                                     color="error"
                                                     size="small"
                                                     fullWidth
-                                                    onClick={() => {}}
+                                                    onClick={() => {
+                                                        handleDelete(
+                                                            subscriber.id,
+                                                        );
+                                                    }}
                                                 >
                                                     Xoá
                                                 </ButtonProduct>
@@ -227,6 +261,21 @@ const PaginationTable = ({ ...props }) => {
                     data={brandSelected}
                     form={form}
                     setForm={setForm}
+                />
+            )}
+            {snackBar.response && (
+                <SnackbarCusom
+                    response={snackBar.response}
+                    type={snackBar.type}
+                />
+            )}
+            {openConfirm && (
+                <DialogConfirm
+                    openConfirm={openConfirm}
+                    handleClose={handleClose}
+                    handleCloseConfirm={handleCloseConfirm}
+                    handleConfirmUpdate={handleConfirmUpdate}
+                    loading={loadButton}
                 />
             )}
         </Box>

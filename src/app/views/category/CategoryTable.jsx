@@ -12,16 +12,30 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import styled from '@emotion/styled';
 import { Grid, TablePagination } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { getOrderList } from 'app/redux/actions/OrderAction';
 import { useState } from 'react';
 import Loading from 'app/components/MatxLoading';
 import ButtonProduct from '../product/ButtonProduct';
+import { StyledButton } from '../brands/AppBrand';
+import DialogBonik from '../material-kit/dialog/DialogBonik';
+import DialogConfirm from '../product/Dialog/DialogConfirm';
+import axios from 'axios.js';
+import SnackbarCusom from '../material-kit/dialog/SnackbarCustom';
 
 function Row({ ...props }) {
-    const { row, tableChildHeader } = props;
-    const [open, setOpen] = React.useState(false);
+    const {
+        row,
+        tableChildHeader,
+        handleClickOpen,
+        setTypeTable,
+        setForm,
+        // eslint-disable-next-line
+        form,
+        setDialogName,
+        setTypeDialog,
+        handleDelete,
+    } = props;
+    const [open, setOpen] = useState(false);
 
     return (
         <React.Fragment>
@@ -49,7 +63,16 @@ function Row({ ...props }) {
                                 variant="contained"
                                 color="primary"
                                 size="small"
-                                onClick={() => {}}
+                                onClick={() => {
+                                    // eslint-disable-next-line
+
+                                    setForm(row);
+
+                                    setDialogName('Cập nhật danh mục cha');
+                                    setTypeDialog('update');
+                                    setTypeTable('parent');
+                                    handleClickOpen();
+                                }}
                             >
                                 Chỉnh sửa
                             </ButtonProduct>
@@ -59,7 +82,9 @@ function Row({ ...props }) {
                                 variant="contained"
                                 color="error"
                                 size="small"
-                                onClick={() => {}}
+                                onClick={() => {
+                                    handleDelete(row.id);
+                                }}
                             >
                                 Xoá
                             </ButtonProduct>
@@ -75,11 +100,28 @@ function Row({ ...props }) {
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
                             <Typography
-                                variant="h6"
+                                variant="h2"
                                 gutterBottom
                                 component="div"
                             >
-                                Chi tiết
+                                <Grid item>
+                                    <StyledButton
+                                        variant="contained"
+                                        color="success"
+                                        onClick={() => {
+                                            setTypeTable('child');
+                                            setDialogName(
+                                                'Thêm mới danh mục con',
+                                            );
+                                            setTypeTable('child');
+                                            setForm(row);
+                                            setTypeDialog('create');
+                                            handleClickOpen();
+                                        }}
+                                    >
+                                        Thêm mới danh mục con
+                                    </StyledButton>
+                                </Grid>
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
@@ -121,7 +163,24 @@ function Row({ ...props }) {
                                                                 variant="outlined"
                                                                 color="primary"
                                                                 size="small"
-                                                                onClick={() => {}}
+                                                                onClick={() => {
+                                                                    setDialogName(
+                                                                        'Cập nhật danh mục con',
+                                                                    );
+                                                                    setForm(
+                                                                        row
+                                                                            .categories[
+                                                                            index
+                                                                        ],
+                                                                    );
+                                                                    setTypeTable(
+                                                                        'child',
+                                                                    );
+                                                                    setTypeDialog(
+                                                                        'update',
+                                                                    );
+                                                                    handleClickOpen();
+                                                                }}
                                                             >
                                                                 Chỉnh sửa
                                                             </ButtonProduct>
@@ -135,7 +194,11 @@ function Row({ ...props }) {
                                                                 variant="outlined"
                                                                 color="error"
                                                                 size="small"
-                                                                onClick={() => {}}
+                                                                onClick={() => {
+                                                                    handleDelete(
+                                                                        value.id,
+                                                                    );
+                                                                }}
                                                             >
                                                                 Xoá
                                                             </ButtonProduct>
@@ -163,40 +226,86 @@ const StyledTable = styled(Table)(() => ({
         '& tr': { '& td': { paddingLeft: 0, textTransform: 'capitalize' } },
     },
 }));
-
+const formCategoryParent = [{ label: 'Tên danh mục cha', type: 'text' }];
+const formCategoryChild = [{ label: 'Tên danh mục con', type: 'text' }];
 //end compare
 export default function CategoryTable({ tableHeader, ...props }) {
-    const { data, tableChildHeader } = props;
+    const { data, tableChildHeader, reRender, setReRender } = props;
     const [page, setPage] = React.useState(0);
+    const [typeTable, setTypeTable] = useState();
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const dispatch = useDispatch();
-    const [reload, setReload] = useState(true);
     const [loading, setLoading] = useState(false);
-
+    const [openDialog, setOpenDialog] = useState(false);
+    const [form, setForm] = useState();
+    const [dialogName, setDialogName] = useState();
+    const [typeDialog, setTypeDialog] = useState();
+    const [categorySelected, setCategorySelected] = useState();
+    const [idSelected, setIdSelected] = useState();
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const [loadButton, setLoadButton] = useState(false);
+    const [snackBar, setSnackbar] = useState({ response: null, type: '' });
     const handleChangePage = (_, newPage) => {
         setPage(newPage);
     };
-    // eslint-disable-next-line
-    useEffect(async () => {
-        setLoading(true);
 
-        await dispatch(getOrderList());
-
-        setLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [reload]);
-
+    useEffect(() => {
+        setCategorySelected(form);
+        // eslint-disable-next-line
+    }, [dialogName]);
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    function handleClickOpen() {
+        setOpenDialog(true);
+    }
+    function handleClose() {
+        setForm('');
+        setOpenDialog(false);
+        setReRender(!reRender);
+    }
+    const handleDelete = (id) => {
+        setIdSelected(id);
+        setOpenConfirm(true);
+    };
+    const handleCloseConfirm = () => {
+        setOpenConfirm(false);
+        setReRender(!reRender);
+    };
+    const handleConfirmUpdate = async () => {
+        setLoadButton(true);
+        setOpenConfirm(true);
 
+        let res = await axios
+            .delete(process.env.REACT_APP_BASE_URL + 'category/' + idSelected)
+            .catch((error) => (res = error.response));
+
+        setSnackbar((pre) => {
+            return { ...pre, type: 'delete', response: res };
+        });
+
+        setLoadButton(false);
+    };
     return loading === true ? (
         <>
             <Loading />
         </>
     ) : (
         <Box width="100%" overflow="auto">
+            <Grid item>
+                <StyledButton
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        setTypeTable('parent');
+                        setDialogName('Thêm mới danh mục cha');
+                        setTypeDialog('create');
+                        handleClickOpen();
+                    }}
+                >
+                    Thêm mới
+                </StyledButton>
+            </Grid>
             <StyledTable>
                 <TableHead>
                     <TableRow>
@@ -228,10 +337,18 @@ export default function CategoryTable({ tableHeader, ...props }) {
                             <Row
                                 key={index}
                                 row={row}
-                                reload={reload}
-                                setReload={setReload}
+                                reload={reRender}
+                                setReload={setReRender}
                                 setLoading={setLoading}
                                 tableChildHeader={tableChildHeader}
+                                handleClickOpen={handleClickOpen}
+                                setTypeTable={setTypeTable}
+                                setForm={setForm}
+                                form={form}
+                                setDialogName={setDialogName}
+                                setTypeDialog={setTypeDialog}
+                                setCategorySelected={setCategorySelected}
+                                handleDelete={handleDelete}
                             />
                         ))}
                 </TableBody>
@@ -249,6 +366,38 @@ export default function CategoryTable({ tableHeader, ...props }) {
                 nextIconButtonProps={{ 'aria-label': 'Next Page' }}
                 backIconButtonProps={{ 'aria-label': 'Previous Page' }}
             />
+            {openDialog && (
+                <DialogBonik
+                    open={openDialog}
+                    setOpen={setOpenDialog}
+                    handleClose={handleClose}
+                    dialogName={dialogName}
+                    typeDialog={typeDialog}
+                    formCategory={
+                        typeTable === 'parent'
+                            ? formCategoryParent
+                            : formCategoryChild
+                    }
+                    form={form}
+                    setForm={setForm}
+                    data={categorySelected}
+                />
+            )}
+            {openConfirm && (
+                <DialogConfirm
+                    openConfirm={openConfirm}
+                    handleClose={handleClose}
+                    handleCloseConfirm={handleCloseConfirm}
+                    handleConfirmUpdate={handleConfirmUpdate}
+                    loading={loadButton}
+                />
+            )}
+            {snackBar.response && (
+                <SnackbarCusom
+                    response={snackBar.response}
+                    type={snackBar.type}
+                />
+            )}
         </Box>
     );
 }

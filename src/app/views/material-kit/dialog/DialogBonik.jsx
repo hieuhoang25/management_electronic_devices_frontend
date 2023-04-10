@@ -11,6 +11,7 @@ import React from 'react';
 import { useState } from 'react';
 import SnackbarCusom from './SnackbarCustom';
 import axios from 'axios.js';
+import { useEffect } from 'react';
 
 export default function DialogBonik({ ...props }) {
     const {
@@ -18,31 +19,40 @@ export default function DialogBonik({ ...props }) {
         handleClose,
         dialogName,
         typeDialog,
-        formBrand,
+        formBrand = [],
+        formCategory = [],
         form,
         setForm,
         data,
     } = props;
 
     const [snackBar, setSnackbar] = useState({ response: null, type: '' });
-    const handleChangeFormBrand = (e) => {
-        setForm((pre) => {
-            return { ...pre, brand_name: e.target.value };
-        });
+    const handleChangeForm = (e, name) => {
+        if (name === 'brand') {
+            setForm((pre) => {
+                return { ...pre, brand_name: e.target.value };
+            });
+        } else if (name === 'category') {
+            setForm((pre) => {
+                return { ...pre, category_name: e.target.value };
+            });
+        }
     };
-
     const [openConfirm, setOpenConfirm] = useState(false);
-    //     const [openSnackBar, setOpenSnackBar] = useState(false);
     const [load, setLoad] = useState(false);
     const handleClickOpenConfirm = () => {
-        //         setLoad(true);
-
         setOpenConfirm(true);
     };
 
     const handleCloseConfirm = () => {
         setOpenConfirm(false);
     };
+    useEffect(() => {
+        if (dialogName === 'Thêm mới danh mục con') {
+            setForm('');
+        }
+        // eslint-disable-next-line
+    }, []);
     const handleConfirmUpdate = async () => {
         setLoad(true);
         if (dialogName === 'Thêm mới thương hiệu') {
@@ -54,10 +64,54 @@ export default function DialogBonik({ ...props }) {
             });
         } else if (dialogName === 'Cập nhật thương hiệu') {
             const newBrand = { id: data.id, brand_name: form.brand_name };
-            console.log(newBrand);
+
             let res;
             res = await axios
                 .put(process.env.REACT_APP_BASE_URL + 'brand', newBrand)
+                .catch((error) => (res = error.response));
+            setSnackbar((pre) => {
+                return { ...pre, type: 'update', response: res };
+            });
+        } else if (dialogName === 'Thêm mới danh mục cha') {
+            let res = await axios
+                .post(process.env.REACT_APP_BASE_URL + 'category', form)
+                .catch((error) => (res = error.response));
+            setSnackbar((pre) => {
+                return { ...pre, type: 'create', response: res };
+            });
+        } else if (dialogName === 'Thêm mới danh mục con') {
+            const newCategory = {
+                parent_id: data.id,
+                category_name: form.category_name,
+            };
+            let res = await axios
+                .post(process.env.REACT_APP_BASE_URL + 'category', newCategory)
+                .catch((error) => (res = error.response));
+            setSnackbar((pre) => {
+                return { ...pre, type: 'create', response: res };
+            });
+        } else if (dialogName === 'Cập nhật danh mục con') {
+            console.log(data);
+            const newCategory = {
+                id: data.id,
+                category_name: form.category_name,
+                parent_id: data.parent_id,
+            };
+            console.log(newCategory);
+            let res = await axios
+                .put(process.env.REACT_APP_BASE_URL + 'category', newCategory)
+                .catch((error) => (res = error.response));
+            setSnackbar((pre) => {
+                return { ...pre, type: 'update', response: res };
+            });
+        } else if (dialogName === 'Cập nhật danh mục cha') {
+            const newCategory = {
+                id: data.id,
+                category_name: form.category_name,
+            };
+            console.log(newCategory);
+            let res = await axios
+                .put(process.env.REACT_APP_BASE_URL + 'category', newCategory)
                 .catch((error) => (res = error.response));
             setSnackbar((pre) => {
                 return { ...pre, type: 'update', response: res };
@@ -89,7 +143,24 @@ export default function DialogBonik({ ...props }) {
                                 fullWidth
                                 value={(form && form.brand_name) || ''}
                                 onChange={(e) => {
-                                    handleChangeFormBrand(e);
+                                    handleChangeForm(e, 'brand');
+                                }}
+                            />
+                        </DialogContent>
+                    ))}
+                {formCategory.length > 0 &&
+                    formCategory.map((value, index) => (
+                        <DialogContent key={index}>
+                            <TextField
+                                key={index}
+                                margin="dense"
+                                id="name"
+                                label={value.label}
+                                type={value.type}
+                                fullWidth
+                                value={(form && form.category_name) || ''}
+                                onChange={(e) => {
+                                    handleChangeForm(e, 'category');
                                 }}
                             />
                         </DialogContent>
@@ -116,13 +187,16 @@ export default function DialogBonik({ ...props }) {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <DialogConfirm
-                openConfirm={openConfirm}
-                handleClose={handleClose}
-                handleCloseConfirm={handleCloseConfirm}
-                handleConfirmUpdate={handleConfirmUpdate}
-                loading={load}
-            />
+            {openConfirm && (
+                <DialogConfirm
+                    openConfirm={openConfirm}
+                    handleClose={handleClose}
+                    handleCloseConfirm={handleCloseConfirm}
+                    handleConfirmUpdate={handleConfirmUpdate}
+                    loading={load}
+                />
+            )}
+
             {snackBar.response && (
                 <SnackbarCusom
                     response={snackBar.response}

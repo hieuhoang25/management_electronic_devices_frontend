@@ -12,6 +12,7 @@ import { Container } from '../material-kit/auto-complete/AppAutoComplete';
 const CategoryTable = Loadable(lazy(() => import('./CategoryTable')));
 function AppCategory() {
     const [category, setCategory] = useState([]);
+    const [reRender, setReRender] = useState(true);
     // eslint-disable-next-line
     useEffect(async () => {
         const categories = await axios.get(
@@ -22,7 +23,7 @@ function AppCategory() {
             return obj.parent_id === null;
         });
         setCategory(categoryParents);
-    }, []);
+    }, [reRender]);
 
     return (
         <Container>
@@ -32,6 +33,8 @@ function AppCategory() {
                     tableHeader={categoryTableHeader}
                     tableChildHeader={categoryTableChildHeader}
                     data={category || []}
+                    reRender={reRender}
+                    setReRender={setReRender}
                 />
             </SimpleCard>
         </Container>
