@@ -149,7 +149,6 @@ const SimpleTable = () => {
         products.stateDeleted.deleted,
         products.keysearch,
         openDialogProduct,
-        products,
     ]);
 
     function handleOpenProductAttribute(id) {
