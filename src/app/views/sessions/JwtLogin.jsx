@@ -6,9 +6,7 @@ import useAuth from 'app/hooks/useAuth';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import {
-    Snackbar
-} from '@mui/material';
+import { Snackbar } from '@mui/material';
 import * as Yup from 'yup';
 
 const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
@@ -73,7 +71,7 @@ const JwtLogin = () => {
         setLoading(true);
         try {
             let response = await login(newObject);
-        
+
             if (response.error) {
                 setAlert(response.error);
                 console.log(response);
@@ -89,7 +87,7 @@ const JwtLogin = () => {
         } catch (e) {
             console.log(e);
             setOpenSnackBar(true);
-            setAlert("Tài khoản và mật khẩu không chính xác!");
+            setAlert('Tài khoản và mật khẩu không chính xác!');
             setLoading(false);
         }
     };
@@ -203,20 +201,22 @@ const JwtLogin = () => {
                                 )}
                             </Formik>
                             <Snackbar
-                      open={openSnackBar}
-                    autoHideDuration={1500}
-                     onClose={handleCloseSnackBar}
-                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-                <Alert
-                    onClose={handleCloseSnackBar}
-                    severity="warning"
-                    md={{ width: '100%' }}
-                >
-                  {alert}
-                </Alert>
-            </Snackbar>
-                          
+                                open={openSnackBar}
+                                autoHideDuration={4000}
+                                onClose={handleCloseSnackBar}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                            >
+                                <Alert
+                                    onClose={handleCloseSnackBar}
+                                    severity="warning"
+                                    md={{ width: '100%' }}
+                                >
+                                    {alert}
+                                </Alert>
+                            </Snackbar>
                         </ContentBox>
                     </Grid>
                 </Grid>

@@ -51,7 +51,7 @@ export const NotificationProvider = ({ settings, children }) => {
                 process.env.REACT_APP_BASE_URL +
                     `notification/delete/${notificationID}`,
             );
-            console.log(res.data);
+
             dispatch({
                 type: 'DELETE_NOTIFICATION',
                 payload: res.data,
@@ -66,7 +66,7 @@ export const NotificationProvider = ({ settings, children }) => {
             const res = await axios.delete(
                 process.env.REACT_APP_BASE_URL + 'notification/delete-all',
             );
-            console.log(res.data);
+
             dispatch({
                 type: 'CLEAR_NOTIFICATIONS',
                 payload: res.data,
@@ -81,7 +81,7 @@ export const NotificationProvider = ({ settings, children }) => {
             const res = await axios.get(
                 process.env.REACT_APP_BASE_URL + 'notification',
             );
-            console.log(res.data);
+
             dispatch({
                 type: 'LOAD_NOTIFICATIONS',
                 payload: res.data,

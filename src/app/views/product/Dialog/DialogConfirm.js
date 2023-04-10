@@ -27,8 +27,8 @@ function DialogConfirm({
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Xác nhận cập nhật các thay đổi thông số của sản phẩm , điều
-                    nay sẽ không hoàn tác được sau khi đã xác nhận
+                    Xác nhận , điều này sẽ không được hoàn tác sau khi đã chấp
+                    nhận
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

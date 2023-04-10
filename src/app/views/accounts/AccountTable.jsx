@@ -24,6 +24,7 @@ import {
 } from 'app/redux/actions/AccountAction';
 import { useEffect } from 'react';
 import Loading from 'app/components/MatxLoading';
+import { format, parseISO } from 'date-fns';
 const GreenRadio = styled(Radio)(() => ({
     color: green[400],
     '&$checked': { color: green[600] },
@@ -117,28 +118,52 @@ function Row(props) {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Ngày tạo</TableCell>
-                                        <TableCell>Địa chỉ</TableCell>
+                                        <TableCell>Số nhà</TableCell>
+                                        <TableCell>Phường/Xã</TableCell>
+                                        <TableCell>Quận/Huyện</TableCell>
+                                        <TableCell>Thành phố/Tỉnh</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     <TableRow>
                                         <TableCell component="th" scope="row">
-                                            {row.user.createDate}
+                                            {format(
+                                                parseISO(
+                                                    row.user.createDate,
+                                                    1,
+                                                ),
+                                                'HH:mm:ss dd/MM/yyyy ',
+                                            ).toString()}
                                         </TableCell>
 
-                                        <TableCell>
-                                            {row.user.addresses.length > 0
-                                                ? row.user.addresses[0]
-                                                      .address_line +
-                                                  ' ' +
-                                                  row.user.addresses[0]
-                                                      .district +
-                                                  ' Quận ' +
-                                                  row.user.addresses[0].wards +
-                                                  ' ' +
-                                                  row.user.addresses[0].province
-                                                : ''}
-                                        </TableCell>
+                                        {row.user.addresses.length > 0 && (
+                                            <>
+                                                <TableCell>
+                                                    {
+                                                        row.user.addresses[0]
+                                                            .address_line
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        row.user.addresses[0]
+                                                            .wards
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        row.user.addresses[0]
+                                                            .district
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        row.user.addresses[0]
+                                                            .province
+                                                    }
+                                                </TableCell>
+                                            </>
+                                        )}
                                     </TableRow>
                                 </TableBody>
                             </Table>

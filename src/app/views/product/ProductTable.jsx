@@ -145,9 +145,11 @@ const SimpleTable = () => {
     }, [
         bodyTable,
         setOpen,
-        setOpenDialogProductV,
+        openDialogProductV,
         products.stateDeleted.deleted,
         products.keysearch,
+        openDialogProduct,
+        products,
     ]);
 
     function handleOpenProductAttribute(id) {
@@ -182,8 +184,10 @@ const SimpleTable = () => {
         setLoading(false);
     };
 
-    function handleClosedialogProduct() {
-        dispatch(getProductsList(5, products.pageNumber - 1));
+    async function handleClosedialogProduct() {
+        await Promise.resolve(
+            dispatch(getProductsList(5, products.pageNumber - 1)),
+        );
         setOpenDialogProduct(false);
     }
     //PRODUCT VARIANT

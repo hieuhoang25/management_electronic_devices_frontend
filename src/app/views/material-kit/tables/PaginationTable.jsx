@@ -11,6 +11,10 @@ import {
 } from '@mui/material';
 import Loading from 'app/components/MatxLoading';
 import ButtonProduct from 'app/views/product/ButtonProduct';
+import { useEffect, useState } from 'react';
+import DialogBonik from '../dialog/DialogBonik';
+import { formBrand } from 'app/views/brands/AppBrand';
+import axios from 'axios.js';
 
 const StyledTable = styled(Table)(() => ({
     whiteSpace: 'pre',
@@ -22,7 +26,6 @@ const StyledTable = styled(Table)(() => ({
     },
 }));
 
-// const subscribarList = [
 //     {
 //         name: 'john doe1',
 //         date: '18 january, 2019',
@@ -91,17 +94,44 @@ const StyledTable = styled(Table)(() => ({
 const PaginationTable = ({ ...props }) => {
     const {
         tableHeader,
-        data = [],
         page,
         rowsPerPage,
         handleChangeRowsPerPage,
         handleChangePage,
         tableName,
-        loading = false,
+        reRender,
+        setReRender,
         // eslint-disable-next-line
-        setLoading,
     } = props;
+    const [open, setOpen] = useState(false);
+    const [brandSelected, setBrandSelected] = useState();
+    const [form, setForm] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState([]);
 
+    function handleClickOpen(object) {
+        setForm(object);
+        setBrandSelected(object);
+        setOpen(true);
+    }
+
+    function handleClose() {
+        setForm('');
+        setOpen(false);
+        setReRender(!reRender);
+    }
+    // eslint-disable-next-line
+    useEffect(async () => {
+        setLoading(true);
+        if (tableName === 'brand') {
+            const res = await axios
+                .get(process.env.REACT_APP_BASE_URL + 'brand')
+                .catch((error) => console.log(error));
+            setData(res.data);
+        }
+        setLoading(false);
+        // eslint-disable-next-line
+    }, [reRender]);
     return loading === true ? (
         <Loading />
     ) : (
@@ -146,7 +176,11 @@ const PaginationTable = ({ ...props }) => {
                                                     color="primary"
                                                     size="small"
                                                     fullWidth
-                                                    onClick={() => {}}
+                                                    onClick={() => {
+                                                        handleClickOpen(
+                                                            subscriber,
+                                                        );
+                                                    }}
                                                 >
                                                     Sửa
                                                 </ButtonProduct>
@@ -182,6 +216,19 @@ const PaginationTable = ({ ...props }) => {
                 nextIconButtonProps={{ 'aria-label': 'Next Page' }}
                 backIconButtonProps={{ 'aria-label': 'Previous Page' }}
             />
+            {brandSelected && (
+                <DialogBonik
+                    open={open}
+                    setOpen={setOpen}
+                    handleClose={handleClose}
+                    dialogName="Cập nhật thương hiệu"
+                    typeDialog="update"
+                    formBrand={formBrand}
+                    data={brandSelected}
+                    form={form}
+                    setForm={setForm}
+                />
+            )}
         </Box>
     );
 };

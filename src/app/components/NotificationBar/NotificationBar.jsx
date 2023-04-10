@@ -16,8 +16,8 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { themeShadows } from '../MatxTheme/themeColors';
 import { Paragraph, Small } from '../Typography';
-import { useState , useEffect} from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
 const Notification = styled('div')(() => ({
     padding: '16px',
@@ -77,53 +77,55 @@ const Heading = styled('span')(({ theme }) => ({
     marginLeft: '16px',
     color: theme.palette.text.secondary,
 }));
-const SOCKET_URL =process.env.REACT_APP_SOCKET_URL;
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
 
 const NotificationBar = ({ container }) => {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
     let onConnected = () => {
-        console.log("Connected!!")
         client.subscribe('/topic/server', function (msg) {
-          if (msg.body) {
-                setMessage(msg.body)
-          }
+            if (msg.body) {
+                setMessage(msg.body);
+            }
         });
         client.subscribe('/topic/error', function (msg) {
-
             if (msg.body) {
-                  setMessage(msg.body)
-               
+                setMessage(msg.body);
             }
-          });
-      }
-  
-      let onDisconnected = () => {
-        console.log("Disconnected!!")
-      }
-      const client = new Client({
+        });
+    };
+
+    let onDisconnected = () => {
+        console.log('Disconnected!!');
+    };
+    const client = new Client({
         brokerURL: SOCKET_URL,
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
         onConnect: onConnected,
         onDisconnect: onDisconnected,
-        onWebSocketError : ()=>{
+        onWebSocketError: () => {
             navigate('/session/502');
-        }
-      });
-      
-    useEffect(()=>{
-          client.activate();
-          getNotifications();
-    },[message])
+        },
+    });
+
+    useEffect(() => {
+        client.activate();
+        getNotifications();
+        // eslint-disable-next-line
+    }, [message]);
 
     const { settings } = useSettings();
     const theme = useTheme();
     const secondary = theme.palette.text.secondary;
     const [panelOpen, setPanelOpen] = React.useState(false);
-    const { deleteNotification, clearNotifications, getNotifications ,notifications } =
-        useNotification();
+    const {
+        deleteNotification,
+        clearNotifications,
+        getNotifications,
+        notifications,
+    } = useNotification();
 
     const handleDrawerToggle = () => {
         setPanelOpen(!panelOpen);
@@ -213,7 +215,10 @@ const NotificationBar = ({ container }) => {
                         {!!notifications?.length && (
                             <Box sx={{ color: secondary }}>
                                 <Button onClick={clearNotifications}>
-                                <Icon className="delete_forever">delete_forever</Icon>  Xoá hết thông báo
+                                    <Icon className="delete_forever">
+                                        delete_forever
+                                    </Icon>{' '}
+                                    Xoá hết thông báo
                                 </Button>
                             </Box>
                         )}

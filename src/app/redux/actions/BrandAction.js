@@ -19,11 +19,10 @@ export const handleChangeBrand = (brandOfProduct) => {
     };
 };
 
-export const getAllBrand = () => (dispatch) => {
-    axios.get(process.env.REACT_APP_BASE_URL + 'brand').then((res) => {
-        dispatch({
-            type: GET_ALL_BRAND,
-            payload: res.data,
-        });
+export const getAllBrand = () => async (dispatch) => {
+    const res = await axios.get(process.env.REACT_APP_BASE_URL + 'brand');
+    dispatch({
+        type: GET_ALL_BRAND,
+        payload: res.data,
     });
 };

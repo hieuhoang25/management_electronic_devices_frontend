@@ -84,7 +84,6 @@ const Layout1Topbar = () => {
     const [message, setMessage] = useState('');
 
     let onConnected = () => {
-        console.log('Connected!!');
         client.subscribe('/topic/server', function (msg) {
             console.log(msg.body);
             if (msg.body) {

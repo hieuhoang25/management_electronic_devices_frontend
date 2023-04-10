@@ -2,38 +2,56 @@ import { SimpleCard } from 'app/components';
 import PaginationTable from '../material-kit/tables/PaginationTable';
 import { useState } from 'react';
 import { brandTableHeader } from 'app/utils/constant';
-import { useEffect } from 'react';
-import axios from 'axios.js';
 import { Container } from '../material-kit/auto-complete/AppAutoComplete';
-
+import styled from '@emotion/styled';
+import { Button, Grid } from '@mui/material';
+import DialogBonik from '../material-kit/dialog/DialogBonik';
+const StyledButton = styled(Button)(({ theme }) => ({
+    margin: theme.spacing(1),
+}));
+export const formBrand = [{ label: 'Tên thương hiệu', type: 'text' }];
 function AppBrand() {
-    const [brands, setBrands] = useState();
     const [pageBrand, setPageBrand] = useState(0);
     const [rowsPerPageBrand, setRowsPerPageBrand] = useState(5);
-    const [loading, setLoading] = useState(false);
+    const [form, setForm] = useState({});
+    const [reRender, setReRender] = useState(true);
     const handleChangePageBrand = (_, newPage) => {
         setPageBrand(newPage);
     };
+    const [open, setOpen] = useState(false);
 
+    function handleClickOpen() {
+        setOpen(true);
+    }
+
+    function handleClose() {
+        setReRender(!reRender);
+        setForm('');
+        setOpen(false);
+    }
     // eslint-disable-next-line
-    useEffect(async () => {
-        setLoading(true);
-        const brandResponse = await axios
-            .get(process.env.REACT_APP_BASE_URL + 'brand')
-            .catch((res) => console.log(res.response));
-        setBrands(brandResponse.data);
-        setLoading(false);
-    }, []);
+
     const handleChangeRowsPerPageBrand = (event) => {
         setRowsPerPageBrand(+event.target.value);
         setPageBrand(0);
     };
+
     return (
         <Container>
-            <SimpleCard title="Quản lý màu sắc">
+            <SimpleCard title="Quản lý thương hiệu">
+                <Grid item>
+                    <StyledButton
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            handleClickOpen();
+                        }}
+                    >
+                        Thêm mới
+                    </StyledButton>
+                </Grid>
                 <PaginationTable
                     tableHeader={brandTableHeader}
-                    data={brands || []}
                     tableName="brand"
                     page={pageBrand}
                     setPage={setPageBrand}
@@ -41,10 +59,22 @@ function AppBrand() {
                     setRowsPerPage={setRowsPerPageBrand}
                     handleChangeRowsPerPage={handleChangeRowsPerPageBrand}
                     handleChangePage={handleChangePageBrand}
-                    loading={loading}
-                    setLoading={setLoading}
+                    reRender={reRender}
+                    setReRender={setReRender}
                 />
             </SimpleCard>
+            {open && (
+                <DialogBonik
+                    open={open}
+                    setOpen={setOpen}
+                    handleClose={handleClose}
+                    dialogName="Thêm mới thương hiệu"
+                    typeDialog="create"
+                    formBrand={formBrand}
+                    form={form}
+                    setForm={setForm}
+                />
+            )}
         </Container>
     );
 }
