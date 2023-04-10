@@ -3,12 +3,14 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 
 function SnackbarCusom({ ...props }) {
-    const { response } = props;
+    const { response, type } = props;
     const [stateSnackbar, setStateSnackbar] = useState({
         message: '',
         status: 'success',
         open: false,
     });
+    const [message, setMessage] = useState('');
+
     const handleCloseSnackBar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -18,20 +20,36 @@ function SnackbarCusom({ ...props }) {
         });
     };
     useEffect(() => {
+        switch (type) {
+            case 'update':
+                setMessage('Cập nhật ');
+                break;
+            case 'create':
+                setMessage('Thêm');
+                break;
+            case 'delete':
+                setMessage('Xoá ');
+                break;
+            default:
+                break;
+        }
+    }, [response, type]);
+    useEffect(() => {
         if (response.status !== 200) {
             setStateSnackbar({
-                message: 'Cập nhật thất bại: ' + response.data.error || '',
+                message: message + 'thất bại' + response.data.error || '',
                 status: 'error',
                 open: true,
             });
         } else {
             setStateSnackbar({
-                message: 'Cập nhật thành công: ',
+                message: message + 'thành công',
                 status: 'success',
                 open: true,
             });
         }
-    }, [response]);
+        // eslint-disable-next-line
+    }, [message]);
 
     return (
         <Snackbar

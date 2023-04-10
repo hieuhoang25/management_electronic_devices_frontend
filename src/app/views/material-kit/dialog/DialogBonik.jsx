@@ -21,9 +21,10 @@ export default function DialogBonik({ ...props }) {
         formBrand,
         form,
         setForm,
+        data,
     } = props;
 
-    const [resSnackbar, setResSnackbar] = useState();
+    const [snackBar, setSnackbar] = useState({ response: null, type: '' });
     const handleChangeFormBrand = (e) => {
         setForm((pre) => {
             return { ...pre, brand_name: e.target.value };
@@ -48,14 +49,19 @@ export default function DialogBonik({ ...props }) {
             let res = await axios
                 .post(process.env.REACT_APP_BASE_URL + 'brand', form)
                 .catch((error) => (res = error.response));
-            setResSnackbar(res);
+            setSnackbar((pre) => {
+                return { ...pre, type: 'create', response: res };
+            });
         } else if (dialogName === 'Cập nhật thương hiệu') {
-            const newBrand = { id: form.brand_id, brand_name: form.brand_name };
+            const newBrand = { id: data.id, brand_name: form.brand_name };
+            console.log(newBrand);
             let res;
             res = await axios
                 .put(process.env.REACT_APP_BASE_URL + 'brand', newBrand)
                 .catch((error) => (res = error.response));
-            setResSnackbar(res);
+            setSnackbar((pre) => {
+                return { ...pre, type: 'update', response: res };
+            });
         }
         setLoad(false);
         setOpenConfirm(false);
@@ -117,7 +123,12 @@ export default function DialogBonik({ ...props }) {
                 handleConfirmUpdate={handleConfirmUpdate}
                 loading={load}
             />
-            {resSnackbar && <SnackbarCusom response={resSnackbar} />}
+            {snackBar.response && (
+                <SnackbarCusom
+                    response={snackBar.response}
+                    type={snackBar.type}
+                />
+            )}
         </Box>
     );
 }
