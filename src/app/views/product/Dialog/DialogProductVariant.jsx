@@ -152,9 +152,7 @@ function DialogProductVariant({
                         'Content-Type': 'multipart/form-data',
                     },
                 })
-                .then((response) => {
-                    // console.log(response.data);
-                })
+                .then((response) => {})
                 .catch((error) => {
                     errorMessage = error;
                 });
@@ -190,7 +188,7 @@ function DialogProductVariant({
             };
         });
     };
-    console.log(formProductVariant);
+
     return (
         <Box>
             <Dialog

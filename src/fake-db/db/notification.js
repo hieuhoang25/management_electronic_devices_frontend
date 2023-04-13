@@ -53,7 +53,6 @@ Mock.onPost('/api/notification/add').reply((config) => {
 });
 
 Mock.onPost('/api/notification/delete').reply((config) => {
-    // console.log(process.env.REACT_APP_BASE_URL + 'accounts.json');
     let { id } = JSON.parse(config.data);
 
     const response = NotificationDB.list.filter(

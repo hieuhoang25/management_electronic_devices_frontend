@@ -74,7 +74,7 @@ const JwtLogin = () => {
 
             if (response.error) {
                 setAlert(response.error);
-                console.log(response);
+
                 setLoading(false);
                 return;
             } else {

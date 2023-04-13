@@ -91,13 +91,12 @@ export default function DialogBonik({ ...props }) {
                 return { ...pre, type: 'create', response: res };
             });
         } else if (dialogName === 'Cập nhật danh mục con') {
-            console.log(data);
             const newCategory = {
                 id: data.id,
                 category_name: form.category_name,
                 parent_id: data.parent_id,
             };
-            console.log(newCategory);
+
             let res = await axios
                 .put(process.env.REACT_APP_BASE_URL + 'category', newCategory)
                 .catch((error) => (res = error.response));
@@ -109,7 +108,7 @@ export default function DialogBonik({ ...props }) {
                 id: data.id,
                 category_name: form.category_name,
             };
-            console.log(newCategory);
+
             let res = await axios
                 .put(process.env.REACT_APP_BASE_URL + 'category', newCategory)
                 .catch((error) => (res = error.response));

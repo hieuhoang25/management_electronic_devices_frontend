@@ -32,10 +32,7 @@ const SimpleForm = (props) => {
         return () => ValidatorForm.removeValidationRule('isPasswordMatch');
     }, [state.password]);
 
-    const handleSubmit = (event) => {
-        // console.log("submitted");
-        // console.log(event);
-    };
+    const handleSubmit = (event) => {};
 
     const handleChange = (event) => {
         event.persist();

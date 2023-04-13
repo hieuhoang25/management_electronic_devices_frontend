@@ -16,13 +16,6 @@ export const getAccountList = (size, page) => async (dispatch) => {
             '&page=' +
             page,
     );
-    // .then((res) => {
-    //     console.log(res.data);
-    //     dispatch({
-    //         type: GET_ACCOUNT_LIST,
-    //         payload: res.data,
-    //     });
-    // });
     dispatch({
         type: GET_ACCOUNT_LIST,
         payload: res.data,
