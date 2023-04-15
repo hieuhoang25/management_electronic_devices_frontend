@@ -16,6 +16,11 @@ export const navigations = [
         path: '/order',
     },
     {
+        name: 'Danh mục',
+        icon: 'category_icon',
+        path: '/category',
+    },
+    {
         name: 'Thương hiệu',
         icon: 'branding_watermark_icon',
         path: '/brand',
@@ -25,11 +30,7 @@ export const navigations = [
         icon: 'border_color',
         path: '/color-storage',
     },
-    {
-        name: 'Danh mục',
-        icon: 'category_icon',
-        path: '/category',
-    },
+
     // {
     //     name: 'Đánh giá',
     //     icon: 'star_icon',
