@@ -330,8 +330,8 @@ const SimpleTable = () => {
                                 <TableCell align="center">
                                     <Chip
                                         label={
-                                            product.discount != 0
-                                                ? product.discount + ' %'
+                                            product.promotion_name
+                                                ? product.promotion_name
                                                 : 'Không có'
                                         }
                                         color="success"
