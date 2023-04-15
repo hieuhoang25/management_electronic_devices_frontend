@@ -15,7 +15,7 @@ const LineChart = ({ height, color = [] }) => {
     var option = {};
     if (Object.keys(statistic.revenue).length !== 0) {
         option = {
-            grid: { top: '10%', bottom: '10%', left: '5%', right: '5%' },
+            grid: { top: '10%', bottom: '10%', left: '10%', right: '5%' },
             legend: {
                 itemGap: 20,
                 icon: 'circle',
