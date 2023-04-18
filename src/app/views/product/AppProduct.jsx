@@ -28,7 +28,7 @@ import {
 import { clearStorageSelected } from 'app/redux/actions/StorageAction';
 import { clearColorSelected } from 'app/redux/actions/ColorAction';
 import useDebounce from 'app/hooks/useDebounce';
-const SimpleTable = Loadable(lazy(() => import('./ProductTable')));
+const ProductTable = Loadable(lazy(() => import('./ProductTable')));
 
 const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(1),
@@ -45,6 +45,7 @@ const AppProduct = (props) => {
     const [openFormProduct, setOpenFormProduct] = useState(false);
     const [openDialogProductV, setOenDialogProductV] = useState(false);
     const [searchValue, setSearchValue] = useState('');
+    const [reRender, setReRender] = useState(true);
     const dispatch = useDispatch();
 
     const handleClickBack = () => {
@@ -53,6 +54,7 @@ const AppProduct = (props) => {
     };
 
     const handleCloseFormProduct = () => {
+        setReRender(!reRender);
         setOpenFormProduct(false);
     };
     const handleClickCreate = () => {
@@ -79,7 +81,7 @@ const AppProduct = (props) => {
     const handleChangeSearchValue = (e) => {
         setSearchValue(e.target.value);
     };
-    const debouncedValue = useDebounce(searchValue, 1000);
+    const debouncedValue = useDebounce(searchValue, 700);
     useEffect(() => {
         dispatch(setPageProduct(1));
         dispatch(handleChangeKeysearch(debouncedValue));
@@ -149,7 +151,10 @@ const AppProduct = (props) => {
                             </ButtonProduct>
                         </Grid>
                     </Grid>
-                    <SimpleTable />
+                    <ProductTable
+                        reRender={reRender}
+                        setReRender={setReRender}
+                    />
                 </SimpleCard>
             ) : (
                 <SimpleCard title="Danh sách sản phẩm">
@@ -174,7 +179,10 @@ const AppProduct = (props) => {
                         </Grid>
                     </Grid>
 
-                    <SimpleTable />
+                    <ProductTable
+                        reRender={reRender}
+                        setReRender={setReRender}
+                    />
                 </SimpleCard>
             )}
             {openFormProduct && (

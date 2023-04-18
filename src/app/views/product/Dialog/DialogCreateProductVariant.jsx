@@ -11,7 +11,7 @@ import {
     Fab,
     Grid,
     Snackbar,
-    TextField,
+    // TextField,
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { useEffect, useState } from 'react';
@@ -24,9 +24,10 @@ import {
 } from 'app/redux/actions/StorageAction';
 import DialogConfirm from './DialogConfirm';
 import axios from 'axios.js';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import NumericFormatCustom from '../NumericFormatCustom';
-
+import { TextField } from './DialogCreateProduct';
+import { ValidatorForm } from 'react-material-ui-form-validator';
 NumericFormatCustom.propTypes = {
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -37,7 +38,7 @@ function DialogCreateProductVariant({
     handleClose,
     ...props
 }) {
-    const [image, setImage] = useState({});
+    const [image, setImage] = useState();
     const [file, setFile] = useState();
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openSnackBar, setOpenSnackBar] = useState(false);
@@ -89,12 +90,12 @@ function DialogCreateProductVariant({
     useEffect(() => {
         getAllColor();
         getAllStorage();
-        setImage(
-            process.env.REACT_APP_BASE_URL_FIREBASE +
-                formProductVariant.image +
-                '?alt=media&token=' +
-                uuidv4(),
-        );
+        // setImage(
+        //     process.env.REACT_APP_BASE_URL_FIREBASE +
+        //         formProductVariant.image +
+        //         '?alt=media&token=' +
+        //         uuidv4(),
+        // );
         setFormProductVariant((pre) => {
             return {
                 ...pre,
@@ -214,251 +215,296 @@ function DialogCreateProductVariant({
                 fullWidth
             >
                 <DialogTitle id="form-dialog-title">Biểu mẫu</DialogTitle>
-                <DialogContent>
-                    {/* <DialogContentText>Biểu mẫu sản phẩm</DialogContentText> */}
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Tên SKU"
-                                fullWidth
-                                value={formProductVariant.sku_name || ''}
-                                onChange={(e) => {
-                                    handleChangeForm(
-                                        e.target.value || '',
-                                        'sku_name',
-                                    );
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2} marginTop={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                margin="dense"
-                                id="name"
-                                label="Tên hiển thị sản phẩm"
-                                fullWidth
-                                value={formProductVariant.display_name || ''}
-                                onChange={(e) => {
-                                    handleChangeForm(
-                                        e.target.value || '',
-                                        'display_name',
-                                    );
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2} marginTop={2}>
-                        <Grid item xs={6}>
-                            <TextField
-                                margin="dense"
-                                id="number"
-                                label="Số lượng"
-                                type="number"
-                                fullWidth
-                                value={formProductVariant.quantity || ''}
-                                onChange={(e) => {
-                                    handleChangeForm(
-                                        e.target.value || '',
-                                        'quantity',
-                                    );
-                                }}
-                                helperText=" "
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            {/* <TextField
-                                margin="dense"
-                                id="name"
-                                label="Giá"
-                                type="text"
-                                fullWidth
-                                value={formProductVariant.price || ''}
-                                onChange={(e) => {
-                                    handleChangeForm(
-                                        e.target.value || '',
-                                        'price',
-                                    );
-                                }}
-                            /> */}
-                            <TextField
-                                label="Giá"
-                                value={formProductVariant.price || ''}
-                                onChange={(e) => {
-                                    handleChangeForm(
-                                        e.target.value || '',
-                                        'price',
-                                    );
-                                }}
-                                fullWidth
-                                name="numberformat"
-                                id="formatted-numberformat-input"
-                                InputProps={{
-                                    inputComponent: NumericFormatCustom,
-                                }}
-                                helperText=""
-                                margin="dense"
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2} marginTop={2}>
-                        <Grid item xs={6}>
-                            <Autocomplete
-                                // disablePortal
-                                disableClearable
-                                disablePortal
-                                id="combo-box-demo"
-                                options={[
-                                    {
-                                        color_name: 'Không chọn',
-                                        color_id: '',
-                                    },
-                                    ...color.colorFilter,
-                                ]}
-                                // getOptionLabel={(option) => option.brand_name}
-                                getOptionLabel={(option) =>
-                                    typeof option === 'string'
-                                        ? option ?? ''
-                                        : option.color_name ?? ''
-                                }
-                                isOptionEqualToValue={(option, value) =>
-                                    option.id === value.id
-                                }
-                                value={
-                                    Object.keys(color.colorSelected).length ===
-                                    0
-                                        ? {
-                                              color_name:
-                                                  formProductVariant.color_name,
-                                              color_id:
-                                                  formProductVariant.color_id,
-                                          } || {
-                                              color_name: 'Không chọn',
-                                              color_id: '',
-                                          }
-                                        : color.colorSelected
-                                }
-                                onChange={(e, value) => {
-                                    handleClickAutoComplete(e, value, 'color');
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Màu sắc" />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Autocomplete
-                                // disablePortal
-                                disableClearable
-                                disablePortal
-                                id="combo-box-demo"
-                                options={storage.storageFilter}
-                                // getOptionLabel={(option) => option.brand_name}
-                                getOptionLabel={(option) =>
-                                    typeof option === 'string'
-                                        ? option ?? ''
-                                        : option.storage_name ?? ''
-                                }
-                                isOptionEqualToValue={(option, value) =>
-                                    option.id === value.id
-                                }
-                                value={
-                                    Object.keys(storage.storageSelected)
-                                        .length === 0
-                                        ? {
-                                              storage_name:
-                                                  formProductVariant.storage_name,
-                                              storage_id:
-                                                  formProductVariant.storage_id,
-                                          } || {
-                                              storage_name: 'Không chọn',
-                                              storage_ud: '',
-                                          }
-                                        : storage.storageSelected
-                                }
-                                onChange={(e, value) => {
-                                    handleClickAutoComplete(
-                                        e,
-                                        value,
-                                        'storage',
-                                    );
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Dung lượng" />
-                                )}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid
-                        container
-                        marginTop={2}
-                        spacing={1}
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <Grid item xs={3}>
-                            <label htmlFor="upload-photo">
-                                <input
-                                    style={{ display: 'none' }}
-                                    id="upload-photo"
-                                    name="upload-photo"
-                                    type="file"
-                                    onChange={(e) => {
-                                        handleUpload(e);
-                                    }}
-                                />
-                                <Fab
-                                    color="warning"
-                                    size="small"
-                                    component="span"
-                                    aria-label="add"
-                                    variant="extended"
-                                    sx={{
-                                        width: 170,
-                                    }}
-                                >
-                                    <AddAPhotoIcon sx={{ marginRight: 1 }} />{' '}
-                                    Upload Image
-                                </Fab>
-                            </label>
-                        </Grid>
+                <ValidatorForm
+                    onSubmit={handleClickOpenConfirm}
+                    onError={(errors) => console.log(errors)}
+                >
+                    <DialogContent>
+                        {/* <DialogContentText>Biểu mẫu sản phẩm</DialogContentText> */}
 
-                        <Grid
-                            item
-                            xs={9}
-                            justifyContent="revert"
-                            alignItems="revert"
-                        >
-                            <Avatar
-                                sx={{ width: 200, height: 200 }}
-                                variant="square"
-                                alt="Hình ánh sản phẩm"
-                                src={image || ''}
-                                key={new Date().getTime().toString()}
-                            />
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="Tên SKU"
+                                    fullWidth
+                                    value={formProductVariant.sku_name || ''}
+                                    onChange={(e) => {
+                                        handleChangeForm(
+                                            e.target.value || '',
+                                            'sku_name',
+                                        );
+                                    }}
+                                    validators={[
+                                        'required',
+                                        'minStringLength: 4',
+                                    ]}
+                                    errorMessages={[
+                                        'Không được bỏ trống',
+                                        'Tối thiểu 4 ký tự',
+                                    ]}
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={handleClose}
-                    >
-                        Huỷ bỏ
-                    </Button>
-                    <Button
-                        onClick={handleClickOpenConfirm}
-                        variant="outlined"
-                        color="primary"
-                    >
-                        Cập nhật
-                    </Button>
-                </DialogActions>
+                        <Grid container spacing={2} marginTop={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    margin="dense"
+                                    id="name"
+                                    label="Tên hiển thị sản phẩm"
+                                    fullWidth
+                                    value={
+                                        formProductVariant.display_name || ''
+                                    }
+                                    onChange={(e) => {
+                                        handleChangeForm(
+                                            e.target.value || '',
+                                            'display_name',
+                                        );
+                                    }}
+                                    validators={[
+                                        'required',
+                                        'minStringLength: 4',
+                                    ]}
+                                    errorMessages={[
+                                        'Không được bỏ trống',
+                                        'Tối thiểu 4 ký tự',
+                                    ]}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2} marginTop={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    margin="dense"
+                                    id="number"
+                                    label="Số lượng"
+                                    type="number"
+                                    fullWidth
+                                    value={formProductVariant.quantity || ''}
+                                    onChange={(e) => {
+                                        handleChangeForm(
+                                            e.target.value || '',
+                                            'quantity',
+                                        );
+                                    }}
+                                    validators={[
+                                        'required',
+                                        'minNumber: 0',
+                                        'maxNumber:1000',
+                                    ]}
+                                    errorMessages={[
+                                        'Không được bỏ trống',
+                                        'Số lượng tối thiểu là 0',
+                                        'Số lượng tối đa là 1000',
+                                    ]}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Giá"
+                                    value={formProductVariant.price || ''}
+                                    onChange={(e) => {
+                                        handleChangeForm(
+                                            e.target.value || '',
+                                            'price',
+                                        );
+                                    }}
+                                    fullWidth
+                                    name="numberformat"
+                                    id="formatted-numberformat-input"
+                                    InputProps={{
+                                        inputComponent: NumericFormatCustom,
+                                    }}
+                                    validators={['required', 'minNumber: 0']}
+                                    errorMessages={[
+                                        'Không được bỏ trống',
+                                        'Giá không thể nhỏ hơn 0',
+                                    ]}
+                                    margin="dense"
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2} marginTop={2}>
+                            <Grid item xs={6}>
+                                <Autocomplete
+                                    // disablePortal
+                                    disableClearable
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    options={[
+                                        {
+                                            color_name: 'Không chọn',
+                                            color_id: '',
+                                        },
+                                        ...color.colorFilter,
+                                    ]}
+                                    // getOptionLabel={(option) => option.brand_name}
+                                    getOptionLabel={(option) =>
+                                        typeof option === 'string'
+                                            ? option ?? ''
+                                            : option.color_name ?? ''
+                                    }
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.id === value.id
+                                    }
+                                    value={
+                                        Object.keys(color.colorSelected)
+                                            .length === 0
+                                            ? {
+                                                  color_name:
+                                                      formProductVariant.color_name,
+                                                  color_id:
+                                                      formProductVariant.color_id,
+                                              } || {
+                                                  color_name: 'Không chọn',
+                                                  color_id: '',
+                                              }
+                                            : color.colorSelected
+                                    }
+                                    onChange={(e, value) => {
+                                        handleClickAutoComplete(
+                                            e,
+                                            value,
+                                            'color',
+                                        );
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Màu sắc"
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Autocomplete
+                                    // disablePortal
+                                    disableClearable
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    options={storage.storageFilter}
+                                    // getOptionLabel={(option) => option.brand_name}
+                                    getOptionLabel={(option) =>
+                                        typeof option === 'string'
+                                            ? option ?? ''
+                                            : option.storage_name ?? ''
+                                    }
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.id === value.id
+                                    }
+                                    value={
+                                        Object.keys(storage.storageSelected)
+                                            .length === 0
+                                            ? {
+                                                  storage_name:
+                                                      formProductVariant.storage_name,
+                                                  storage_id:
+                                                      formProductVariant.storage_id,
+                                              } || {
+                                                  storage_name: 'Không chọn',
+                                                  storage_ud: '',
+                                              }
+                                            : storage.storageSelected
+                                    }
+                                    onChange={(e, value) => {
+                                        handleClickAutoComplete(
+                                            e,
+                                            value,
+                                            'storage',
+                                        );
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Dung lượng"
+                                            value={
+                                                formProductVariant.storage_id
+                                            }
+                                            validators={['required']}
+                                            errorMessages={['Vui lòng chọn']}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            container
+                            marginTop={2}
+                            spacing={1}
+                            direction="column"
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <Grid item xs={3}>
+                                <label htmlFor="upload-photo">
+                                    <input
+                                        style={{ display: 'none' }}
+                                        id="upload-photo"
+                                        name="upload-photo"
+                                        type="file"
+                                        onChange={(e) => {
+                                            handleUpload(e);
+                                        }}
+                                        accept="image/*"
+                                    />
+                                    <Fab
+                                        color="warning"
+                                        size="small"
+                                        component="span"
+                                        aria-label="add"
+                                        variant="extended"
+                                        sx={{
+                                            width: 170,
+                                        }}
+                                    >
+                                        <AddAPhotoIcon
+                                            sx={{ marginRight: 1 }}
+                                        />{' '}
+                                        Upload Image
+                                    </Fab>
+                                </label>
+                            </Grid>
+
+                            <Grid
+                                item
+                                xs={9}
+                                justifyContent="revert"
+                                alignItems="revert"
+                            >
+                                <Avatar
+                                    sx={{ width: 200, height: 200 }}
+                                    variant="square"
+                                    alt="Hình ánh sản phẩm"
+                                    src={
+                                        image ||
+                                        'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'
+                                    }
+                                    key={new Date().getTime().toString()}
+                                />
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={handleClose}
+                        >
+                            Huỷ bỏ
+                        </Button>
+                        <Button
+                            // onClick={handleClickOpenConfirm}
+                            variant="outlined"
+                            color="primary"
+                            type="submit"
+                        >
+                            Cập nhật
+                        </Button>
+                    </DialogActions>
+                </ValidatorForm>
             </Dialog>
 
             <DialogConfirm

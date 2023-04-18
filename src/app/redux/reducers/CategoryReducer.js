@@ -3,6 +3,7 @@ import {
     GET_CATEGORY_SHOW_PRODUCT,
     HANDLE_CHANGE_CATEGORY,
     HANDLE_CHANGE_SUBCATEGORY,
+    HANDLE_RESET_CATEGORY,
 } from '../actions/CategoryAction';
 
 const initalState = {
@@ -75,6 +76,16 @@ const CategoryReducer = (state = initalState, action) => {
             return {
                 ...state,
                 subCategoryOfProduct: action.payload,
+            };
+        case HANDLE_RESET_CATEGORY:
+            console.log('reset category');
+            return {
+                data: [],
+                categoryFilterNotChildren: [],
+                subCategoryListProduct: [],
+                subCategoryOfProduct: {},
+                dataOfProduct: {},
+                categoryOfProduct: {},
             };
         default:
             return {

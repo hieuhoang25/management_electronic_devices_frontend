@@ -4,6 +4,7 @@ export const GET_CATEGORY = 'getCategory';
 export const GET_CATEGORY_SHOW_PRODUCT = 'getCategoryShowProduct';
 export const HANDLE_CHANGE_CATEGORY = 'handleChangleCategory';
 export const HANDLE_CHANGE_SUBCATEGORY = 'handleChangeSubcategory';
+export const HANDLE_RESET_CATEGORY = 'handleResetCategory';
 
 export const getCategory = () => (dispatch) => {
     axios.get(process.env.REACT_APP_BASE_URL + 'category').then((res) => {

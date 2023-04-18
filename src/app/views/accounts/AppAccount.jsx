@@ -31,7 +31,7 @@ function AppAccount() {
         dispatch(setPageNumberAccount(1));
         dispatch(handleChangeRole(value));
     };
-    const debouncedValue = useDebounce(searchValue, 1200);
+    const debouncedValue = useDebounce(searchValue, 700);
     useEffect(() => {
         dispatch(setPageNumberAccount(1));
         dispatch(handleChangeKeysearchAccount(debouncedValue));

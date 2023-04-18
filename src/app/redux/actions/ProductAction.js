@@ -11,6 +11,7 @@ export const SET_PAGE_PRODUCT = 'setPageProduct';
 export const SET_STATE_DELETED = 'setStateDeleted';
 export const HANDLE_CHANGE_KEYSEARCH = 'handleChangeKeysearch';
 export const GET_PRODUCTS_FILTERS = 'getProductsFilters';
+export const HANDLE_RESET_PRODUCT = 'handleResetProduct';
 
 export const getProductsList = (size, page) => async (dispatch, getState) => {
     if (

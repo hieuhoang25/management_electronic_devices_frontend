@@ -10,6 +10,7 @@ import {
     SET_PAGE_PRODUCT,
     HANDLE_CHANGE_KEYSEARCH,
     GET_PRODUCTS_FILTERS,
+    HANDLE_RESET_PRODUCT,
 } from '../actions/ProductAction';
 
 const initalState = {
@@ -95,6 +96,29 @@ const ProductReducer = (state = initalState, action) => {
             return {
                 ...state,
                 keysearch: action.payload,
+            };
+        case HANDLE_RESET_PRODUCT:
+            console.log('reset product');
+            return {
+                listProduct: [],
+                inputNextStatus: true,
+                breadCrum: {
+                    data: [
+                        { name: 'Quản lý sản phẩm', path: '/product' },
+                        { name: 'Quản lý sản phẩm', path: '/product' },
+                    ],
+                },
+                productId: '',
+                stateTable: 'product',
+                totalPage: 0,
+                pageNumber: 1,
+                productById: {},
+
+                stateDeleted: {
+                    label: 'Hiển thị tất cả',
+                    deleted: -1,
+                },
+                keysearch: '',
             };
         default:
             return state;

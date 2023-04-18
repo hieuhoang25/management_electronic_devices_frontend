@@ -1,11 +1,11 @@
 import { LoadingButton } from '@mui/lab';
 import { Alert, Card, Checkbox, Grid, TextField } from '@mui/material';
-import { Box, styled, useTheme } from '@mui/system';
+import { Box, styled } from '@mui/system';
 import { Paragraph } from 'app/components/Typography';
 import useAuth from 'app/hooks/useAuth';
 import { Formik } from 'formik';
 import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Snackbar } from '@mui/material';
 import * as Yup from 'yup';
 
@@ -42,16 +42,14 @@ const initialValues = {
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
-    // password: Yup.string()
-    //     .min(6, 'Password must be 6 character length')
-    //     .required('Password is required!'),
-    // userName: Yup.string()
-    //     .email('Invalid Email address')
-    //     .required('Email is required!'),
+    password: Yup.string()
+        // .min(6, 'Password must be 6 character length')
+        .required('Password is required!'),
+    userName: Yup.string().required('User is required!'),
 });
 
 const JwtLogin = () => {
-    const theme = useTheme();
+    // const theme = useTheme();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState('');
@@ -133,10 +131,12 @@ const JwtLogin = () => {
                                             value={values.userName}
                                             onChange={handleChange}
                                             helperText={
-                                                touched.email && errors.email
+                                                touched.userName &&
+                                                errors.userName
                                             }
                                             error={Boolean(
-                                                errors.email && touched.email,
+                                                errors.userName &&
+                                                    touched.userName,
                                             )}
                                             sx={{ mb: 3 }}
                                         />
@@ -177,7 +177,7 @@ const JwtLogin = () => {
                                                 </Paragraph>
                                             </FlexBox>
 
-                                            <NavLink
+                                            {/* <NavLink
                                                 to="/session/forgot-password"
                                                 style={{
                                                     color: theme.palette.primary
@@ -185,7 +185,7 @@ const JwtLogin = () => {
                                                 }}
                                             >
                                                 Quên mật khẩu?
-                                            </NavLink>
+                                            </NavLink> */}
                                         </FlexBox>
 
                                         <LoadingButton

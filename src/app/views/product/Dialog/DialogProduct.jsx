@@ -11,7 +11,6 @@ import {
     Fab,
     Grid,
     Snackbar,
-    TextField,
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { useEffect, useState } from 'react';
@@ -35,6 +34,9 @@ import DialogConfirm from './DialogConfirm';
 import { putProduct } from 'app/redux/actions/ProductAction';
 import axios from 'axios.js';
 import { v4 as uuidv4 } from 'uuid';
+import { TextField } from './DialogCreateProduct';
+import { ValidatorForm } from 'react-material-ui-form-validator';
+import { deleteFieldNotBelongProductForm } from './DialogCreateProduct';
 function DialogProduct({
     open,
     products = {},
@@ -63,6 +65,7 @@ function DialogProduct({
         image: '',
         description: '',
         id: '',
+        category_parent: '',
     });
     //clean up img
     useEffect(() => {
@@ -126,6 +129,12 @@ function DialogProduct({
         // eslint-disable-next-line
     }, [products]);
     const handleClickCategory = (e, value) => {
+        setFormProduct((pre) => {
+            return {
+                ...pre,
+                category_parent: value.category_name,
+            };
+        });
         if (value === null) {
             return;
         }
@@ -169,6 +178,7 @@ function DialogProduct({
         handleChangeFormProduct(value.promotion_id, 'promotion_id');
     };
     const handleConfirmUpdate = async () => {
+        deleteFieldNotBelongProductForm(formProduct);
         setLoad(true);
         await putProduct(formProduct);
 
@@ -218,244 +228,283 @@ function DialogProduct({
                 fullWidth
             >
                 <DialogTitle id="form-dialog-title">Biểu mẫu</DialogTitle>
-                <DialogContent>
-                    {/* <DialogContentText>Biểu mẫu sản phẩm</DialogContentText> */}
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Tên sản phẩm"
-                                type="text"
-                                fullWidth
-                                // value={
-                                //     formProduct.product_name === ''
-                                //         ? products.product_name === undefined
-                                //         : ''
-                                //         ? products.product_name
-                                //         : formProduct.product_name || ''
-                                // }
-                                value={formProduct.product_name || ''}
-                                onChange={(e) => {
-                                    handleChangeFormProduct(
-                                        e.target.value || '',
-                                        'product_name',
-                                    );
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2} marginTop={2}>
-                        <Grid item xs={6}>
-                            <Autocomplete
-                                disableClearable
-                                id="combo-box-demo"
-                                getOptionLabel={(option) =>
-                                    typeof option === 'string'
-                                        ? option ?? ''
-                                        : option.category_name ?? ''
-                                }
-                                options={categories.categoryFilterNotChildren}
-                                onChange={(e, value) => {
-                                    handleClickCategory(e, value);
-                                }}
-                                isOptionEqualToValue={(option, value) =>
-                                    option.category_id === value.category_id
-                                }
-                                value={categories.categoryOfProduct}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Danh mục" />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Autocomplete
-                                disableClearable
-                                id="combo-box-demo"
-                                options={categories.subCategoryListProduct}
-                                getOptionLabel={(option) =>
-                                    option.category_name || ''
-                                }
-                                onChange={(e, value) => {
-                                    handleClickSubCategory(e, value);
-                                }}
-                                isOptionEqualToValue={(option, value) =>
-                                    option.category_id === value.category_id
-                                }
-                                value={categories.subCategoryOfProduct}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Danh mục con"
-                                    />
-                                )}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2} marginTop={2}>
-                        <Grid item xs={6}>
-                            <Autocomplete
-                                // disablePortal
-                                disableClearable
-                                disablePortal
-                                id="combo-box-demo"
-                                options={brands.brandFilterOfProduct}
-                                // getOptionLabel={(option) => option.brand_name}
-                                getOptionLabel={(option) =>
-                                    typeof option === 'string'
-                                        ? option ?? ''
-                                        : option.brand_name ?? ''
-                                }
-                                value={brands.brandOfProduct}
-                                onChange={(e, value) => {
-                                    handleClickBrand(e, value);
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Thuơng hiệu"
-                                    />
-                                )}
-                                isOptionEqualToValue={(option, value) =>
-                                    option.brand_id === value.brand_id
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Autocomplete
-                                // disablePortal
-                                disableClearable
-                                id="combo-box-demo"
-                                // options={promotions.promotionFilterOfProduct}
-                                options={[
-                                    {
-                                        promotion_name: 'Không có khuyến mãi',
-                                        promotion_id: '',
-                                    },
-                                    ...promotions.promotionFilterOfProduct,
-                                ]}
-                                getOptionLabel={(option) =>
-                                    typeof option === 'string'
-                                        ? option ?? ''
-                                        : option.promotion_name ?? ''
-                                }
-                                isOptionEqualToValue={(option, value) =>
-                                    option.promotion_name ===
-                                    value.promotion_name
-                                }
-                                value={
-                                    promotions.promotionOfProduct || {
-                                        promotion_name: 'Không có khuyến mãi',
-                                        promotion_id: '',
-                                    }
-                                }
-                                onChange={(e, value) => {
-                                    handleClickPromotion(e, value);
-                                    // handleChangeFormProduct(
-                                    //     value.promotion_id || '',
-                                    //     'promotion_id',
-                                    // );
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Khuyến mãi" />
-                                )}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid
-                        container
-                        marginTop={2}
-                        spacing={1}
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <Grid item xs={3}>
-                            <label htmlFor="upload-photo">
-                                <input
-                                    style={{ display: 'none' }}
-                                    id="upload-photo"
-                                    name="upload-photo"
-                                    type="file"
+                <ValidatorForm
+                    onSubmit={handleClickOpenConfirm}
+                    onError={(errors) => console.log(errors)}
+                >
+                    <DialogContent>
+                        {/* <DialogContentText>Biểu mẫu sản phẩm</DialogContentText> */}
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="Tên sản phẩm"
+                                    type="text"
+                                    fullWidth
+                                    value={formProduct.product_name || ''}
                                     onChange={(e) => {
-                                        handleUpload(e);
+                                        handleChangeFormProduct(
+                                            e.target.value || '',
+                                            'product_name',
+                                        );
                                     }}
+                                    validators={[
+                                        'required',
+                                        'minStringLength: 4',
+                                    ]}
+                                    errorMessages={[
+                                        'Không được bỏ trống',
+                                        'Tối thiểu 4 ký tự',
+                                    ]}
                                 />
-                                <Fab
-                                    color="warning"
-                                    size="small"
-                                    component="span"
-                                    aria-label="add"
-                                    variant="extended"
-                                    sx={{
-                                        width: 170,
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2} marginTop={2}>
+                            <Grid item xs={6}>
+                                <Autocomplete
+                                    disableClearable
+                                    id="combo-box-demo"
+                                    getOptionLabel={(option) =>
+                                        typeof option === 'string'
+                                            ? option ?? ''
+                                            : option.category_name ?? ''
+                                    }
+                                    options={
+                                        categories.categoryFilterNotChildren
+                                    }
+                                    onChange={(e, value) => {
+                                        handleClickCategory(e, value);
                                     }}
-                                >
-                                    <AddAPhotoIcon sx={{ marginRight: 1 }} />{' '}
-                                    Upload Image
-                                </Fab>
-                            </label>
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.category_id === value.category_id
+                                    }
+                                    value={categories.categoryOfProduct}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Danh mục"
+                                            value={categories.categoryOfProduct}
+                                            validators={['required']}
+                                            errorMessages={['Vui lòng chọn']}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Autocomplete
+                                    disableClearable
+                                    id="combo-box-demo"
+                                    options={categories.subCategoryListProduct}
+                                    getOptionLabel={(option) =>
+                                        option.category_name || ''
+                                    }
+                                    onChange={(e, value) => {
+                                        handleClickSubCategory(e, value);
+                                    }}
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.category_id === value.category_id
+                                    }
+                                    value={categories.subCategoryOfProduct}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Danh mục con"
+                                            value={
+                                                categories.subCategoryOfProduct
+                                            }
+                                            validators={['required']}
+                                            errorMessages={['Vui lòng chọn']}
+                                        />
+                                    )}
+                                />
+                            </Grid>
                         </Grid>
-
+                        <Grid container spacing={2} marginTop={2}>
+                            <Grid item xs={6}>
+                                <Autocomplete
+                                    // disablePortal
+                                    disableClearable
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    options={brands.brandFilterOfProduct}
+                                    // getOptionLabel={(option) => option.brand_name}
+                                    getOptionLabel={(option) =>
+                                        typeof option === 'string'
+                                            ? option ?? ''
+                                            : option.brand_name ?? ''
+                                    }
+                                    value={brands.brandOfProduct}
+                                    onChange={(e, value) => {
+                                        handleClickBrand(e, value);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Thuơng hiệu"
+                                            value={formProduct.brand_id}
+                                            validators={['required']}
+                                            errorMessages={['Vui lòng chọn']}
+                                        />
+                                    )}
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.brand_id === value.brand_id
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Autocomplete
+                                    // disablePortal
+                                    disableClearable
+                                    id="combo-box-demo"
+                                    // options={promotions.promotionFilterOfProduct}
+                                    options={[
+                                        {
+                                            promotion_name:
+                                                'Không có khuyến mãi',
+                                            promotion_id: '',
+                                        },
+                                        ...promotions.promotionFilterOfProduct,
+                                    ]}
+                                    getOptionLabel={(option) =>
+                                        typeof option === 'string'
+                                            ? option ?? ''
+                                            : option.promotion_name ?? ''
+                                    }
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.promotion_name ===
+                                        value.promotion_name
+                                    }
+                                    value={
+                                        promotions.promotionOfProduct || {
+                                            promotion_name:
+                                                'Không có khuyến mãi',
+                                            promotion_id: '',
+                                        }
+                                    }
+                                    onChange={(e, value) => {
+                                        handleClickPromotion(e, value);
+                                        // handleChangeFormProduct(
+                                        //     value.promotion_id || '',
+                                        //     'promotion_id',
+                                        // );
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Khuyến mãi"
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                        </Grid>
                         <Grid
-                            item
-                            xs={9}
-                            justifyContent="revert"
-                            alignItems="revert"
+                            container
+                            marginTop={2}
+                            spacing={1}
+                            direction="column"
+                            justifyContent="center"
+                            alignItems="center"
                         >
-                            <Avatar
-                                sx={{ width: 200, height: 200 }}
-                                variant="square"
-                                alt="Hình ánh sản phẩm"
-                                src={image || ''}
-                                key={new Date().getTime().toString()}
-                            />
-                        </Grid>
-                    </Grid>
+                            <Grid item xs={3}>
+                                <label htmlFor="upload-photo">
+                                    <input
+                                        style={{ display: 'none' }}
+                                        id="upload-photo"
+                                        name="upload-photo"
+                                        type="file"
+                                        onChange={(e) => {
+                                            handleUpload(e);
+                                        }}
+                                        accept="image/*"
+                                    />
+                                    <Fab
+                                        color="warning"
+                                        size="small"
+                                        component="span"
+                                        aria-label="add"
+                                        variant="extended"
+                                        sx={{
+                                            width: 170,
+                                        }}
+                                    >
+                                        <AddAPhotoIcon
+                                            sx={{ marginRight: 1 }}
+                                        />{' '}
+                                        Upload Image
+                                    </Fab>
+                                </label>
+                            </Grid>
 
-                    <Grid container marginTop={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                placeholder="Mô tả tổng quan sản phẩm"
-                                multiline
-                                label="Mô tả tổng quan sản phẩm"
-                                rows={8}
-                                // minRows={8}
-                                fullWidth
-                                value={
-                                    formProduct.description === ''
-                                        ? products.description === undefined
-                                            ? ''
-                                            : products.description
-                                        : formProduct.description
-                                }
-                                onChange={(e) => {
-                                    handleChangeFormProduct(
-                                        e.target.value || ' ',
-                                        'description',
-                                    );
-                                }}
-                            />
+                            <Grid
+                                item
+                                xs={9}
+                                justifyContent="revert"
+                                alignItems="revert"
+                            >
+                                <Avatar
+                                    sx={{ width: 200, height: 200 }}
+                                    variant="square"
+                                    alt="Hình ánh sản phẩm"
+                                    src={image || ''}
+                                    key={new Date().getTime().toString()}
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={handleClose}
-                    >
-                        Huỷ bỏ
-                    </Button>
-                    <Button
-                        onClick={handleClickOpenConfirm}
-                        variant="outlined"
-                        color="primary"
-                    >
-                        Cập nhật
-                    </Button>
-                </DialogActions>
+
+                        <Grid container marginTop={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    placeholder="Mô tả tổng quan sản phẩm"
+                                    multiline
+                                    label="Mô tả tổng quan sản phẩm"
+                                    rows={8}
+                                    // minRows={8}
+                                    fullWidth
+                                    value={
+                                        formProduct.description === ''
+                                            ? products.description === undefined
+                                                ? ''
+                                                : products.description
+                                            : formProduct.description
+                                    }
+                                    onChange={(e) => {
+                                        handleChangeFormProduct(
+                                            e.target.value || ' ',
+                                            'description',
+                                        );
+                                    }}
+                                    validators={[
+                                        'required',
+                                        'minStringLength: 10',
+                                    ]}
+                                    errorMessages={[
+                                        'Không được bỏ trống',
+                                        'Tối thiểu 10 ký tự',
+                                    ]}
+                                />
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={handleClose}
+                        >
+                            Huỷ bỏ
+                        </Button>
+                        <Button
+                            // onClick={handleClickOpenConfirm}
+                            variant="outlined"
+                            color="primary"
+                            type="submit"
+                        >
+                            Cập nhật
+                        </Button>
+                    </DialogActions>
+                </ValidatorForm>
             </Dialog>
 
             <DialogConfirm

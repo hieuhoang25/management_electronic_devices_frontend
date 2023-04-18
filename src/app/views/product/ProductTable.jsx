@@ -28,6 +28,7 @@ import {
     getProductById,
     changeStateTable,
     setPageProduct,
+    HANDLE_RESET_PRODUCT,
 } from 'app/redux/actions/ProductAction';
 import ButtonProduct from './ButtonProduct';
 import {
@@ -45,6 +46,7 @@ import Loadable from 'app/components/Loadable';
 import DialogProductVariant from './Dialog/DialogProductVariant';
 import { formatCurrency } from 'app/utils/utils';
 import Loading from 'app/components/MatxLoading';
+import { HANDLE_RESET_CATEGORY } from 'app/redux/actions/CategoryAction';
 
 const DialogProduct = Loadable(lazy(() => import('./Dialog/DialogProduct')));
 const DialogProductAttribute = Loadable(
@@ -91,7 +93,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 //end avatar
-const SimpleTable = () => {
+const ProductTable = ({ ...props }) => {
+    const { reRender } = props;
     const [bodyTable, setBodyTable] = useState([{}]);
     const [idSelected, setIdSelected] = useState(-1);
     const [open, setOpen] = useState(false);
@@ -144,13 +147,23 @@ const SimpleTable = () => {
         // eslint-disable-next-line
     }, [
         bodyTable,
-        setOpen,
         openDialogProductV,
         products.stateDeleted.deleted,
         products.keysearch,
-        openDialogProduct,
+        // openDialogProduct,
+        reRender,
     ]);
-
+    useEffect(() => {
+        return () => {
+            dispatch({
+                type: HANDLE_RESET_PRODUCT,
+            });
+            dispatch({
+                type: HANDLE_RESET_CATEGORY,
+            });
+        };
+        // eslint-disable-next-line
+    }, []);
     function handleOpenProductAttribute(id) {
         setIdSelected(id);
         dispatch(getProductAttribute(id));
@@ -160,6 +173,7 @@ const SimpleTable = () => {
         dispatch({
             type: RESET_PRODUCT_ATTRIBUTE,
         });
+
         setOpen(false);
     }
     const handleDelete = async (value, isDelted, name) => {
@@ -215,6 +229,7 @@ const SimpleTable = () => {
         );
         setOpenDialogProductV(false);
     };
+
     return loading ? (
         <Loading />
     ) : (
@@ -573,4 +588,4 @@ const SimpleTable = () => {
     );
 };
 
-export default SimpleTable;
+export default ProductTable;
