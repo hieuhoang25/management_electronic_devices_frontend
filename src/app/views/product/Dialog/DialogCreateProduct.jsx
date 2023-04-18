@@ -385,7 +385,7 @@ function DialogCreateProduct({ open, handleClose, ...props }) {
                         >
                             <Grid item xs={3}>
                                 <label htmlFor="upload-photo">
-                                    <TextField
+                                    <input
                                         style={{ display: 'none' }}
                                         id="upload-photo"
                                         name="upload-photo"
