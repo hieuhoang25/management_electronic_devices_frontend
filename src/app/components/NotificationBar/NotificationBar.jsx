@@ -192,6 +192,7 @@ const NotificationBar = ({ container }) => {
                                                 </Heading>
                                             </Box>
                                             <Small className="messageTime">
+                                                {console.log(notification.timestamp)}
                                                 {getTimeDifference(
                                                     new Date(
                                                         notification.timestamp,
