@@ -129,7 +129,7 @@ export function getTimeDifference(date) {
 
     if (difference < 60) return `${Math.floor(difference)} giây `;
     else if (difference < 3600) return `${Math.floor(difference / 60)} phút `;
-    else if (difference < 86400) return `${Math.floor(difference / 3660)} giờ `;
+    else if (difference < 86400) return `${Math.floor(difference / 3600)} giờ `;
     else if (difference < 86400 * 30)
         return `${Math.floor(difference / 86400)} ngày `;
     else if (difference < 86400 * 30 * 12)
