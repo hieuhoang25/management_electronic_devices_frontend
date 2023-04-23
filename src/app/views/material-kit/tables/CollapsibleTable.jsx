@@ -79,10 +79,11 @@ function Row({ ...props }) {
                 <TableCell align="center">
                     <StyledButton
                         disabled={
-                            row.status_name === 'Hoàn thành' ? true : false
+                            (row.status_name === 'Hoàn thành' ? true : false ) || 
+                            (row.status_name === 'Đã hủy' ? true : false )
                         }
                         variant="contained"
-                        color="primary"
+                        color={row.status_name === 'Chờ xác nhận' ? 'error':'primary'}
                         onClick={() => {
                             handleChangeStatusOrder(row);
                         }}
