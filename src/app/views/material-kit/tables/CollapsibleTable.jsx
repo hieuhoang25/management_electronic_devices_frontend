@@ -183,26 +183,27 @@ const StyledTable = styled(Table)(() => ({
 }));
 
 //end compare
-export default function CollapsibleTable({ tableHeader }) {
+export default function CollapsibleTable({ tableHeader ,orders, setLoading, setReload,reload, loading }) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const dispatch = useDispatch();
-    const orders = useSelector((state) => state.orders);
-    const [reload, setReload] = useState(true);
-    const [loading, setLoading] = useState(false);
+    // const orders = useSelector((state) => state.orders);
+    // const [reload, setReload] = useState(true);
+    // const [loading, setLoading] = useState(false);
 
+    console.log("table"+orders)
     const handleChangePage = (_, newPage) => {
         setPage(newPage);
     };
     // eslint-disable-next-line
-    useEffect(async () => {
-        setLoading(true);
+    // useEffect(async () => {
+    //     setLoading(true);
 
-        await dispatch(getOrderList());
+    //     await dispatch(getOrderList());
 
-        setLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [reload]);
+    //     setLoading(false);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [reload]);
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);

@@ -140,11 +140,11 @@ const TopSellingTable = (props) => {
                                     {product.stock ? (
                                         product.stock < 20 ? (
                                             <Small bgcolor={bgSecondary}>
-                                                {product.stock} còn hàng
+                                                còn {product.stock} chiếc 
                                             </Small>
                                         ) : (
                                             <Small bgcolor={bgPrimary}>
-                                                còn hàng
+                                                  còn {product.stock} chiếc
                                             </Small>
                                         )
                                     ) : (

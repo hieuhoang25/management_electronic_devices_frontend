@@ -1,7 +1,8 @@
-import { GET_ORDER_LIST } from '../actions/OrderAction';
+import { GET_ORDER_LIST, GET_LIST_COUNTION_ORDER } from '../actions/OrderAction';
 
 const initialState = {
     list: [],
+    listCountion:{}
 };
 
 const OrderReducer = (state = initialState, action) => {
@@ -11,6 +12,11 @@ const OrderReducer = (state = initialState, action) => {
                 ...state,
                 list: [...action.payload],
             };
+        case GET_LIST_COUNTION_ORDER:
+                return {
+                    ...state,
+                    listCountion : action.payload,
+                };    
 
         default:
             return state;

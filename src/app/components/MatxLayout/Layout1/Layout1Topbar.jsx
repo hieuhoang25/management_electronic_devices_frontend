@@ -214,7 +214,7 @@ const Layout1Topbar = () => {
             >
                 <Alert
                     onClose={handleCloseSnackBar}
-                    severity="info"
+                    severity="error"
                     md={{ width: '100%' }}
                 >
                     <AlertTitle>{message}</AlertTitle>
